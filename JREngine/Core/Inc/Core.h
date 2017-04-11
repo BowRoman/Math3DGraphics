@@ -4,10 +4,8 @@
 #include "Common.h"
 
 #include "Application.h"
-#include "Cast.h"
 #include "Debug.h"
 #include "DeleteUtil.h"
-#include "NonCopyable.h"
 #include "Timer.h"
 #include "Window.h"
 
