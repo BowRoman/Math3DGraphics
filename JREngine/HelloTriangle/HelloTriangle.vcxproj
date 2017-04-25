@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F5C56CDC-C02F-457E-91D3-64BB3742CCC7}</ProjectGuid>
+    <ProjectGuid>{71871D15-6329-4067-8B48-0221D6F3A8A3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HelloApplication</RootNamespace>
+    <RootNamespace>HelloTriangle</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -146,15 +146,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="WinMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
       <Project>{56b26341-3c5b-4e9a-9219-43a818454660}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.vcxproj">
+      <Project>{0671ca3a-bca1-4561-935f-0519c579f6b6}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Input\Input.vcxproj">
       <Project>{422b1df4-f1a4-4c64-bcdb-3f1baaaaa768}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Math\Math.vcxproj">
+      <Project>{b4537184-e7d8-465e-90d1-27da72203376}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameApp.cpp" />
+    <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

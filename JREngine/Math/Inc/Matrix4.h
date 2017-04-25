@@ -81,12 +81,6 @@ private:
 
 };
 
-inline Matrix4::Matrix4()
-{
-	// initially identity matrix
-	Identity();
-}
-
 inline Matrix4::Matrix4(const float src[16])
 {
 	Set(src);
@@ -376,29 +370,29 @@ Matrix4& Matrix4::InvertEuclidean()
 //  [ --+-- ]   = [ -----+---------- ]
 //  [ 0 | 1 ]     [  0   +     1     ]
 ///////////////////////////////////////////////////////////////////////////////
-Matrix4& Matrix4::InvertAffine()
-{
-	// R^-1
-	Matrix3 r(m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9], m[10]);
-	r.Invert();
-	m[0] = r[0];  m[1] = r[1];  m[2] = r[2];
-	m[4] = r[3];  m[5] = r[4];  m[6] = r[5];
-	m[8] = r[6];  m[9] = r[7];  m[10] = r[8];
-
-	// -R^-1 * T
-	float x = m[12];
-	float y = m[13];
-	float z = m[14];
-	m[12] = -(r[0] * x + r[3] * y + r[6] * z);
-	m[13] = -(r[1] * x + r[4] * y + r[7] * z);
-	m[14] = -(r[2] * x + r[5] * y + r[8] * z);
-
-	// last row should be unchanged (0,0,0,1)
-	//m[3] = m[7] = m[11] = 0.0f;
-	//m[15] = 1.0f;
-
-	return *this;
-}
+//Matrix4& Matrix4::InvertAffine()
+//{
+//	// R^-1
+//	Matrix3 r(m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9], m[10]);
+//	r.Invert();
+//	m[0] = r[0];  m[1] = r[1];  m[2] = r[2];
+//	m[4] = r[3];  m[5] = r[4];  m[6] = r[5];
+//	m[8] = r[6];  m[9] = r[7];  m[10] = r[8];
+//
+//	// -R^-1 * T
+//	float x = m[12];
+//	float y = m[13];
+//	float z = m[14];
+//	m[12] = -(r[0] * x + r[3] * y + r[6] * z);
+//	m[13] = -(r[1] * x + r[4] * y + r[7] * z);
+//	m[14] = -(r[2] * x + r[5] * y + r[8] * z);
+//
+//	// last row should be unchanged (0,0,0,1)
+//	//m[3] = m[7] = m[11] = 0.0f;
+//	//m[15] = 1.0f;
+//
+//	return *this;
+//}
 
 
 
@@ -420,53 +414,53 @@ Matrix4& Matrix4::InvertAffine()
 //       The matrix is invertable even if det(A)=0, so must check det(A) before
 //       calling this function, and use invertGeneric() instead.
 ///////////////////////////////////////////////////////////////////////////////
-Matrix4& Matrix4::InvertProjective()
-{
-	// partition
-	Matrix2 a(m[0], m[1], m[4], m[5]);
-	Matrix2 b(m[8], m[9], m[12], m[13]);
-	Matrix2 c(m[2], m[3], m[6], m[7]);
-	Matrix2 d(m[10], m[11], m[14], m[15]);
-
-	// pre-compute repeated parts
-	a.invert();             // A^-1
-	Matrix2 ab = a * b;     // A^-1 * B
-	Matrix2 ca = c * a;     // C * A^-1
-	Matrix2 cab = ca * b;   // C * A^-1 * B
-	Matrix2 dcab = d - cab; // D - C * A^-1 * B
-
-							// check determinant if |D - C * A^-1 * B| = 0
-							//NOTE: this function assumes det(A) is already checked. if |A|=0 then,
-							//      cannot use this function.
-	float determinant = dcab[0] * dcab[3] - dcab[1] * dcab[2];
-	if (fabs(determinant) <= EPSILON)
-	{
-		return identity();
-	}
-
-	// compute D' and -D'
-	Matrix2 d1 = dcab;      //  (D - C * A^-1 * B)
-	d1.invert();            //  (D - C * A^-1 * B)^-1
-	Matrix2 d2 = -d1;       // -(D - C * A^-1 * B)^-1
-
-							// compute C'
-	Matrix2 c1 = d2 * ca;   // -D' * (C * A^-1)
-
-							// compute B'
-	Matrix2 b1 = ab * d2;   // (A^-1 * B) * -D'
-
-							// compute A'
-	Matrix2 a1 = a - (ab * c1); // A^-1 - (A^-1 * B) * C'
-
-								// assemble inverse matrix
-	m[0] = a1[0];  m[4] = a1[2]; /*|*/ m[8] = b1[0];  m[12] = b1[2];
-	m[1] = a1[1];  m[5] = a1[3]; /*|*/ m[9] = b1[1];  m[13] = b1[3];
-	/*-----------------------------+-----------------------------*/
-	m[2] = c1[0];  m[6] = c1[2]; /*|*/ m[10] = d1[0];  m[14] = d1[2];
-	m[3] = c1[1];  m[7] = c1[3]; /*|*/ m[11] = d1[1];  m[15] = d1[3];
-
-	return *this;
-}
+//Matrix4& Matrix4::InvertProjective()
+//{
+//	// partition
+//	Matrix2 a(m[0], m[1], m[4], m[5]);
+//	Matrix2 b(m[8], m[9], m[12], m[13]);
+//	Matrix2 c(m[2], m[3], m[6], m[7]);
+//	Matrix2 d(m[10], m[11], m[14], m[15]);
+//
+//	// pre-compute repeated parts
+//	a.invert();             // A^-1
+//	Matrix2 ab = a * b;     // A^-1 * B
+//	Matrix2 ca = c * a;     // C * A^-1
+//	Matrix2 cab = ca * b;   // C * A^-1 * B
+//	Matrix2 dcab = d - cab; // D - C * A^-1 * B
+//
+//							// check determinant if |D - C * A^-1 * B| = 0
+//							//NOTE: this function assumes det(A) is already checked. if |A|=0 then,
+//							//      cannot use this function.
+//	float determinant = dcab[0] * dcab[3] - dcab[1] * dcab[2];
+//	if (fabs(determinant) <= EPSILON)
+//	{
+//		return identity();
+//	}
+//
+//	// compute D' and -D'
+//	Matrix2 d1 = dcab;      //  (D - C * A^-1 * B)
+//	d1.invert();            //  (D - C * A^-1 * B)^-1
+//	Matrix2 d2 = -d1;       // -(D - C * A^-1 * B)^-1
+//
+//							// compute C'
+//	Matrix2 c1 = d2 * ca;   // -D' * (C * A^-1)
+//
+//							// compute B'
+//	Matrix2 b1 = ab * d2;   // (A^-1 * B) * -D'
+//
+//							// compute A'
+//	Matrix2 a1 = a - (ab * c1); // A^-1 - (A^-1 * B) * C'
+//
+//								// assemble inverse matrix
+//	m[0] = a1[0];  m[4] = a1[2]; /*|*/ m[8] = b1[0];  m[12] = b1[2];
+//	m[1] = a1[1];  m[5] = a1[3]; /*|*/ m[9] = b1[1];  m[13] = b1[3];
+//	/*-----------------------------+-----------------------------*/
+//	m[2] = c1[0];  m[6] = c1[2]; /*|*/ m[10] = d1[0];  m[14] = d1[2];
+//	m[3] = c1[1];  m[7] = c1[3]; /*|*/ m[11] = d1[1];  m[15] = d1[3];
+//
+//	return *this;
+//}
 
 
 
@@ -566,10 +560,10 @@ float Matrix4::GetCofactor(float m0, float m1, float m2,
 ///////////////////////////////////////////////////////////////////////////////
 // translate this matrix by (x, y, z)
 ///////////////////////////////////////////////////////////////////////////////
-Matrix4& Matrix4::Translate(const Vector3& v)
-{
-	return Translate(v.x, v.y, v.z);
-}
+//Matrix4& Matrix4::Translate(const Vector3& v)
+//{
+//	return Translate(v.x, v.y, v.z);
+//}
 
 Matrix4& Matrix4::Translate(float x, float y, float z)
 {
@@ -604,10 +598,10 @@ Matrix4& Matrix4::Scale(float x, float y, float z)
 // build a rotation matrix with given angle(degree) and rotation axis, then
 // multiply it with this object
 ///////////////////////////////////////////////////////////////////////////////
-Matrix4& Matrix4::Rotate(float angle, const Vector3& axis)
-{
-	return Rotate(angle, axis.x, axis.y, axis.z);
-}
+//Matrix4& Matrix4::Rotate(float angle, const Vector3& axis)
+//{
+//	return Rotate(angle, axis.x, axis.y, axis.z);
+//}
 
 Matrix4& Matrix4::Rotate(float angle, float x, float y, float z)
 {

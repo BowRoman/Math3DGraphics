@@ -2,8 +2,6 @@
 #ifndef INCLUDED_MATH_VECTOR4_H
 #define INCLUDED_MATH_VECTOR4_H
 
-// TODO: Ask about w and cmath (for sqrt)
-
 namespace Math
 {
 
@@ -22,8 +20,8 @@ struct Vector4
 
 	void Set(float a, float b, float c, float d = 1.0f) { x = a; y = b; z = c; w = d; }
 
-	// double Length() const { return sqrt(x*x + y*y, z*z); }
-	double LengthSq()const { return x*x + y*y + z*z; }
+	float LengthSq() const { return x*x + y*y + z*z; }
+	float Length() const { return sqrt(LengthSq()); }
 
 	// static functions to return basic colours
 
@@ -35,37 +33,39 @@ struct Vector4
 
 	// Operators
 
-	Vector4& operator+=(const Vector4& v) { x += v.x; y += v.y; z += v.z;/* w += v.w;*/ return *this; }
-	Vector4& operator-=(const Vector4& v) { x -= v.x; y -= v.y; z -= v.z;/* w -= v.w;*/ return *this; }
-	Vector4& operator*=(const Vector4& v) { x *= v.x; y *= v.y; z *= v.z;/* w *= v.w;*/ return *this; }
-	Vector4& operator/=(const Vector4& v) { x /= v.x; y /= v.y; z /= v.z;/* w /= v.w;*/ return *this; }
+	Vector4& operator+=(const Vector4& v) { x += v.x; y += v.y; z += v.z; w += v.w; return *this; }
+	Vector4& operator-=(const Vector4& v) { x -= v.x; y -= v.y; z -= v.z; w -= v.w; return *this; }
+	Vector4& operator*=(const Vector4& v) { x *= v.x; y *= v.y; z *= v.z; w *= v.w; return *this; }
+	Vector4& operator/=(const Vector4& v) { x /= v.x; y /= v.y; z /= v.z; w /= v.w; return *this; }
 
-	Vector4& operator+=(const float s) { x += s; y += s; z += s; return *this; }
-	Vector4& operator-=(const float s) { x -= s; y -= s; z -= s; return *this; }
-	Vector4& operator*=(const float s) { x *= s; y *= s; z *= s; return *this; }
-	Vector4& operator/=(const float s) { x /= s; y /= s; z /= s; return *this; }	friend bool operator==(const Vector4& L, const Vector4& R)
+	Vector4& operator+=(const float s) { x += s; y += s; z += s; w += s; return *this; }
+	Vector4& operator-=(const float s) { x -= s; y -= s; z -= s; w -= s; return *this; }
+	Vector4& operator*=(const float s) { x *= s; y *= s; z *= s; w *= s; return *this; }
+	Vector4& operator/=(const float s) { x /= s; y /= s; z /= s; w /= s; return *this; }
+
+	friend bool operator==(const Vector4& L, const Vector4& R)
 	{
-		return (L.x == R.x && L.y == R.y && L.z == R.z);
+		return (L.x == R.x && L.y == R.y && L.z == R.z && L.w == R.w);
 	}
 	friend bool operator!=(const Vector4& L, const Vector4& R) { return !(L == R); }
 
 	/*Check which Vectors are closer or further from the origin.*/
-	friend bool operator>(const Vector4& L, const Vector4& R) { return LengthSq(L) < LengthSq(R); }
-	friend bool operator>=(const Vector4& L, const Vector4& R) { return !(L > R); }
-	friend bool operator<(const Vector4& L, const Vector4& R) { return R < L; }
-	friend bool operator<=(const Vector4& L, const Vector4& R) { return !(R < L); }
+	// friend bool operator>(const Vector4& L, const Vector4& R) { return LengthSq(L) < LengthSq(R); }
+	// friend bool operator>=(const Vector4& L, const Vector4& R) { return !(L > R); }
+	// friend bool operator<(const Vector4& L, const Vector4& R) { return R < L; }
+	// friend bool operator<=(const Vector4& L, const Vector4& R) { return !(R < L); }
 
 	Vector4 operator-() const { return Vector4(-x, -y, -z, w); }
 
-	Vector4 operator*(float s) { Vector4 tmp(*this); tmp.x *= s; tmp.y *= s; tmp.z *= s;  return tmp; }
-	Vector4 operator/(float s) { Vector4 tmp(*this); tmp.x /= s; tmp.y /= s; tmp.z /= s;  return tmp; }
+	Vector4 operator*(float s) { Vector4 tmp(*this); tmp.x *= s; tmp.y *= s; tmp.z *= s; tmp.w *= s;  return tmp; }
+	Vector4 operator/(float s) { Vector4 tmp(*this); tmp.x /= s; tmp.y /= s; tmp.z /= s; tmp.w /= s;  return tmp; }
 };
 
-Vector4 operator*(float s, const Vector4& v) { return Vector4(v) *= s; }
-Vector4 operator*(const Vector4& v, float s) { return Vector4(v) *= s; }
-
-Vector4 operator-(const Vector4& v1, const Vector4& v2) { return Vector4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w); }
-Vector4 operator+(const Vector4& v1, const Vector4& v2) { return Vector4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w); }
+// Vector4 operator*(float s, const Vector4& v) { return Vector4(v) *= s; }
+// Vector4 operator*(const Vector4& v, float s) { return Vector4(v) *= s; }
+// 
+// Vector4 operator-(const Vector4& v1, const Vector4& v2) { return Vector4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w); }
+// Vector4 operator+(const Vector4& v1, const Vector4& v2) { return Vector4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w); }
 
 // Product functions
 // float DotProduct(const Vector4& a, const Vector4& b) { return ((a.x * b.x) + (a.y * b.y) + (a.z * b.z)); }

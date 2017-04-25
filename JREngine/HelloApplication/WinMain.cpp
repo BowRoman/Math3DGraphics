@@ -13,7 +13,7 @@ private:
 	}
 
 	virtual void OnTerminate() override
-	{
+	{ 
 		Input::InputSystem::StaticTerminate();
 
 		UnhookWindow();
