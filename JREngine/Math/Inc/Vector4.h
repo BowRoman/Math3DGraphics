@@ -49,37 +49,11 @@ struct Vector4
 	}
 	friend bool operator!=(const Vector4& L, const Vector4& R) { return !(L == R); }
 
-	/*Check which Vectors are closer or further from the origin.*/
-	// friend bool operator>(const Vector4& L, const Vector4& R) { return LengthSq(L) < LengthSq(R); }
-	// friend bool operator>=(const Vector4& L, const Vector4& R) { return !(L > R); }
-	// friend bool operator<(const Vector4& L, const Vector4& R) { return R < L; }
-	// friend bool operator<=(const Vector4& L, const Vector4& R) { return !(R < L); }
-
 	Vector4 operator-() const { return Vector4(-x, -y, -z, w); }
 
 	Vector4 operator*(float s) { Vector4 tmp(*this); tmp.x *= s; tmp.y *= s; tmp.z *= s; tmp.w *= s;  return tmp; }
 	Vector4 operator/(float s) { Vector4 tmp(*this); tmp.x /= s; tmp.y /= s; tmp.z /= s; tmp.w /= s;  return tmp; }
 };
-
-// Vector4 operator*(float s, const Vector4& v) { return Vector4(v) *= s; }
-// Vector4 operator*(const Vector4& v, float s) { return Vector4(v) *= s; }
-// 
-// Vector4 operator-(const Vector4& v1, const Vector4& v2) { return Vector4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w); }
-// Vector4 operator+(const Vector4& v1, const Vector4& v2) { return Vector4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w); }
-
-// Product functions
-// float DotProduct(const Vector4& a, const Vector4& b) { return ((a.x * b.x) + (a.y * b.y) + (a.z * b.z)); }
-// Vector4 CrossProduct(const Vector4& a, const Vector4& b)
-// {
-// 	return Vector4(a.y * b.z - a.z * b.y,
-// 				   a.z * b.x - a.x * b.z,
-// 				   a.x * b.y - a.y * b.x);
-// }
-
-// Return the unit vector of the input
-// template<class T> Vector4<T> Normal(const Vector3<T>& a) { double mag = a.Length(); return v<T>(a.x / mag, a.y / mag, a.z / mag); }
-
-
 }
 
 #endif // #ifndef INCLUDED_MATH_VECTOR4_H

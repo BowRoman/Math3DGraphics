@@ -1,7 +1,7 @@
 #pragma once
 
 const float DEG2RAD = 3.141593f / 180;
-const float EPSILON = 0.00001f;
+const float EPSILON = 1.0e-6f;
 
 class Matrix4
 {
@@ -21,11 +21,7 @@ public:
 			 float m12, float m13, float m14, float m15);// 4th row
 
 	void SetRow(int index, const float row[4]);
-	// void SetRow(int index, const Vector4& v);
-	// void SetRow(int index, const Vector3& v);
 	void SetColumn(int index, const float col[4]);
-	// void SetColumn(int index, const Vector4& v);
-	// void SetColumn(int index, const Vector3& v);
 
 	const float* Get() const;
 	const float* GetTranspose();                        // return transposed matrix
@@ -36,13 +32,11 @@ public:
 	Matrix4& Invert();                               // check best inverse method before inverse
 	Matrix4& InvertEuclidean();                      // inverse of Euclidean transform matrix
 	Matrix4& InvertAffine();                         // inverse of affine transform matrix
-	Matrix4& InvertProjective();                     // inverse of projective matrix using partitioning
+	//Matrix4& InvertProjective();                     // inverse of projective matrix using partitioning
 	Matrix4& InvertGeneral();                        // inverse of generic matrix
 
 					  								 // transform matrix
 	Matrix4& Translate(float x, float y, float z);   // translation by (x,y,z)
-	// Matrix4& Translate(const Vector3& v);            //
-	// Matrix4& Rotate(float angle, const Vector3& axis); // rotate angle(degree) along the given axix
 	Matrix4& Rotate(float angle, float x, float y, float z);
 	Matrix4& RotateX(float angle);                   // rotate on X-axis with degree
 	Matrix4& RotateY(float angle);                   // rotate on Y-axis with degree
@@ -55,8 +49,6 @@ public:
 	Matrix4     operator-(const Matrix4& rhs) const;    // subtract rhs
 	Matrix4&    operator+=(const Matrix4& rhs);         // add rhs and update this object
 	Matrix4&    operator-=(const Matrix4& rhs);         // subtract rhs and update this object
-	// Vector4     operator*(const Vector4& rhs) const;    // multiplication: v' = M * v
-	// Vector3     operator*(const Vector3& rhs) const;    // multiplication: v' = M * v
 	Matrix4     operator*(const Matrix4& rhs) const;    // multiplication: M3 = M1 * M2
 	Matrix4&    operator*=(const Matrix4& rhs);         // multiplication: M1' = M1 * M2
 	bool        operator==(const Matrix4& rhs) const;   // exact compare, no epsilon
@@ -66,8 +58,6 @@ public:
 
 	friend Matrix4 operator-(const Matrix4& m);                     // unary operator (-)
 	friend Matrix4 operator*(float scalar, const Matrix4& m);       // pre-multiplication
-	// friend Vector3 operator*(const Vector3& vec, const Matrix4& m); // pre-multiplication
-	// friend Vector4 operator*(const Vector4& vec, const Matrix4& m); // pre-multiplication
 
 protected:
 
@@ -118,30 +108,10 @@ inline void Matrix4::SetRow(int index, const float row[4])
 	m[index] = row[0];  m[index + 4] = row[1];  m[index + 8] = row[2];  m[index + 12] = row[3];
 }
 
-//inline void Matrix4::SetRow(int index, const Vector4& v)
-//{
-//	m[index] = v.x;  m[index + 4] = v.y;  m[index + 8] = v.z;  m[index + 12] = v.w;
-//}
-//
-//inline void Matrix4::SetRow(int index, const Vector3& v)
-//{
-//	m[index] = v.x;  m[index + 4] = v.y;  m[index + 8] = v.z;
-//}
-
 inline void Matrix4::SetColumn(int index, const float col[4])
 {
 	m[index * 4] = col[0];  m[index * 4 + 1] = col[1];  m[index * 4 + 2] = col[2];  m[index * 4 + 3] = col[3];
 }
-
-//inline void Matrix4::SetColumn(int index, const Vector4& v)
-//{
-//	m[index * 4] = v.x;  m[index * 4 + 1] = v.y;  m[index * 4 + 2] = v.z;  m[index * 4 + 3] = v.w;
-//}
-//
-//inline void Matrix4::SetColumn(int index, const Vector3& v)
-//{
-//	m[index * 4] = v.x;  m[index * 4 + 1] = v.y;  m[index * 4 + 2] = v.z;
-//}
 
 inline const float* Matrix4::Get() const
 {
@@ -198,21 +168,6 @@ inline Matrix4& Matrix4::operator-=(const Matrix4& rhs)
 	return *this;
 }
 
-//inline Vector4 Matrix4::operator*(const Vector4& rhs) const
-//{
-//	return Vector4(m[0] * rhs.x + m[4] * rhs.y + m[8] * rhs.z + m[12] * rhs.w,
-//		m[1] * rhs.x + m[5] * rhs.y + m[9] * rhs.z + m[13] * rhs.w,
-//		m[2] * rhs.x + m[6] * rhs.y + m[10] * rhs.z + m[14] * rhs.w,
-//		m[3] * rhs.x + m[7] * rhs.y + m[11] * rhs.z + m[15] * rhs.w);
-//}
-//
-//inline Vector3 Matrix4::operator*(const Vector3& rhs) const
-//{
-//	return Vector3(m[0] * rhs.x + m[4] * rhs.y + m[8] * rhs.z,
-//		m[1] * rhs.x + m[5] * rhs.y + m[9] * rhs.z,
-//		m[2] * rhs.x + m[6] * rhs.y + m[10] * rhs.z);
-//}
-
 inline Matrix4 Matrix4::operator*(const Matrix4& n) const
 {
 	return Matrix4(m[0] * n[0] + m[4] * n[1] + m[8] * n[2] + m[12] * n[3], m[1] * n[0] + m[5] * n[1] + m[9] * n[2] + m[13] * n[3], m[2] * n[0] + m[6] * n[1] + m[10] * n[2] + m[14] * n[3], m[3] * n[0] + m[7] * n[1] + m[11] * n[2] + m[15] * n[3],
@@ -262,16 +217,6 @@ inline Matrix4 operator*(float s, const Matrix4& rhs)
 {
 	return Matrix4(s*rhs[0], s*rhs[1], s*rhs[2], s*rhs[3], s*rhs[4], s*rhs[5], s*rhs[6], s*rhs[7], s*rhs[8], s*rhs[9], s*rhs[10], s*rhs[11], s*rhs[12], s*rhs[13], s*rhs[14], s*rhs[15]);
 }
-
-//inline Vector4 operator*(const Vector4& v, const Matrix4& m)
-//{
-//	return Vector4(v.x*m[0] + v.y*m[1] + v.z*m[2] + v.w*m[3], v.x*m[4] + v.y*m[5] + v.z*m[6] + v.w*m[7], v.x*m[8] + v.y*m[9] + v.z*m[10] + v.w*m[11], v.x*m[12] + v.y*m[13] + v.z*m[14] + v.w*m[15]);
-//}
-//
-//inline Vector3 operator*(const Vector3& v, const Matrix4& m)
-//{
-//	return Vector3(v.x*m[0] + v.y*m[1] + v.z*m[2], v.x*m[4] + v.y*m[5] + v.z*m[6], v.x*m[8] + v.y*m[9] + v.z*m[10]);
-//}
 
 Matrix4& Matrix4::Transpose()
 {
@@ -352,8 +297,6 @@ Matrix4& Matrix4::InvertEuclidean()
 	return *this;
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
 // compute the inverse of a 4x4 affine transformation matrix
 //
@@ -370,29 +313,43 @@ Matrix4& Matrix4::InvertEuclidean()
 //  [ --+-- ]   = [ -----+---------- ]
 //  [ 0 | 1 ]     [  0   +     1     ]
 ///////////////////////////////////////////////////////////////////////////////
-//Matrix4& Matrix4::InvertAffine()
-//{
-//	// R^-1
-//	Matrix3 r(m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9], m[10]);
-//	r.Invert();
-//	m[0] = r[0];  m[1] = r[1];  m[2] = r[2];
-//	m[4] = r[3];  m[5] = r[4];  m[6] = r[5];
-//	m[8] = r[6];  m[9] = r[7];  m[10] = r[8];
-//
-//	// -R^-1 * T
-//	float x = m[12];
-//	float y = m[13];
-//	float z = m[14];
-//	m[12] = -(r[0] * x + r[3] * y + r[6] * z);
-//	m[13] = -(r[1] * x + r[4] * y + r[7] * z);
-//	m[14] = -(r[2] * x + r[5] * y + r[8] * z);
-//
-//	// last row should be unchanged (0,0,0,1)
-//	//m[3] = m[7] = m[11] = 0.0f;
-//	//m[15] = 1.0f;
-//
-//	return *this;
-//}
+Matrix4& Matrix4::InvertAffine()
+{
+	Matrix4 result;
+
+	// compute upper left 3x3 matrix determinant
+	float cofactor0 = m[5] * m[10] - m[6] * m[9];
+	float cofactor4 = m[2] * m[9] - m[1] * m[10];
+	float cofactor8 = m[1] * m[6] - m[2] * m[5];
+	float det = m[0] * cofactor0 + m[4] * cofactor4 + m[8] * cofactor8;
+	if (fabsf(det) < EPSILON)
+	{
+		return result;
+	}
+
+	// create adjunct matrix and multiply by 1/det to get upper 3x3
+	float invDet = 1.0f / det;
+	result.m[0] = invDet*cofactor0;
+	result.m[1] = invDet*cofactor4;
+	result.m[2] = invDet*cofactor8;
+
+	result.m[4] = invDet*(m[6] * m[8] - m[4] * m[10]);
+	result.m[5] = invDet*(m[0] * m[10] - m[2] * m[8]);
+	result.m[6] = invDet*(m[2] * m[4] - m[0] * m[6]);
+
+	result.m[8] = invDet*(m[4] * m[9] - m[5] * m[8]);
+	result.m[9] = invDet*(m[1] * m[8] - m[0] * m[9]);
+	result.m[10] = invDet*(m[0] * m[5] - m[1] * m[4]);
+
+	// multiply -translation by inverted 3x3 to get its inverse
+
+	result.m[12] = -result.m[0] * m[12] - result.m[4] * m[13] - result.m[8] * m[14];
+	result.m[13] = -result.m[1] * m[12] - result.m[5] * m[13] - result.m[9] * m[14];
+	result.m[14] = -result.m[2] * m[12] - result.m[6] * m[13] - result.m[10] * m[14];
+
+	return result;
+
+}   // End of AffineInverse()
 
 
 
