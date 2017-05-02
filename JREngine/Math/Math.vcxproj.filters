@@ -14,5 +14,6 @@
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp" />
     <ClCompile Include="Src\EngineMath.cpp" />
+    <ClCompile Include="Src\Matrix4.cpp" />
   </ItemGroup>
 </Project>

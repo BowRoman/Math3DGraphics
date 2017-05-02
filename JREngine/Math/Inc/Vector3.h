@@ -45,25 +45,19 @@ public:
 
 	Vector3 operator*(float s) { Vector3 tmp(*this); tmp.x *= s; tmp.y *= s; tmp.z *= s;  return tmp; }
 	Vector3 operator/(float s) { Vector3 tmp(*this); tmp.x /= s; tmp.y /= s; tmp.z /= s;  return tmp; }
+
+	// Product functions
+	float Dot(const Vector3& b) { return  ((x * b.x) + (y * b.y) + (z * b.z)); }
+	Vector3 Cross(const Vector3& b)
+	{
+		return Vector3(y * b.z - z * b.y,
+					   z * b.x - x * b.z,
+					   x * b.y - y * b.x);
+	}
+
+	// Return the unit vector of the input
+	Vector3 Normal() { float mag = Length(); return Vector3(x / mag, y / mag, z / mag); }
 };
-
-Vector3 operator*(float s, const Vector3& v) { return Vector3(v) *= s; }
-Vector3 operator*(const Vector3& v, float s) { return Vector3(v) *= s; }
-
-Vector3 operator-(const Vector3& v1, const Vector3& v2) { return Vector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z); }
-Vector3 operator+(const Vector3& v1, const Vector3& v2) { return Vector3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z); }
-
-// Product functions
-float Dot(const Vector3& a, const Vector3& b) { return  ((a.x * b.x) + (a.y * b.y) + (a.z * b.z)); }
-Vector3 Cross(const Vector3& a, const Vector3& b)
-{
-	return Vector3(a.y * b.z - a.z * b.y,
-				   a.z * b.x - a.x * b.z,
-				   a.x * b.y - a.y * b.x);
-}
-
-// Return the unit vector of the input
-Vector3 Normal(const Vector3& a) { float mag = a.Length(); return Vector3(a.x / mag, a.y / mag, a.z / mag); }
 
 }
 

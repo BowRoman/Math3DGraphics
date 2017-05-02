@@ -25,11 +25,20 @@ struct Vector4
 
 	// static functions to return basic colours
 
-	static Vector4 Black()	{ return Vector4(0.0f, 0.0f, 0.0f, 1.0f); }
-	static Vector4 White()	{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
-	static Vector4 Red()	{ return Vector4(1.0f, 0.0f, 0.0f, 1.0f); }
-	static Vector4 Green()	{ return Vector4(0.0f, 1.0f, 0.0f, 1.0f); }
-	static Vector4 Blue()	{ return Vector4(0.0f, 0.0f, 1.0f, 1.0f); }
+	static Vector4 Black()		{ return Vector4(0.0f, 0.0f, 0.0f, 1.0f); }
+	static Vector4 White()		{ return Vector4(1.0f, 1.0f, 1.0f, 1.0f); }
+	static Vector4 Red()		{ return Vector4(1.0f, 0.0f, 0.0f, 1.0f); }
+	static Vector4 Green()		{ return Vector4(0.0f, 1.0f, 0.0f, 1.0f); }
+	static Vector4 Blue()		{ return Vector4(0.0f, 0.0f, 1.0f, 1.0f); }
+	static Vector4 Yellow()		{ return Vector4(1.0f, 1.0f, 0.0f, 1.0f); }
+	static Vector4 Magenta()	{ return Vector4(1.0f, 0.0f, 1.0f, 1.0f); }
+	static Vector4 Cyan()		{ return Vector4(0.0f, 1.0f, 1.0f, 1.0f); }
+	static Vector4 Orange()		{ return Vector4(1.0f, 0.5f, 0.0f, 1.0f); }
+	static Vector4 Lime()		{ return Vector4(0.5f, 1.0f, 0.0f, 1.0f); }
+	static Vector4 CyanGreen()	{ return Vector4(0.0f, 1.0f, 0.5f, 1.0f); }
+	static Vector4 Azure()		{ return Vector4(0.0f, 0.5f, 1.0f, 1.0f); }
+	static Vector4 Violet()		{ return Vector4(0.5f, 0.0f, 1.0f, 1.0f); }
+	static Vector4 Rose()		{ return Vector4(1.0f, 0.0f, 0.5f, 1.0f); }
 
 	// Operators
 
