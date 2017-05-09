@@ -1,23 +1,38 @@
 //====================================================================================================
 // Filename:	DoNothing.fx
 // Created by:	Peter Chan
-// Description: Shader that does nothing.
+// Description: Basic shader for colour
 //====================================================================================================
+
+struct VS_INPUT
+{
+	float4 Pos : POSITION;
+	float4 Color : COLOR;
+};
+
+struct VS_OUTPUT
+{
+	float4 Pos : SV_POSITION;
+	float4 Color : COLOR;
+};
 
 //====================================================================================================
 // Vertex Shader
 //====================================================================================================
 
-float4 VS( float4 Pos : POSITION ) : SV_POSITION
+VS_OUTPUT VS( VS_INPUT input )
 {
-	return Pos;
+	VS_OUTPUT output = (VS_OUTPUT)0;
+	output.Pos = input.Pos;
+	output.Color = input.Color;
+	return output;
 }
 
 //====================================================================================================
 // Pixel Shader
 //====================================================================================================
 
-float4 PS( float4 Pos : SV_POSITION ) : SV_Target
+float4 PS( VS_OUTPUT input ) : SV_Target
 {
-	return float4( 1.0f, 1.0f, 0.0f, 1.0f );	// Yellow, with Alpha = 1
+	return input.Color;
 }
