@@ -16,8 +16,8 @@ public:
 
 private:
 	ID3D11PixelShader* mPixelShader;
-};
+}; // class PixelShader
 
-}
+} // namespace Graphics
 
 #endif // #ifndef INCLUDED_GRAPHICS_PIXELSHADER_H

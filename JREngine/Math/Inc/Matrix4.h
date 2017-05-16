@@ -10,17 +10,18 @@ class Matrix4
 public:
 	// constructors
 	Matrix4() { Identity(); }
+	Matrix4(const Matrix4& src);
 	Matrix4(const float source[16]);
 	Matrix4(float m00, float m01, float m02, float m03, // 1st row
-		float m04, float m05, float m06, float m07, // 2nd row
-		float m08, float m09, float m10, float m11, // 3rd row
-		float m12, float m13, float m14, float m15);// 4th row
+			float m04, float m05, float m06, float m07, // 2nd row
+			float m08, float m09, float m10, float m11, // 3rd row
+			float m12, float m13, float m14, float m15);// 4th row
 
 	void Set(const float source[16]);
 	void Set(float m00, float m01, float m02, float m03, // 1st row
-		float m04, float m05, float m06, float m07, // 2nd row
-		float m08, float m09, float m10, float m11, // 3rd row
-		float m12, float m13, float m14, float m15);// 4th row
+			float m04, float m05, float m06, float m07, // 2nd row
+			float m08, float m09, float m10, float m11, // 3rd row
+			float m12, float m13, float m14, float m15);// 4th row
 
 	void SetRow(int index, const float row[4]);
 	void SetColumn(int index, const float col[4]);
@@ -46,6 +47,46 @@ public:
 	Matrix4& Scale(float scale);                     // uniform scale
 	Matrix4& Scale(float sx, float sy, float sz);    // scale by (sx, sy, sz) on each axis
 
+	// statics
+	static Matrix4 RotationX(float rad)
+	{
+		const float c = cos(rad);
+		const float s = sin(rad);
+
+		return Matrix4
+		(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, c, s, 0.0f,
+			0.0f, -s, c, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+	}
+	static Matrix4 RotationY(float rad)
+	{
+		const float c = cos(rad);
+		const float s = sin(rad);
+
+		return Matrix4
+		(
+			c, 0.0f, -s, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f,
+			s, 0.0f, c, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+	}
+	static Matrix4 RotationZ(float rad)
+	{
+		const float c = cos(rad);
+		const float s = sin(rad);
+
+		return Matrix4
+		(
+			c, s, 0.0f, 0.0f,
+			-s, c, 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+	}
 														// operators
 	Matrix4     operator+(const Matrix4& rhs) const;    // add rhs
 	Matrix4     operator-(const Matrix4& rhs) const;    // subtract rhs
@@ -64,14 +105,19 @@ public:
 protected:
 
 private:
-	float GetCofactor(float m0, float m1, float m2,
-		float m3, float m4, float m5,
-		float m6, float m7, float m8);
+	float GetCofactor(	float m0, float m1, float m2,
+						float m3, float m4, float m5,
+						float m6, float m7, float m8);
 
 	float m[16];
 	float tm[16]; // transposed m
 
 };
+
+inline Matrix4::Matrix4(const Matrix4 & src)
+{
+	Set(src[0], src[1], src[2], src[3], src[4], src[5], src[6], src[7], src[8], src[9], src[10], src[11], src[12], src[13], src[14], src[15]);
+}
 
 inline Matrix4::Matrix4(const float src[16])
 {

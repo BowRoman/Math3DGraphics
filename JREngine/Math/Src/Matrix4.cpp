@@ -289,13 +289,13 @@ float Matrix4::GetDeterminant()
 // input params are 9 elements of the minor matrix
 // NOTE: The caller must know its sign.
 ///////////////////////////////////////////////////////////////////////////////
-float Matrix4::GetCofactor(float m0, float m1, float m2,
-	float m3, float m4, float m5,
-	float m6, float m7, float m8)
+float Matrix4::GetCofactor(	float m0, float m1, float m2,
+							float m3, float m4, float m5,
+							float m6, float m7, float m8)
 {
-	return m0 * (m4 * m8 - m5 * m7) -
-		m1 * (m3 * m8 - m5 * m6) +
-		m2 * (m3 * m7 - m4 * m6);
+	return	m0 * (m4 * m8 - m5 * m7)-
+			m1 * (m3 * m8 - m5 * m6)+
+			m2 * (m3 * m7 - m4 * m6);
 }
 
 
@@ -408,10 +408,10 @@ Matrix4& Matrix4::RotateY(float angle)
 {
 	float c = cosf(angle * DEG2RAD);
 	float s = sinf(angle * DEG2RAD);
-	float m0 = m[0], m2 = m[2],
-		m4 = m[4], m6 = m[6],
-		m8 = m[8], m10 = m[10],
-		m12 = m[12], m14 = m[14];
+	float	m0 = m[0],		m2 = m[2],
+			m4 = m[4],		m6 = m[6],
+			m8 = m[8],		m10 = m[10],
+			m12 = m[12],	m14 = m[14];
 
 	m[0] = m0 * c + m2 * s;
 	m[2] = m0 *-s + m2 * c;

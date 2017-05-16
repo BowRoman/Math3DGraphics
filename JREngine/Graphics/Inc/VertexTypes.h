@@ -37,6 +37,6 @@ struct VertexPNC
 	Math::Vector4 color;
 };
 
-}
+} // namespace Graphics
 
 #endif // #ifndef INCLUDED_GRAPHICS_VERTEXTYPES_H

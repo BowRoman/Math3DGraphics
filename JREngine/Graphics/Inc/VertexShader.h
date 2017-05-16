@@ -17,8 +17,8 @@ public:
 private:
 	ID3D11InputLayout* mInputLayout;
 	ID3D11VertexShader* mVertexShader;
-};
+}; // class VertexShader
 
-}
+} // namespace Graphics
 
 #endif // #ifndef INCLUDED_GRAPHICS_VERTEXSHADER_H

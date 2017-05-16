@@ -17,10 +17,23 @@ private:
 	void OnUpdate() override;
 
 private:
+	struct ConstantData
+	{
+		Math::Matrix4 wvp;
+	};
+
 	Core::Window mWindow;
-	Graphics::MeshBuffer mMeshBuffer;
+	Core::Timer mTimer;
+
+	Graphics::Camera mCamera;
+	Graphics::Transform mCameraTransform;
+
+	Graphics::TypedConstantBuffer<ConstantData> mConstantBuffer;
 	Graphics::PixelShader mPixelShader;
 	Graphics::VertexShader mVertexShader;
+
+	Graphics::MeshBuffer mMeshBuffer;
+	Math::Vector3 mRotation;
 };
 
 #endif // #ifndef INCLUDED_GAMEAPP_H

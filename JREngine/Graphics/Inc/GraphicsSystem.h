@@ -31,6 +31,7 @@ public:
 	
 	uint32_t GetWidth() const;
 	uint32_t GetHeight() const;
+	float GetAspectRatio() const;
 
 	ID3D11Device* GetDevice()			{ return mD3DDevice; }
 	ID3D11DeviceContext* GetContext()	{ return mImmediateContext; }
@@ -52,7 +53,7 @@ private:
 	DXGI_SWAP_CHAIN_DESC mSwapChainDesc;
 
 	D3D11_VIEWPORT mViewport;
-};
+}; // class GraphicsSystem
 
 } // namespace Graphics
 

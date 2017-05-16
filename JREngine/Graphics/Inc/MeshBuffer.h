@@ -22,8 +22,8 @@ private:
 	uint32_t mVertexSize;
 	uint32_t mVertexCount;
 	uint32_t mIndexCount;
-};
+}; // class MeshBuffer
 
-}
+} //namespace Graphics
 
 #endif // #ifndef INCLUDED_GRAPHICS_MESHBUFFER_H

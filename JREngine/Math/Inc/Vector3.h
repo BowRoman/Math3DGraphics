@@ -17,6 +17,12 @@ public:
 	float LengthSq() const { return x*x + y*y + z*z; }
 	float Length() const { return sqrt(LengthSq()); }
 
+	// static functions for directions
+	static Vector3 Zero()				{ return Vector3(0.0f, 0.0f, 0.0f); }
+	static Vector3 AxisX()				{ return Vector3(1.0f, 0.0f, 0.0f); }
+	static Vector3 AxisY()				{ return Vector3(0.0f, 1.0f, 0.0f); }
+	static Vector3 AxisZ()				{ return Vector3(0.0f, 0.0f, 1.0f); }
+
 	// Operators
 
 	Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
@@ -47,8 +53,8 @@ public:
 	Vector3 operator/(float s) { Vector3 tmp(*this); tmp.x /= s; tmp.y /= s; tmp.z /= s;  return tmp; }
 
 	// Product functions
-	float Dot(const Vector3& b) { return  ((x * b.x) + (y * b.y) + (z * b.z)); }
-	Vector3 Cross(const Vector3& b)
+	float Dot(const Vector3& b) const { return  ((x * b.x) + (y * b.y) + (z * b.z)); }
+	Vector3 Cross(const Vector3& b) const
 	{
 		return Vector3(y * b.z - z * b.y,
 					   z * b.x - x * b.z,
@@ -56,7 +62,16 @@ public:
 	}
 
 	// Return the unit vector of the input
-	Vector3 Normal() { float mag = Length(); return Vector3(x / mag, y / mag, z / mag); }
+	static void Normalize(Vector3& vector)
+	{
+		vector = vector.Normal();
+	}
+	Vector3 Normal() const
+	{
+		float mag = Length();
+		mag = 1 / mag;
+		return Vector3(x * mag, y * mag, z * mag);
+	}
 };
 
 }

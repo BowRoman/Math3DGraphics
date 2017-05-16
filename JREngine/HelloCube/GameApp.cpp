@@ -39,12 +39,18 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mWindow.Initialize(GetInstance(), GetAppName(), width, height);
 	HookWindow(mWindow.GetWindowHandle());
 
+	mTimer.Initialize();
+
 	Graphics::GraphicsSystem::StaticInitialize(mWindow.GetWindowHandle(), false);
 	Input::InputSystem::StaticInitialize(mWindow.GetWindowHandle());
 
+	mCameraTransform.SetPosition(Math::Vector3(0.0f, 0.0f, -5.0f));
+	mCameraTransform.SetDirection(Math::Vector3(0.0f, 0.0f, 1.0f));
+
+	mConstantBuffer.Initialize();
 	mMeshBuffer.Initialize(kVertices, sizeof(Graphics::VertexPC), kVertexCount, kIndices, kIndexCount);
-	mVertexShader.Initialize(L"../Assets/Shaders/DoColour.fx", Graphics::VertexPC::format);
-	mPixelShader.Initialize(L"../Assets/Shaders/DoColour.fx");
+	mVertexShader.Initialize(L"../Assets/Shaders/Transform.fx", Graphics::VertexPC::format);
+	mPixelShader.Initialize(L"../Assets/Shaders/Transform.fx");
 }
 
 void GameApp::OnTerminate()
@@ -53,6 +59,7 @@ void GameApp::OnTerminate()
 	mVertexShader.Terminate();
 
 	mMeshBuffer.Terminate();
+	mConstantBuffer.Terminate();
 
 	Input::InputSystem::StaticTerminate();
 	Graphics::GraphicsSystem::StaticTerminate();
@@ -68,6 +75,8 @@ void GameApp::OnUpdate()
 		Kill();
 	}
 
+	mTimer.Update();
+
 	Input::InputSystem* iS = Input::InputSystem::Get();
 	iS->Update();
 
@@ -81,6 +90,16 @@ void GameApp::OnUpdate()
 	gs->BeginRender(Math::Vector4::Black());
 	// rendering
 
+	Math::Matrix4 worldMatrix = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 10.0f);
+	Math::Matrix4 viewMatrix;// = mCamera.GetViewMatrix(mCameraTransform);
+	Math::Matrix4 projectionMatrix = mCamera.GetProjectionMatrix(gs->GetAspectRatio());
+
+	ConstantData data;
+	data.wvp = worldMatrix * viewMatrix * projectionMatrix;
+	data.wvp.Transpose();
+	mConstantBuffer.Set(data);
+	mConstantBuffer.BindVS();
+	
 	// bind input layout, and vertex/pixel shaders
 	mVertexShader.Bind();
 	mPixelShader.Bind();

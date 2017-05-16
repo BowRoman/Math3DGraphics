@@ -222,3 +222,8 @@ uint32_t GraphicsSystem::GetHeight() const
 {
 	return mSwapChainDesc.BufferDesc.Height;
 }
+
+float GraphicsSystem::GetAspectRatio() const
+{
+	return (float)GetWidth() / (float)GetHeight();
+}
