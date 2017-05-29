@@ -3,13 +3,13 @@
 
 Graphics::Transform::Transform()
 	: mPosition(Math::Vector3::Zero())
-	, mDirection(Math::Vector3::AxisZ())
+	, mDirection(Math::Vector3::ZAxis())
 {
 }
 
 Graphics::Transform::Transform(const Math::Vector3& position, const Math::Vector3& direction)
 	: mPosition(position)
-	, mDirection(Math::Normal(direction))
+	, mDirection(Math::Normalize(direction))
 {
 }
 
@@ -20,7 +20,7 @@ void Graphics::Transform::Walk(float distance)
 
 void Graphics::Transform::Strafe(float distance)
 {
-	Math::Vector3 right = Math::Cross(Math::Vector3::AxisY(), mDirection);
+	Math::Vector3 right = Math::Cross(Math::Vector3::YAxis(), mDirection);
 	mPosition += right * distance;
 }
 
@@ -37,16 +37,16 @@ void Graphics::Transform::Yaw(float rad)
 
 void Graphics::Transform::Pitch(float rad)
 {
-	Math::Vector3 right = Math::Cross(Math::Vector3::AxisY(), mDirection);
-	Math::Matrix4 rotationPitch = Math::RotationAxis(right, rad);
+	Math::Vector3 right = Math::Cross(Math::Vector3::YAxis(), mDirection);
+	Math::Matrix4 rotationPitch = Math::Matrix4::RotationAxis(right, rad);
 	mDirection = Math::TransformNormal(mDirection, rotationPitch);
 }
 
 Math::Matrix4 Graphics::Transform::GetWorldMatrix() const
 {
-	Math::Vector3 forward = Math::Normal(mDirection);
-	Math::Vector3 right = Math::Normal(Math::Cross(Math::Vector3::AxisY(), forward));
-	Math::Vector3 up = Math::Normal(Math::Cross(forward, right));
+	Math::Vector3 forward = Math::Normalize(mDirection);
+	Math::Vector3 right = Math::Normalize(Math::Cross(Math::Vector3::YAxis(), forward));
+	Math::Vector3 up = Math::Normalize(Math::Cross(forward, right));
 	return Math::Matrix4(
 		right.x,		right.y,		right.z,		0.0f,
 		up.x,			up.y,			up.z,			0.0f,
@@ -62,5 +62,5 @@ void Graphics::Transform::SetPosition(const Math::Vector3& position)
 
 void Graphics::Transform::SetDirection(const Math::Vector3& direction)
 {
-	mDirection = Math::Normal(direction);
+	mDirection = Math::Normalize(direction);
 }

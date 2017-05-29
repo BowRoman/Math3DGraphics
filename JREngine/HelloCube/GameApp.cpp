@@ -96,7 +96,7 @@ void GameApp::OnUpdate()
 
 	ConstantData data;
 	data.wvp = worldMatrix * viewMatrix * projectionMatrix;
-	data.wvp.Transpose();
+	data.wvp = Transpose(data.wvp);
 	mConstantBuffer.Set(data);
 	mConstantBuffer.BindVS();
 	
