@@ -5,25 +5,54 @@ namespace
 	// vertex data
 	const Graphics::VertexPC kVertices[] =
 	{
-		{ Math::Vector3(-0.50f, +0.25f, 0.0f), Math::Vector4::Red() },
-		{ Math::Vector3(-0.25f, +0.50f, 0.0f), Math::Vector4::Orange() },
-		{ Math::Vector3(+0.00f, +0.25f, 0.0f), Math::Vector4(0.5f, 0.5f, 0.0f, 1.0f) },
-		{ Math::Vector3(+0.25f, +0.50f, 0.0f), Math::Vector4::Lime() },
-		{ Math::Vector3(+0.50f, +0.25f, 0.0f), Math::Vector4::Green() },
-		{ Math::Vector3(+0.50f, -0.25f, 0.0f), Math::Vector4::Cyan() },
-		{ Math::Vector3(-0.50f, -0.25f, 0.0f), Math::Vector4::Magenta() },
-		{ Math::Vector3(-0.00f, -0.75f, 0.0f), Math::Vector4::Blue() },
+		{ Math::Vector3(-1.0f, +1.0f, -1.0f), Math::Vector4::Red() },					// 0
+		{ Math::Vector3(+1.0f, +1.0f, -1.0f), Math::Vector4::Orange() },				// 1
+		{ Math::Vector3(-1.0f, -1.0f, -1.0f), Math::Vector4::Yellow() },				// 2
+		{ Math::Vector3(+1.0f, -1.0f, -1.0f), Math::Vector4::Lime() },					// 3
+																						
+		{ Math::Vector3(-1.0f, +1.0f, +1.0f), Math::Vector4::Green() },					// 4
+		{ Math::Vector3(+1.0f, +1.0f, +1.0f), Math::Vector4::Cyan() },					// 5
+		{ Math::Vector3(-1.0f, -1.0f, +1.0f), Math::Vector4::Magenta() },				// 6
+		{ Math::Vector3(+1.0f, -1.0f, +1.0f), Math::Vector4::Blue() },					// 7
+
+		/*
+			   4------5
+			  /|     /|
+			 / 6----/-7
+			0------1 /
+		    |/     |/
+			2------3
+		*/
 	};
 	const int kVertexCount = sizeof(kVertices) / sizeof(kVertices[0]);
 
 	// index data
 	const uint32_t kIndices[]
 	{
-		0, 1, 2,
-		2, 3, 4,
+		// front
+		2, 0, 1,
+		1, 3, 2,
+
+		// back
+		5, 4, 6,
+		6, 7, 5,
+
+		// top
 		0, 4, 5,
-		0, 5, 6,
-		6, 5, 7
+		5, 1, 0,
+
+		// bottom
+		7, 6, 2,
+		2, 3, 7,
+
+		// left
+		4, 0, 2,
+		2, 6, 4,
+
+		// right
+		1, 5, 7,
+		7, 3, 1
+
 	};
 	const int kIndexCount = sizeof(kIndices) / sizeof(kIndices[0]);
 }
@@ -42,9 +71,10 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mTimer.Initialize();
 
 	Graphics::GraphicsSystem::StaticInitialize(mWindow.GetWindowHandle(), false);
+	Graphics::SimpleDraw::StaticInitialize(10000);
 	Input::InputSystem::StaticInitialize(mWindow.GetWindowHandle());
 
-	mCameraTransform.SetPosition(Math::Vector3(0.0f, 0.0f, -5.0f));
+	mCameraTransform.SetPosition(Math::Vector3(0.0f, 2.0f, -5.0f));
 	mCameraTransform.SetDirection(Math::Vector3(0.0f, 0.0f, 1.0f));
 
 	mConstantBuffer.Initialize();
@@ -62,6 +92,7 @@ void GameApp::OnTerminate()
 	mConstantBuffer.Terminate();
 
 	Input::InputSystem::StaticTerminate();
+	Graphics::SimpleDraw::StaticTerminate();
 	Graphics::GraphicsSystem::StaticTerminate();
 
 	UnhookWindow();
@@ -70,7 +101,7 @@ void GameApp::OnTerminate()
 
 void GameApp::OnUpdate()
 {
-	if (mWindow.ProcessMessage())
+	if(mWindow.ProcessMessage())
 	{
 		Kill();
 	}
@@ -80,9 +111,36 @@ void GameApp::OnUpdate()
 	Input::InputSystem* iS = Input::InputSystem::Get();
 	iS->Update();
 
-	if (iS->IsKeyPressed(Keys::ESCAPE))
+	if(iS->IsKeyPressed(Keys::ESCAPE))
 	{
 		PostQuitMessage(0);
+	}
+
+	// camera control
+	float deltaTime = mTimer.GetElapsedTime();
+	const float boostModifyer = 1.6;
+	const float cameraMoveSpeed = iS->IsKeyDown(Keys::LSHIFT) ? 10.f : 10.f*boostModifyer;
+	const float cameraTurnSpeed = 0.7f;
+	if(iS->IsKeyDown(Keys::W))
+	{
+		mCameraTransform.Walk(cameraMoveSpeed * deltaTime);
+	}
+	if(iS->IsKeyDown(Keys::S))
+	{
+		mCameraTransform.Walk(-cameraMoveSpeed * deltaTime);
+	}
+	if(iS->IsKeyDown(Keys::A))
+	{
+		mCameraTransform.Strafe(-cameraMoveSpeed * deltaTime);
+	}
+	if(iS->IsKeyDown(Keys::D))
+	{
+		mCameraTransform.Strafe(cameraMoveSpeed * deltaTime);
+	}
+	if (iS->IsMouseDown(Mouse::RBUTTON))
+	{
+		mCameraTransform.Yaw(iS->GetMouseMoveX() * cameraTurnSpeed * deltaTime);
+		mCameraTransform.Pitch(iS->GetMouseMoveY() * cameraTurnSpeed * deltaTime);
 	}
 
 	Graphics::GraphicsSystem* gs = Graphics::GraphicsSystem::Get();
@@ -90,8 +148,14 @@ void GameApp::OnUpdate()
 	gs->BeginRender(Math::Vector4::Black());
 	// rendering
 
-	Math::Matrix4 worldMatrix = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 10.0f);
-	Math::Matrix4 viewMatrix;// = mCamera.GetViewMatrix(mCameraTransform);
+	Math::Matrix4 matRotX = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 3.0f);
+	Math::Matrix4 matRotY = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 2.0f);
+	Math::Matrix4 matRotZ = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 2.0f);
+	Math::Matrix4 matTrans = Math::Matrix4::Translation(0.f, 0.f, 0.f);
+	Math::Matrix4 matScale = Math::Matrix4::Scaling(1.f, 1.f, 1.f);
+
+	Math::Matrix4 worldMatrix = matRotX * matRotY * matRotZ * matTrans * matScale;
+	Math::Matrix4 viewMatrix = mCamera.GetViewMatrix(mCameraTransform);
 	Math::Matrix4 projectionMatrix = mCamera.GetProjectionMatrix(gs->GetAspectRatio());
 
 	ConstantData data;
@@ -105,6 +169,21 @@ void GameApp::OnUpdate()
 	mPixelShader.Bind();
 
 	mMeshBuffer.Render();
+
+	for (int z = 0; z <= 100; ++z)
+	{
+		Math::Vector3 p0(-5.f, 0.f, -5.f + z);
+		Math::Vector3 p1(-5.f, 0.f, -5.f + z);
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Lime());
+	}
+	for (int x = 0; x <= 100; ++x)
+	{
+		Math::Vector3 p0(-5.f + x, 0.f, -5.f);
+		Math::Vector3 p1(-5.f + x, 0.f, -5.f);
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Lime());
+	}
+
+	Graphics::SimpleDraw::Flush(viewMatrix*projectionMatrix);
 
 	gs->EndRender();
 }

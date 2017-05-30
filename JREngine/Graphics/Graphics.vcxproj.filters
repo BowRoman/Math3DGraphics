@@ -45,6 +45,9 @@
     <ClInclude Include="Inc\ConstantBuffer.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\SimpleDraw.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -72,5 +75,8 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\ConstantBuffer.cpp" />
+    <ClCompile Include="Src\SimpleDraw.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

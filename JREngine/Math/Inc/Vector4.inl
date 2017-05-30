@@ -38,32 +38,32 @@ inline Vector4 Vector4::Cyan()
 	return Vector4(0.0f, 1.0f, 1.0f, 1.0f);
 }
 
-inline Vector4 Orange()
+inline Vector4 Vector4::Orange()
 {
 	return Vector4(1.0f, 0.5f, 0.0f, 1.0f);
 }
 
-inline Vector4 Lime()
+inline Vector4 Vector4::Lime()
 {
 	return Vector4(0.5f, 1.0f, 0.0f, 1.0f);
 }
 
-inline Vector4 CyanGreen()
+inline Vector4 Vector4::CyanGreen()
 {
 	return Vector4(0.0f, 1.0f, 0.5f, 1.0f);
 }
 
-inline Vector4 Azure()
+inline Vector4 Vector4::Azure()
 {
 	return Vector4(0.0f, 0.5f, 1.0f, 1.0f);
 }
 
-inline Vector4 Violet()
+inline Vector4 Vector4::Violet()
 {
 	return Vector4(0.5f, 0.0f, 1.0f, 1.0f);
 }
 
-inline Vector4 Rose()
+inline Vector4 Vector4::Rose()
 {
 	return Vector4(1.0f, 0.0f, 0.5f, 1.0f);
 }

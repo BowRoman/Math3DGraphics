@@ -144,9 +144,11 @@
     <ClInclude Include="Inc\Transform.h" />
     <ClInclude Include="Inc\VertexShader.h" />
     <ClInclude Include="Inc\VertexTypes.h" />
+    <ClInclude Include="Inc\SimpleDraw.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\SimpleDraw.cpp" />
     <ClCompile Include="Src\Camera.cpp" />
     <ClCompile Include="Src\ConstantBuffer.cpp" />
     <ClCompile Include="Src\GraphicsSystem.cpp" />

@@ -8,6 +8,7 @@
 #include "GraphicsSystem.h"
 #include "MeshBuffer.h"
 #include "PixelShader.h"
+#include "SimpleDraw.h"
 #include "Transform.h"
 #include "VertexShader.h"
 #include "VertexTypes.h"

@@ -67,7 +67,7 @@ inline float Magnitude(const Vector3& v)
 	return Sqrt(MagnitudeSqr(v));
 }
 
-inline float MagnitudeXZSqr(const Vector3& v)
+inline float Math::MagnitudeXZSqr(const Vector3& v)
 {
 	return (v.x * v.x) + (v.z * v.z);
 }
@@ -113,12 +113,12 @@ inline float DistanceSqr(const Vector3& a, const Vector3& b)
 	return MagnitudeSqr(a - b);
 }
 
-inline float Distance(const Vector3& a, const Vector3& b)
+inline float Math::Distance(const Vector3& a, const Vector3& b)
 {
 	return Sqrt(DistanceSqr(a, b));
 }
 
-inline float DistanceXZSqr(const Vector3& a, const Vector3& b)
+inline float Math::DistanceXZSqr(const Vector3& a, const Vector3& b)
 {
 	return MagnitudeXZSqr(a - b);
 }
@@ -128,7 +128,7 @@ inline float DistanceXZ(const Vector3& a, const Vector3& b)
 	return Sqrt(DistanceXZSqr(a, b));
 }
 
-inline float Dot(const Vector3& a, const Vector3& b)
+inline float Math::Dot(const Vector3& a, const Vector3& b)
 {
 	return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
@@ -148,7 +148,7 @@ inline Vector3 Project(const Vector3& v, const Vector3& n)
 	return n * (Dot(v, n) / Dot(n, n));
 }
 
-inline float Determinant(const Matrix4& m)
+inline float Math::Determinant(const Matrix4& m)
 {
 	float det = 0.0f;
 	det  = (m._11 * (m._22 * (m._33 * m._44 - (m._43 * m._34)) - m._23 * (m._32 * m._44 - (m._42 * m._34)) + m._24 * (m._32 * m._43 - (m._42 * m._33))));
@@ -158,7 +158,7 @@ inline float Determinant(const Matrix4& m)
 	return det;
 }
 
-inline Matrix4 Adjoint(const Matrix4& m)
+inline Matrix4 Math::Adjoint(const Matrix4& m)
 {
 	return Matrix4
 	(
