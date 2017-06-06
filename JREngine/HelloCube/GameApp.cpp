@@ -148,8 +148,8 @@ void GameApp::OnUpdate()
 	gs->BeginRender(Math::Vector4::Black());
 	// rendering
 
-	Math::Matrix4 matRotX = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 3.0f);
-	Math::Matrix4 matRotY = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 2.0f);
+	Math::Matrix4 matRotX = Math::Matrix4::RotationX(mTimer.GetTotalTime() * 3.0f);
+	Math::Matrix4 matRotY = Math::Matrix4::RotationY(mTimer.GetTotalTime() * 2.0f);
 	Math::Matrix4 matRotZ = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 2.0f);
 	Math::Matrix4 matTrans = Math::Matrix4::Translation(0.f, 0.f, 0.f);
 	Math::Matrix4 matScale = Math::Matrix4::Scaling(1.f, 1.f, 1.f);
@@ -172,14 +172,14 @@ void GameApp::OnUpdate()
 
 	for (int z = 0; z <= 100; ++z)
 	{
-		Math::Vector3 p0(-5.f, 0.f, -5.f + z);
-		Math::Vector3 p1(-5.f, 0.f, -5.f + z);
+		Math::Vector3 p0(-50.f, 0.f, -50.f + z);
+		Math::Vector3 p1(+50.f, 0.f, -50.f + z);
 		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Lime());
 	}
 	for (int x = 0; x <= 100; ++x)
 	{
-		Math::Vector3 p0(-5.f + x, 0.f, -5.f);
-		Math::Vector3 p1(-5.f + x, 0.f, -5.f);
+		Math::Vector3 p0(-50.f + x, 0.f, -50.f);
+		Math::Vector3 p1(-50.f + x, 0.f, +50.f);
 		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Lime());
 	}
 

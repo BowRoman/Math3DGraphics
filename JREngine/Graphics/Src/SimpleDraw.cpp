@@ -56,6 +56,23 @@ public:
 			mVertices[mVertexCount++] = { p1,color };
 		}
 	}
+	void DrawSphere(const Math::Vector3& position, uint32_t slices, uint32_t rings, float scale, const Math::Vector4& color)
+	{
+		/*float incXZ = Math::kPi / slices;
+		float incY = Math::kPi / rings;
+		Math::Vector3 curPos(position.x - (Math::kPi / 2), position.y - (Math::kPi / 2), position.z - (Math::kPi / 2));
+		if (mVertexCount + 2 < mCapacity)
+		{
+			for (float y = 0.f; y <= Math::kPi; y+=incY)
+			{
+				for (float xz = 0.f; xz <= Math::kPi; xz += incXZ)
+				{
+
+					mVertices[mVertexCount++] = { curPos,color };
+				}
+			}
+		}*/
+	}
 	// Render vertices and reset the buffer
 	void Flush(const Math::Matrix4& matViewProj)
 	{
@@ -113,6 +130,11 @@ void SimpleDraw::DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, cons
 	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
 	sSimpleDraw->DrawLine(p0, p1, color);
 }
+
+void SimpleDraw::DrawSphere(const Math::Vector3 & position, uint32_t slices, uint32_t rings, float scale, const Math::Vector4& color)
+{
+	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
+	sSimpleDraw->DrawSphere(position, slices, rings, scale, color);}
 
 void SimpleDraw::Flush(const Math::Matrix4& matViewProj)
 {

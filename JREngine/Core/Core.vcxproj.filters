@@ -15,8 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Application.cpp" />
-    <ClCompile Include="Src\Precomplied.cpp" />
     <ClCompile Include="Src\Timer.cpp" />
     <ClCompile Include="Src\Window.cpp" />
+    <ClCompile Include="Src\Precompiled.cpp" />
   </ItemGroup>
 </Project>

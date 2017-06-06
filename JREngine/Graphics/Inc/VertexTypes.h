@@ -29,6 +29,13 @@ struct VertexPC
 	Math::Vector4 color;
 };
 
+struct VertexPT
+{
+	static const uint32_t format = VF_POSITION | VF_UV;
+	Math::Vector3 position;
+	Math::Vector2 uv;
+};
+
 struct VertexPNC
 {
 	static const uint32_t format = VF_POSITION | VF_NORMAL | VF_COLOR;
