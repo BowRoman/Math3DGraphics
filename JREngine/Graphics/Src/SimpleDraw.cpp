@@ -50,6 +50,7 @@ public:
 
 	void DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, const Math::Vector4& color)
 	{
+		mMeshBuffer.SetToplogy(MeshBuffer::Topology::LineList);
 		if(mVertexCount + 2 < mCapacity)
 		{
 			mVertices[mVertexCount++] = { p0,color };
@@ -58,20 +59,35 @@ public:
 	}
 	void DrawSphere(const Math::Vector3& position, uint32_t slices, uint32_t rings, float scale, const Math::Vector4& color)
 	{
-		/*float incXZ = Math::kPi / slices;
-		float incY = Math::kPi / rings;
-		Math::Vector3 curPos(position.x - (Math::kPi / 2), position.y - (Math::kPi / 2), position.z - (Math::kPi / 2));
-		if (mVertexCount + 2 < mCapacity)
+		if (scale > 0)
 		{
-			for (float y = 0.f; y <= Math::kPi; y+=incY)
+			if (rings > 75)
+				rings = 75;
+			if (slices > 75)
+				slices = 75;
+			mMeshBuffer.SetToplogy(MeshBuffer::Topology::LineStrip);
+			float x, y, z, radius;
+			if (mVertexCount + 2 < mCapacity)
 			{
-				for (float xz = 0.f; xz <= Math::kPi; xz += incXZ)
+				for (uint32_t i = 0; i <= rings; ++i)
 				{
+					for (uint32_t j = 0; j <= slices; ++j)
+					{
+						y = (-cos(Math::kPi * i / rings)*scale) + position.y;
+						radius = sqrt(scale - (y*y));
+						float xz = 2.0 * Math::kPi * j / slices;
+						x = (radius * sin(xz)) + position.x;
+						z = (radius * cos(xz)) + position.z;
 
-					mVertices[mVertexCount++] = { curPos,color };
+						mVertices[mVertexCount++] = { Math::Vector3(x,y,z),color };
+					}
 				}
 			}
-		}*/
+		}
+		else
+		{
+			mVertices[mVertexCount++] = { position,color };
+		}
 	}
 	// Render vertices and reset the buffer
 	void Flush(const Math::Matrix4& matViewProj)

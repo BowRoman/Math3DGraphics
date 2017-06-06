@@ -55,6 +55,10 @@ namespace
 
 	};
 	const int kIndexCount = sizeof(kIndices) / sizeof(kIndices[0]);
+
+	// basic sphere variables
+	uint32_t numRings = 6, numSlices = 6;
+	float scale = 1.f;
 }
 
 GameApp::GameApp()
@@ -114,6 +118,36 @@ void GameApp::OnUpdate()
 	if(iS->IsKeyPressed(Keys::ESCAPE))
 	{
 		PostQuitMessage(0);
+	}
+
+	// Basic Sphere control
+	if (iS->IsKeyDown(Keys::O))
+	{
+		if(numRings > 0)
+			--numRings;
+	}
+	if (iS->IsKeyDown(Keys::P))
+	{
+		if (numRings < 75)
+			++numRings;
+	}
+	if (iS->IsKeyDown(Keys::L))
+	{
+		if (numSlices < 75)
+			++numSlices;
+	}
+	if (iS->IsKeyDown(Keys::K))
+	{
+		if(numSlices > 0)
+			--numSlices;
+	}
+	if (iS->IsKeyDown(Keys::ZERO))
+	{
+		scale += 0.1f;;
+	}
+	if (iS->IsKeyDown(Keys::NINE))
+	{
+		scale -= 0.1f;;
 	}
 
 	// camera control
@@ -182,6 +216,10 @@ void GameApp::OnUpdate()
 		Math::Vector3 p1(-50.f + x, 0.f, +50.f);
 		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Lime());
 	}
+
+	Graphics::SimpleDraw::Flush(viewMatrix*projectionMatrix);
+
+	Graphics::SimpleDraw::DrawSphere(Math::Vector3(10.f,0.f,10.f), numSlices, numRings, scale, Math::Vector4::Cyan());
 
 	Graphics::SimpleDraw::Flush(viewMatrix*projectionMatrix);
 
