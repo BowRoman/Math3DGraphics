@@ -59,16 +59,12 @@ public:
 	}
 	void DrawSphere(const Math::Vector3& position, uint32_t slices, uint32_t rings, float scale, const Math::Vector4& color)
 	{
-		if (scale > 0)
+		if (scale > 0 && slices > 0 && rings > 0)
 		{
-			if (rings > 75)
-				rings = 75;
-			if (slices > 75)
-				slices = 75;
 			mMeshBuffer.SetToplogy(MeshBuffer::Topology::LineStrip);
-			float x, y, z, radius;
-			if (mVertexCount + 2 < mCapacity)
+			if ((mVertexCount + (4*rings*slices)) <= mCapacity)
 			{
+				/*float x, y, z, radius;
 				for (uint32_t i = 0; i <= rings; ++i)
 				{
 					for (uint32_t j = 0; j <= slices; ++j)
@@ -81,7 +77,51 @@ public:
 
 						mVertices[mVertexCount++] = { Math::Vector3(x,y,z),color };
 					}
+				}*/
+				const float kTheta = Math::kPi / (float)rings;
+				const float kPhi = Math::kTwoPi / (float)slices;
+				for (uint32_t j = 0; j < slices; ++j)
+				{
+					for (uint32_t i = 0; i < rings; ++i)
+					{
+						const float a = i * kTheta;
+						const float b = a + kTheta;
+						const float radius = scale / 2;
+						const float ay = radius * cos(a);
+						const float by = radius * cos(b);
+
+						const float theta = j * kPhi;
+						const float phi = theta + kPhi;
+
+						const float ar = sqrt(radius * radius - ay * ay);
+						const float br = sqrt(radius * radius - by * by);
+
+						const float x0 = position.x + (ar * sin(theta));
+						const float y0 = position.y + (ay);
+						const float z0 = position.z + (ar * cos(theta));
+
+						const float x1 = position.x + (br * sin(theta));
+						const float y1 = position.y + (by);
+						const float z1 = position.z + (br * cos(theta));
+
+						const float x2 = position.x + (br * sin(phi));
+						const float y2 = position.y + (by);
+						const float z2 = position.z + (br * cos(phi));
+
+						mVertices[mVertexCount++] = { Math::Vector3(x0, y0, z0), color };
+						mVertices[mVertexCount++] = { Math::Vector3(x1, y1, z1), color };
+
+						if (i < rings - 1)
+						{
+							mVertices[mVertexCount++] = { Math::Vector3(x1, y1, z1), color };
+							mVertices[mVertexCount++] = { Math::Vector3(x2, y2, z2), color };
+						}
+					}
 				}
+			}
+			else
+			{
+				mVertices[mVertexCount++] = { position,color };
 			}
 		}
 		else

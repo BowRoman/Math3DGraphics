@@ -128,12 +128,10 @@ void GameApp::OnUpdate()
 	}
 	if (iS->IsKeyDown(Keys::P))
 	{
-		if (numRings < 75)
 			++numRings;
 	}
 	if (iS->IsKeyDown(Keys::L))
 	{
-		if (numSlices < 75)
 			++numSlices;
 	}
 	if (iS->IsKeyDown(Keys::K))
@@ -143,11 +141,11 @@ void GameApp::OnUpdate()
 	}
 	if (iS->IsKeyDown(Keys::ZERO))
 	{
-		scale += 0.1f;;
+		scale += 0.1f;
 	}
 	if (iS->IsKeyDown(Keys::NINE))
 	{
-		scale -= 0.1f;;
+		scale -= 0.1f;
 	}
 
 	// camera control
@@ -171,6 +169,14 @@ void GameApp::OnUpdate()
 	{
 		mCameraTransform.Strafe(cameraMoveSpeed * deltaTime);
 	}
+	if (iS->IsKeyDown(Keys::E))
+	{
+		mCameraTransform.Rise(cameraMoveSpeed * deltaTime);
+	}
+	if (iS->IsKeyDown(Keys::Q))
+	{
+		mCameraTransform.Rise(-cameraMoveSpeed * deltaTime);
+	}
 	if (iS->IsMouseDown(Mouse::RBUTTON))
 	{
 		mCameraTransform.Yaw(iS->GetMouseMoveX() * cameraTurnSpeed * deltaTime);
@@ -183,9 +189,9 @@ void GameApp::OnUpdate()
 	// rendering
 
 	Math::Matrix4 matRotX = Math::Matrix4::RotationX(mTimer.GetTotalTime() * 3.0f);
-	Math::Matrix4 matRotY = Math::Matrix4::RotationY(mTimer.GetTotalTime() * 2.0f);
+	Math::Matrix4 matRotY = Math::Matrix4::RotationY(mTimer.GetTotalTime() * 2.5f);
 	Math::Matrix4 matRotZ = Math::Matrix4::RotationZ(mTimer.GetTotalTime() * 2.0f);
-	Math::Matrix4 matTrans = Math::Matrix4::Translation(0.f, 0.f, 0.f);
+	Math::Matrix4 matTrans = Math::Matrix4::Translation(0.f, 5.f, 0.f);
 	Math::Matrix4 matScale = Math::Matrix4::Scaling(1.f, 1.f, 1.f);
 
 	Math::Matrix4 worldMatrix = matRotX * matRotY * matRotZ * matTrans * matScale;
