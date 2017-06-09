@@ -121,21 +121,21 @@ void GameApp::OnUpdate()
 	}
 
 	// Basic Sphere control
-	if (iS->IsKeyDown(Keys::O))
+	if (iS->IsKeyPressed(Keys::O))
 	{
 		if(numRings > 0)
 			--numRings;
 	}
-	if (iS->IsKeyDown(Keys::P))
+	if (iS->IsKeyPressed(Keys::P))
 	{
 			++numRings;
 	}
-	if (iS->IsKeyDown(Keys::L))
+	if (iS->IsKeyPressed(Keys::L))
 	{
 			++numSlices;
 	}
-	if (iS->IsKeyDown(Keys::K))
-	{
+	if (iS->IsKeyPressed(Keys::K))
+	{ 
 		if(numSlices > 0)
 			--numSlices;
 	}

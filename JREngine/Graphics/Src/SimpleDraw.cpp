@@ -84,35 +84,35 @@ public:
 				{
 					for (uint32_t i = 0; i < rings; ++i)
 					{
-						const float a = i * kTheta;
-						const float b = a + kTheta;
+						const float currRingAngle = i * kTheta;
+						const float nextRingAngle = currRingAngle + kTheta;
 						const float radius = scale / 2;
-						const float ay = radius * cos(a);
-						const float by = radius * cos(b);
+						const float currRingArmLength = radius * cos(currRingAngle);
+						const float nextRingArmLength = radius * cos(nextRingAngle);
 
 						const float theta = j * kPhi;
 						const float phi = theta + kPhi;
 
-						const float ar = sqrt(radius * radius - ay * ay);
-						const float br = sqrt(radius * radius - by * by);
+						const float currRingOuterEdgeLength = sqrt(radius * radius - currRingArmLength * currRingArmLength);
+						const float nextRingOuterEdgeLength = sqrt(radius * radius - nextRingArmLength * nextRingArmLength);
 
-						const float x0 = position.x + (ar * sin(theta));
-						const float y0 = position.y + (ay);
-						const float z0 = position.z + (ar * cos(theta));
+						const float x0 = position.x + (currRingOuterEdgeLength * sin(theta));
+						const float y0 = position.y + (currRingArmLength);
+						const float z0 = position.z + (currRingOuterEdgeLength * cos(theta));
 
-						const float x1 = position.x + (br * sin(theta));
-						const float y1 = position.y + (by);
-						const float z1 = position.z + (br * cos(theta));
-
-						const float x2 = position.x + (br * sin(phi));
-						const float y2 = position.y + (by);
-						const float z2 = position.z + (br * cos(phi));
+						const float x1 = position.x + (nextRingOuterEdgeLength * sin(theta));
+						const float y1 = position.y + (nextRingArmLength);
+						const float z1 = position.z + (nextRingOuterEdgeLength * cos(theta));
 
 						mVertices[mVertexCount++] = { Math::Vector3(x0, y0, z0), color };
 						mVertices[mVertexCount++] = { Math::Vector3(x1, y1, z1), color };
 
 						if (i < rings - 1)
 						{
+							const float x2 = position.x + (nextRingOuterEdgeLength * sin(phi));
+							const float y2 = position.y + (nextRingArmLength);
+							const float z2 = position.z + (nextRingOuterEdgeLength * cos(phi));
+
 							mVertices[mVertexCount++] = { Math::Vector3(x1, y1, z1), color };
 							mVertices[mVertexCount++] = { Math::Vector3(x2, y2, z2), color };
 						}
