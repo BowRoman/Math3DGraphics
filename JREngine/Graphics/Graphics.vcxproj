@@ -140,8 +140,10 @@
     <ClInclude Include="Inc\Graphics.h" />
     <ClInclude Include="Inc\GraphicsSystem.h" />
     <ClInclude Include="Inc\MeshBuffer.h" />
+    <ClInclude Include="Inc\MeshBuilder.h" />
     <ClInclude Include="Inc\PixelShader.h" />
     <ClInclude Include="Inc\Sampler.h" />
+    <ClInclude Include="Inc\Terrain.h" />
     <ClInclude Include="Inc\Texture.h" />
     <ClInclude Include="Inc\Transform.h" />
     <ClInclude Include="Inc\VertexShader.h" />
@@ -150,6 +152,7 @@
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\MeshBuilder.cpp" />
     <ClCompile Include="Src\Sampler.cpp" />
     <ClCompile Include="Src\SimpleDraw.cpp" />
     <ClCompile Include="Src\Camera.cpp" />
@@ -163,6 +166,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Src\Terrain.cpp" />
     <ClCompile Include="Src\Texture.cpp" />
     <ClCompile Include="Src\Transform.cpp" />
     <ClCompile Include="Src\VertexShader.cpp" />

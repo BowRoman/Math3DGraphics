@@ -54,7 +54,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::VertexPT::format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 
-	mTexture.Initialize(L"../Assets/Images/tree.dds");
+	mTexture.Initialize(L"../Assets/Images/brickwork.jpg");
 	mSampler.Initialize(Graphics::Sampler::Filter::Point, Graphics::Sampler::AddressMode::Clamp);
 }
 
@@ -99,21 +99,29 @@ void GameApp::OnUpdate()
 	const float boostModifyer = 1.6;
 	const float cameraMoveSpeed = iS->IsKeyDown(Keys::LSHIFT) ? 10.f : 10.f*boostModifyer;
 	const float cameraTurnSpeed = 0.7f;
-	if(iS->IsKeyDown(Keys::W))
+	if (iS->IsKeyDown(Keys::W))
 	{
 		mCameraTransform.Walk(cameraMoveSpeed * deltaTime);
 	}
-	if(iS->IsKeyDown(Keys::S))
+	if (iS->IsKeyDown(Keys::S))
 	{
 		mCameraTransform.Walk(-cameraMoveSpeed * deltaTime);
 	}
-	if(iS->IsKeyDown(Keys::A))
+	if (iS->IsKeyDown(Keys::A))
 	{
 		mCameraTransform.Strafe(-cameraMoveSpeed * deltaTime);
 	}
-	if(iS->IsKeyDown(Keys::D))
+	if (iS->IsKeyDown(Keys::D))
 	{
 		mCameraTransform.Strafe(cameraMoveSpeed * deltaTime);
+	}
+	if (iS->IsKeyDown(Keys::E))
+	{
+		mCameraTransform.Rise(cameraMoveSpeed * deltaTime);
+	}
+	if (iS->IsKeyDown(Keys::Q))
+	{
+		mCameraTransform.Rise(-cameraMoveSpeed * deltaTime);
 	}
 	if (iS->IsMouseDown(Mouse::RBUTTON))
 	{

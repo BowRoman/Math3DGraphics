@@ -50,6 +50,8 @@
     </ClInclude>
     <ClInclude Include="Inc\Texture.h" />
     <ClInclude Include="Inc\Sampler.h" />
+    <ClInclude Include="Inc\MeshBuilder.h" />
+    <ClInclude Include="Inc\Terrain.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -82,5 +84,7 @@
     </ClCompile>
     <ClCompile Include="Src\Texture.cpp" />
     <ClCompile Include="Src\Sampler.cpp" />
+    <ClCompile Include="Src\MeshBuilder.cpp" />
+    <ClCompile Include="Src\Terrain.cpp" />
   </ItemGroup>
 </Project>

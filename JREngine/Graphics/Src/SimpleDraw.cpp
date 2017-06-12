@@ -61,7 +61,7 @@ public:
 	{
 		if (scale > 0 && slices > 0 && rings > 0)
 		{
-			mMeshBuffer.SetToplogy(MeshBuffer::Topology::LineStrip);
+			mMeshBuffer.SetToplogy(MeshBuffer::Topology::LineList);
 			if ((mVertexCount + (4*rings*slices)) <= mCapacity)
 			{
 				/*float x, y, z, radius;
