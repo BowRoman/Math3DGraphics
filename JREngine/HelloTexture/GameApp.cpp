@@ -54,7 +54,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::VertexPT::format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 
-	mTexture.Initialize(L"../Assets/Images/brickwork.jpg");
+	mTexture.Initialize(L"../Assets/Images/brick.jpg");
 	mSampler.Initialize(Graphics::Sampler::Filter::Point, Graphics::Sampler::AddressMode::Clamp);
 }
 

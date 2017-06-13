@@ -52,6 +52,7 @@
     <ClInclude Include="Inc\Sampler.h" />
     <ClInclude Include="Inc\MeshBuilder.h" />
     <ClInclude Include="Inc\Terrain.h" />
+    <ClInclude Include="Inc\Mesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -86,5 +87,6 @@
     <ClCompile Include="Src\Sampler.cpp" />
     <ClCompile Include="Src\MeshBuilder.cpp" />
     <ClCompile Include="Src\Terrain.cpp" />
+    <ClCompile Include="Src\Mesh.cpp" />
   </ItemGroup>
 </Project>

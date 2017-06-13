@@ -1,13 +1,18 @@
 #ifndef INCLUDED_GRAPHICS_MESHBUILDER_H
 #define INCLUDED_GRAPHICS_MESHBUILDER_H
 
+#include "Mesh.h"
+
 namespace Graphics {
-namespace Meshbuilder{
 
-//void StaticInitialize(uint32_t capacity);
-//void StaticTerminate();
+class MeshBuilder
+{
+public:
+	static void CreatePlane(Mesh& mesh, uint32_t rows, uint32_t columns, float scale);
+	static void CreateSphere(Mesh& mesh, uint32_t slices, uint32_t rings);
 
-} // namespace Meshbuilder
+}; // class MeshBuilder
+
 } // namespace Graphics
 
 #endif // #ifndef INCLUDED_GRAPHICS_MESHBUILDER_H

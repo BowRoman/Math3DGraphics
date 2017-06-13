@@ -139,6 +139,7 @@
     <ClInclude Include="Inc\ConstantBuffer.h" />
     <ClInclude Include="Inc\Graphics.h" />
     <ClInclude Include="Inc\GraphicsSystem.h" />
+    <ClInclude Include="Inc\Mesh.h" />
     <ClInclude Include="Inc\MeshBuffer.h" />
     <ClInclude Include="Inc\MeshBuilder.h" />
     <ClInclude Include="Inc\PixelShader.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Mesh.cpp" />
     <ClCompile Include="Src\MeshBuilder.cpp" />
     <ClCompile Include="Src\Sampler.cpp" />
     <ClCompile Include="Src\SimpleDraw.cpp" />

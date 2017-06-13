@@ -44,6 +44,13 @@ struct VertexPNC
 	Math::Vector4 color;
 };
 
+struct Vertex
+{
+	static const uint32_t format = VF_POSITION | VF_UV;
+	Math::Vector3 position;
+	Math::Vector2 uv;
+};
+
 } // namespace Graphics
 
 #endif // #ifndef INCLUDED_GRAPHICS_VERTEXTYPES_H
