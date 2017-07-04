@@ -387,7 +387,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E0B52AE7-E160-4D32-BF3F-910B785E5A8E}</ProjectGuid>
+    <ProjectGuid>{3F9426FC-5677-4FFB-A83F-8FA7F70B078E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DirectXTK</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
