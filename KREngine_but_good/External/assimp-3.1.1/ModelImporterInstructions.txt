@@ -1,0 +1,4 @@
+- Add assimp.dll from External to Debug
+- Open Command prompt from Debug
+- Run the following command
+ModelImporter.exe ../Assets/Models/duck.fbx ../Assets/Models/duck.txt

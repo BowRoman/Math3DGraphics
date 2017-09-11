@@ -148,13 +148,13 @@ void GameApp::OnUpdate()
 	{
 		Math::Vector3 p0(-50.0f, 0.0f, -50.0f + i);
 		Math::Vector3 p1(+50.0f, 0.0f, -50.0f + i);
-		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::White());
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Cyan());
 	}
 	for (int i = 0; i < 100; ++i)
 	{
 		Math::Vector3 p0(-50.0f + i, 0.0f, -50.0f);
 		Math::Vector3 p1(-50.0f + i, 0.0f, +50.0f);
-		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::White());
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Orange());
 	}
 
 	Graphics::SimpleDraw::Flush(viewMatrix * projectionMatrix);

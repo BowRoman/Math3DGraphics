@@ -150,7 +150,9 @@ bool ImportModel(const Params& params)
 				aiString diffuseFilepath;
 				if (material->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseFilepath) == AI_SUCCESS)
 				{
-					fprintf(file, "DiffuseMap: %s\n", StripPath(diffuseFilepath.C_Str()));
+					std::string str = StripPath(diffuseFilepath.C_Str());
+					str.replace(str.end() - 4, str.end(), ".dds");
+					fprintf(file, "DiffuseMap: %s\n", str.c_str());
 				}
 				else
 				{

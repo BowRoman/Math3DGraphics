@@ -70,12 +70,18 @@ void Model::Load(const char* filename)
 
 		mModelParts.emplace_back(Part(mesh, meshBuffer, materialIndex));
 	}
+	++numMaterials;
 
-	for (uint32_t i = 0; i <= numMaterials; ++i)
+	for (uint32_t i = 0; i < numMaterials; ++i)
 	{
-		char* diffuseFilepath = "";
-		fscanf_s(file, "DiffuseMap: %[^\n]", diffuseFilepath);
-		TextureManager::Get()->Load(diffuseFilepath);
+		char diffuseFilepath[1024];
+		fscanf_s(file, "DiffuseMap: %s/n", diffuseFilepath, 1024);
+		if (diffuseFilepath == "none")
+		{
+			strcpy(diffuseFilepath, "error.jpg");
+		}
+		TextureId hash = TextureManager::Get()->Load(diffuseFilepath);
+		mTextureIds.emplace_back(hash);
 	}
 	fclose(file);
 }
@@ -97,6 +103,7 @@ void Model::Render()
 {
 	for (auto& part : mModelParts)
 	{
+		TextureManager::Get()->BindVS(mTextureIds[part.materialIndex], 0);
 		TextureManager::Get()->BindPS(mTextureIds[part.materialIndex], 0);
 		part.meshBuffer->Render();
 	}
