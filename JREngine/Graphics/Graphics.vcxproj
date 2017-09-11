@@ -22,7 +22,7 @@
     <ProjectGuid>{0671CA3A-BCA1-4561-935F-0519C579F6B6}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Graphics</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -175,8 +175,8 @@
     <ClCompile Include="Src\VertexTypes.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\External\DirectXTK\DirectXTK_Desktop_2015.vcxproj">
-      <Project>{e0b52ae7-e160-4d32-bf3f-910b785e5a8e}</Project>
+    <ProjectReference Include="..\External\DirectXTK\DirectXTK_Desktop_2017.vcxproj">
+      <Project>{3f9426fc-5677-4ffb-a83f-8fa7f70b078e}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Math\Math.vcxproj">
       <Project>{b4537184-e7d8-465e-90d1-27da72203376}</Project>
