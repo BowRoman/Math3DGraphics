@@ -12,7 +12,11 @@
 
 using namespace Graphics;
 
+
 Terrain::Terrain()
+	:mHeightVertices(nullptr),
+	mColumns(0),
+	mRows(0)
 {
 }
 
@@ -20,87 +24,135 @@ Terrain::~Terrain()
 {
 }
 
-void Terrain::Initialize(const char *rawFileName, uint32_t columns, uint32_t rows, float scale, Math::Vector3 origin, uint32_t distBtwnVert)
+void Terrain::Initialize(const char* rawFileName, uint32_t cols, uint32_t rows, float scale, float maxHeight, Math::Vector3 origin)
 {
-	mMesh.Allocate(columns*rows, (columns * 2) * (rows - 1) + (rows - 2));
+	ASSERT(cols > 0, "[HeightMap] Invalid number of columns");
+	ASSERT(rows > 0, "[HeightMap] Invalid number of rows");
 
-	// move the terrain starting point from the center to the top left
-	const Math::Vector3 startPoint = origin - Math::Vector3(columns*0.5f*distBtwnVert, 0.f, -(rows*0.5f*distBtwnVert));
-	Math::Vector3 currVert = startPoint;
+	mColumns = cols;
+	mRows = rows;
 
-	unsigned char *file = new unsigned char[columns * rows * 4];
+	std::ifstream file(rawFileName, std::ios::binary);
+	size_t bytesSize = cols * rows * 4;
 
-	// read uv map and interpret into floats to use for height
-	std::ifstream heightStream;
-	heightStream.open(rawFileName, std::ios::binary);
-	heightStream.read((char*)file, columns * rows * 4);
-	heightStream.close();
-	//float *verticesHeight = reinterpret_cast<float*>(file);
+	unsigned char* buffer = new unsigned char[bytesSize];
+	file.read((char*)buffer, bytesSize);
+	file.close();
+	mHeightVertices = reinterpret_cast<float*>(buffer);
 
-	// set indices in CPU mesh
-	int index = 0;
-	for (int z = 0; z < rows - 1; z++)
+	float tempMin = 0;
+	for (uint32_t i = 0; i < mColumns * mRows; ++i)
 	{
-		// Even rows move left to right, odd rows move right to left.
-		if (z % 2 == 0)
+		float tempVal = mHeightVertices[i];
+		if (tempVal < tempMin)
 		{
-			// Even row
-			int x;
-			for (x = 0; x < columns; x++)
-			{
-				mMesh.mIndices[index++] = static_cast<uint32_t>(x + (z * columns));
-				mMesh.mIndices[index++] = static_cast<uint32_t>(x + (z * columns) + columns);
-			}
-			// Insert degenerate vertex if this isn't the last row
-			if (z != rows - 2)
-			{
-				mMesh.mIndices[index++] = static_cast<uint32_t>(--x + (z * columns));
-			}
+			tempVal = tempMin;
 		}
-		else
+		if (tempVal > maxHeight)
 		{
-			// Odd row
-			int x;
-			for (x = columns - 1; x >= 0; x--)
-			{
-				mMesh.mIndices[index++] = static_cast<uint32_t>(x + (z * columns));
-				mMesh.mIndices[index++] = static_cast<uint32_t>(x + (z * columns) + columns);
-			}
-			// Insert degenerate vertex if this isn't the last row
-			if (z != rows - 2)
-			{
-				mMesh.mIndices[index++] = static_cast<uint32_t>(++x + (z * columns));
-			}
+			tempVal = maxHeight;
+		}
+		mHeightVertices[i] = tempVal;
+	}
+
+	uint32_t intcount = (mColumns * 2) * (mRows - 1) + (mRows - 2);
+	mMesh.Allocate(rows*cols, intcount);
+
+	float startingX = origin.x - ((rows*scale)*0.5);
+	float startingZ = origin.z - ((cols*scale)*0.5);
+	for (uint32_t i = 0; i < cols; ++i)
+	{
+		for (uint32_t j = 0; j < rows; ++j)
+		{
+			mMesh.mVertices[(i * cols) + j].position.y = origin.y + (GetHeight(i, j) * scale);
+			mMesh.mVertices[(i * cols) + j].position.x = startingX + (j * scale);
+			mMesh.mVertices[(i * cols) + j].position.z = startingZ + (i * scale);
+			mMesh.mVertices[(i * cols) + j].normal = Math::Vector3::YAxis();
+			mMesh.mVertices[(i * cols) + j].tangent = Math::Vector3::XAxis();
+			mMesh.mVertices[(i * cols) + j].color = Math::Vector4::White();
+			mMesh.mVertices[(i * cols) + j].uv.x = (float)j / (float)cols;
+			mMesh.mVertices[(i * cols) + j].uv.y = (float)i / (float)cols;
 		}
 	}
 
-	// create vertex buffer array
-	for (uint32_t i = 0; i < rows; ++i)
-	{
-		for (uint32_t j = 0; j < columns; ++j)
-		{
-			currVert = startPoint;
-			currVert.x += static_cast<float>(j*distBtwnVert);
-			currVert.y = (float)file[i + j] * 10.f; // TODO: replace with a parameter factor
-			currVert.z -= static_cast<float>(i*distBtwnVert);
-			mMesh.mVertices[i + j].position = currVert;
-			mMesh.mVertices[i + j].uv = Math::Vector2((float)j, (float)i);
-		}
-	}
+	GenerateIndices();
 
-	SafeDeleteArray(file);
-
-
-	// set vertices and indices in GPU mesh
-	mMeshBuffer.Initialize(mMesh.mVertices, sizeof(Graphics::Vertex), mMesh.mNumVertices, mMesh.mIndices, mMesh.mNumIndices);
+	mMeshBuffer.Initialize(mMesh.GetVertices(), sizeof(Graphics::Vertex), mMesh.GetVertexCount(), mMesh.GetIndices(), mMesh.GetIndexCount());
+	mMeshBuffer.SetTopology(Graphics::MeshBuffer::Topology::TriangleStrip);
 }
 
 void Terrain::Terminate()
 {
+	SafeDelete(mHeightVertices);
+	mMesh.Destroy();
 	mMeshBuffer.Terminate();
 }
 
-void Terrain::Render()
+float Terrain::GetHeight(uint32_t row, uint32_t col) const
+{
+	ASSERT(row < mColumns && col < mRows, "[HeightMap] Out of range");
+	return mHeightVertices[row + (col * mColumns)];
+}
+
+uint32_t Graphics::Terrain::GetColumns() const
+{
+	return mColumns;
+}
+
+uint32_t Graphics::Terrain::GetRows() const
+{
+	return mRows;
+}
+
+Mesh& Graphics::Terrain::GetMesh()
+{
+	return mMesh;
+}
+
+void Graphics::Terrain::Render()
 {
 	mMeshBuffer.Render();
+}
+
+// http://www.chadvernon.com/blog/resources/directx9/terrain-generation-with-a-heightmap/
+void Terrain::GenerateIndices()
+{
+	uint32_t numIndices = mMesh.GetIndexCount();
+	uint32_t* indices = new uint32_t[numIndices];
+	int index = 0;
+	int length = 0;
+
+	for (int width = 0; width < mRows - 1; ++width)
+	{
+		length = 0;
+		if (width % 2 == 0) // even rows left to right
+		{
+			for (length = 0; length < mColumns; ++length)
+			{
+				(indices)[index++] = length + (width * mColumns);
+				(indices)[index++] = length + (width * mColumns) + mColumns;
+			}
+			if (width != mRows - 2)
+			{
+				(indices)[index++] = --length + (width * mColumns);
+			}
+		}
+		else // odd rows right to left
+		{
+			for (length = mColumns - 1; length >= 0; --length)
+			{
+				(indices)[index++] = length + (width * mColumns);
+				(indices)[index++] = length + (width * mColumns) + mColumns;
+			}
+			if (width != mRows - 2)
+			{
+				(indices)[index++] = ++length + (width * mColumns);
+			}
+		}
+	}
+	for (int i = 0; i < static_cast<int>(numIndices); ++i)
+	{
+		mMesh.mIndices[i] = indices[i];
+	}
+	SafeDeleteArray(indices);
 }

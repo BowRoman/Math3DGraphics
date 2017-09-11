@@ -29,11 +29,6 @@ private:
 	Graphics::Transform mCameraTransform;
 
 	Graphics::TypedConstantBuffer<ConstantData> mConstantBuffer;
-	Graphics::PixelShader mPixelShader;
-	Graphics::VertexShader mVertexShader;
-
-	Graphics::Texture mTexture;
-	Graphics::Sampler mSampler;
 
 	Graphics::Terrain mTerrain;
 	Graphics::Texture mTerrainTexture;
@@ -41,7 +36,6 @@ private:
 	Graphics::PixelShader mTerrainPixelShader;
 	Graphics::VertexShader mTerrainVertexShader;
 
-	Graphics::MeshBuffer mMeshBuffer;
 	Math::Vector3 mRotation;
 };
 

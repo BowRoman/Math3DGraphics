@@ -35,7 +35,7 @@ public:
 		mVertexShader.Initialize(L"../Assets/Shaders/SimpleDraw.fx", VertexPC::format);
 		mPixelShader.Initialize(L"../Assets/Shaders/SimpleDraw.fx");
 		mMeshBuffer.InitializeDynamic(sizeof(VertexPC), capacity);
-		mMeshBuffer.SetToplogy(topology);
+		mMeshBuffer.SetTopology(topology);
 	}
 	void Terminate()
 	{
@@ -50,7 +50,7 @@ public:
 
 	void DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, const Math::Vector4& color)
 	{
-		mMeshBuffer.SetToplogy(MeshBuffer::Topology::LineList);
+		mMeshBuffer.SetTopology(MeshBuffer::Topology::LineList);
 		if(mVertexCount + 2 < mCapacity)
 		{
 			mVertices[mVertexCount++] = { p0,color };
@@ -61,7 +61,7 @@ public:
 	{
 		if (scale > 0 && slices > 0 && rings > 0)
 		{
-			mMeshBuffer.SetToplogy(MeshBuffer::Topology::LineList);
+			mMeshBuffer.SetTopology(MeshBuffer::Topology::LineList);
 			if ((mVertexCount + (4*rings*slices)) <= mCapacity)
 			{
 				/*float x, y, z, radius;

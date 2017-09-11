@@ -101,7 +101,7 @@ void Graphics::MeshBuffer::SetVertexBuffer(const void * vertices, uint32_t verte
 	}
 }
 
-void Graphics::MeshBuffer::SetToplogy(Topology topology)
+void Graphics::MeshBuffer::SetTopology(Topology topology)
 {
 	switch (topology)
 	{

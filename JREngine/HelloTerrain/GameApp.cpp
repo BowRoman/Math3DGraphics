@@ -50,36 +50,24 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mCameraTransform.SetDirection(Math::Vector3(0.0f, 0.0f, 1.0f));
 
 	mConstantBuffer.Initialize();
-	mMeshBuffer.Initialize(kVertices, sizeof(Graphics::VertexPT), kVertexCount, kIndices, kIndexCount);
-	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::VertexPT::format);
-	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 
-	mTerrainVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::VertexPT::format);
+	mTerrainVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::Vertex::Format);
 	mTerrainPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 
-	mTerrain.Initialize("../Assets/Images/heightMap.raw", 1024, 1024);
+	mTerrain.Initialize("../Assets/Images/heightMap.raw", 1024, 1024, 0.1f);
 
 	mTerrainTexture.Initialize(L"../Assets/Images/terrain.jpg");
-
-	mTexture.Initialize(L"../Assets/Images/brick.jpg");
-	mSampler.Initialize(Graphics::Sampler::Filter::Point, Graphics::Sampler::AddressMode::Clamp);
+	mTerrainSampler.Initialize(Graphics::Sampler::Filter::Anisotropic, Graphics::Sampler::AddressMode::Wrap);
 }
 
 void GameApp::OnTerminate()
 {
-	mSampler.Terminate();
-	mTexture.Terminate();
-
 	mTerrainSampler.Terminate();
 	mTerrainTexture.Terminate();
 	mTerrainPixelShader.Terminate();
 	mTerrainVertexShader.Terminate();
 	mTerrain.Terminate();
 
-	mPixelShader.Terminate();
-	mVertexShader.Terminate();
-
-	mMeshBuffer.Terminate();
 	mConstantBuffer.Terminate();
 
 	Input::InputSystem::StaticTerminate();
@@ -151,23 +139,14 @@ void GameApp::OnUpdate()
 	Math::Matrix4 projectionMatrix = mCamera.GetProjectionMatrix(gs->GetAspectRatio());
 
 	// bind input layout, and vertex/pixel shaders
-	mVertexShader.Bind();
-	mPixelShader.Bind();
 
-	mTexture.BindPS(0);
-	mSampler.BindPS(0);
-
-	Math::Matrix4 matTrans = Math::Matrix4::Translation(0.f, 0.f, 0.f);
 	Math::Matrix4 matScale = Math::Matrix4::Scaling(1.f, 1.f, 1.f);
-
-	Math::Matrix4 worldMatrix = matTrans * matScale;
+	Math::Matrix4 worldMatrix = matScale;
 
 	ConstantData data;
-	data.wvp = Transpose(/*worldMatrix * */viewMatrix * projectionMatrix);
+	data.wvp = Transpose(worldMatrix *viewMatrix * projectionMatrix);
 	mConstantBuffer.Set(data);
 	mConstantBuffer.BindVS();
-
-	mMeshBuffer.Render();
 
 	mTerrainVertexShader.Bind();
 	mTerrainPixelShader.Bind();

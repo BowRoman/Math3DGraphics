@@ -24,7 +24,7 @@ public:
 	void Terminate();
 
 	void SetVertexBuffer(const void* vertices, uint32_t vertexCount);
-	void SetToplogy(Topology topology);
+	void SetTopology(Topology topology);
 	void Render();
 
 private:

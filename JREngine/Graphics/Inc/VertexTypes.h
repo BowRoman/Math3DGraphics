@@ -8,6 +8,7 @@ namespace Graphics
 #define VF_NORMAL 0X1 << 1
 #define VF_UV 0X1 << 2
 #define VF_COLOR 0X1 << 3
+#define VF_TANGENT	0x01 << 4
 
 struct VertexP
 {
@@ -46,8 +47,11 @@ struct VertexPNC
 
 struct Vertex
 {
-	static const uint32_t format = VF_POSITION | VF_UV;
+	static const uint32_t Format = VF_POSITION | VF_NORMAL | VF_TANGENT | VF_COLOR | VF_UV;
 	Math::Vector3 position;
+	Math::Vector3 normal;
+	Math::Vector3 tangent;
+	Math::Vector4 color;
 	Math::Vector2 uv;
 };
 

@@ -17,14 +17,26 @@ public:
 	Terrain();
 	~Terrain();
 
-	void Initialize(const char *rawFileName, uint32_t columns, uint32_t rows, float scale = 1.f, Math::Vector3 origin = Math::Vector3::Zero(), uint32_t distBtwnVert = 1);
+	void Initialize(const char* rawFileName, uint32_t columns, uint32_t rows, float scale = 1.f, float maxHeight = 10.f, Math::Vector3 origin = Math::Vector3::Zero());
 	void Terminate();
+
+	float GetHeight(uint32_t row, uint32_t col) const;
+	uint32_t GetColumns() const;
+	uint32_t GetRows() const;
+	Mesh& GetMesh();
 
 	void Render();
 
 private:
+	void GenerateIndices();
+
+private:
 	Mesh mMesh;
 	MeshBuffer mMeshBuffer;
+
+	float* mHeightVertices;
+	uint32_t mColumns;
+	uint32_t mRows;
 };
 
 } // namespace Graphics
