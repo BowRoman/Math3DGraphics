@@ -48,6 +48,7 @@ private:
 	Core::Timer mTimer;
 
 	Graphics::Camera mCamera;
+	Graphics::Camera* mCurrentCamera;
 
 	// light
 	Graphics::Camera mLightCamera;

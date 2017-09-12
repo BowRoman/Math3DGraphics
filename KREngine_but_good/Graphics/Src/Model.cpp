@@ -73,13 +73,13 @@ void Model::Load(const char* filename)
 
 	for (uint32_t i = 0; i < numMaterials; ++i)
 	{
-		char diffuseFilepath[1024];
-		fscanf_s(file, "DiffuseMap: %s\n", diffuseFilepath, 1024);
-		if (diffuseFilepath == "none")
+		char materialFilepath[1024];
+		fscanf_s(file, "MaterialMap: %s\n", materialFilepath, 1024);
+		if (materialFilepath == "none")
 		{
-			strcpy(diffuseFilepath, "error.jpg");
+			strcpy(materialFilepath, "error.jpg");
 		}
-		TextureId hash = TextureManager::Get()->Load(diffuseFilepath);
+		TextureId hash = TextureManager::Get()->Load(materialFilepath);
 		mTextureIds.emplace_back(hash);
 	}
 	fclose(file);

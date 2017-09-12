@@ -9207,4 +9207,4 @@ MaterialIndex: 0
 2679 3187 2680
 2682 3188 2683
 2685 3189 2686
-DiffuseMap: drone_diffuse.png
+MaterialMap: drone_diffuse.png

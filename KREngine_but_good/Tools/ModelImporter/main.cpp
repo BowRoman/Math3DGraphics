@@ -146,18 +146,19 @@ bool ImportModel(const Params& params)
 			const aiMaterial* material = scene->mMaterials[i];
 			uint32_t diffuseMapCount = material->GetTextureCount(aiTextureType_DIFFUSE);
 			uint32_t specularMapCount = material->GetTextureCount(aiTextureType_SPECULAR);
+			uint32_t normalMapCount = material->GetTextureCount(aiTextureType_NORMALS);
 			if (diffuseMapCount > 0)
 			{
 				aiString diffuseFilepath;
 				if (material->GetTexture(aiTextureType_DIFFUSE, 0, &diffuseFilepath) == AI_SUCCESS)
 				{
 					std::string str = StripPath(diffuseFilepath.C_Str());
-					str.replace(str.end() - 4, str.end(), ".dds");
-					fprintf(file, "DiffuseMap: %s\n", str.c_str());
+					//str.replace(str.end() - 4, str.end(), ".dds");
+					fprintf(file, "MaterialMap: %s\n", str.c_str());
 				}
 				else
 				{
-					fprintf(file, "DiffuseMap: none\n");
+					fprintf(file, "MaterialMap: none\n");
 				}
 			}
 			if (specularMapCount > 0)
@@ -166,12 +167,26 @@ bool ImportModel(const Params& params)
 				if (material->GetTexture(aiTextureType_DIFFUSE, 0, &specularFilepath) == AI_SUCCESS)
 				{
 					std::string str = StripPath(specularFilepath.C_Str());
-					str.replace(str.end() - 4, str.end(), ".dds");
-					fprintf(file, "SpecularMap: %s\n", str.c_str());
+					//str.replace(str.end() - 4, str.end(), ".dds");
+					fprintf(file, "MaterialMap: %s\n", str.c_str());
 				}
 				else
 				{
-					fprintf(file, "SpecularMap: none\n");
+					fprintf(file, "MaterialMap: none\n");
+				}
+			}
+			if (normalMapCount > 0)
+			{
+				aiString normalFilepath;
+				if (material->GetTexture(aiTextureType_DIFFUSE, 0, &normalFilepath) == AI_SUCCESS)
+				{
+					std::string str = StripPath(normalFilepath.C_Str());
+					//str.replace(str.end() - 4, str.end(), ".dds");
+					fprintf(file, "MaterialMap: %s\n", str.c_str());
+				}
+				else
+				{
+					fprintf(file, "MaterialMap: none\n");
 				}
 			}
 		}

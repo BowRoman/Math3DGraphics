@@ -43,7 +43,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mDepthMapVertexShader.Initialize(L"../Assets/Shaders/DepthMap.fx", Graphics::VertexPT::Format);
 	mDepthMap.Initialize(1024, 1024);
 	mLightCamera.mTransform.SetDirection(Math::Vector3(1.0f, -1.0f, 1.0f));
-	mLightCamera.mTransform.SetPosition(Math::Vector3(-5.0f, 5.0f, -5.0f));
+	mLightCamera.mTransform.SetPosition(Math::Vector3(-7.0f, 7.0f, -7.0f));
 
 	// Plane Mesh
 	mPlaneVertexShader.Initialize(L"../Assets/Shaders/ShadowMapping.fx", Graphics::Vertex::Format);
@@ -52,7 +52,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mPlaneNormalTexture.Initialize(L"../Assets/Images/brickwork_normal.jpg");
 	mPlaneDisplacementTexture.Initialize(L"../Assets/Images/brickwork_bump.jpg");
 	mPlaneTexture.Initialize(L"../Assets/Images/brickwork.jpg");
-	Graphics::MeshBuilder::GeneratePlane(mPlane, 30.0f, 30.0f, -4.0f);
+	Graphics::MeshBuilder::GeneratePlane(mPlane, 50.0f, 50.0f, -4.0f);
 	mPlaneMeshBuffer.Initialize(mPlane.mVertices, sizeof(Graphics::Vertex), mPlane.mVertexCount, mPlane.mIndices, mPlane.mIndexCount);
 
 	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::Vertex::Format);
@@ -61,8 +61,12 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mSampler.Initialize(Graphics::Sampler::Filter::Point, Graphics::Sampler::AddressMode::Clamp);
 
 	// model
-	mModel.Load("../Assets/Models/Drone_Red.txt");
+	mModel.Load("../Assets/Models/Drone_red.txt");
 	mConstantBuffer.Initialize();
+
+	// Camera
+	mCurrentCamera = &mCamera;
+	mCurrentCamera->mTransform = mCamera.mTransform;
 
 	mRotation = 0.0f;
 }
@@ -149,6 +153,19 @@ void GameApp::OnUpdate()
 		mCamera.mTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * mTimer.GetElapsedTime());
 		mCamera.mTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * mTimer.GetElapsedTime());
 	}
+	if (is->IsKeyPressed(Keys::TAB))
+	{
+		if (mCurrentCamera == &mCamera)
+		{
+			mCurrentCamera = &mLightCamera;
+			mCurrentCamera->mTransform = mLightCamera.mTransform;
+		}
+		else
+		{
+			mCurrentCamera = &mCamera;
+			mCurrentCamera->mTransform = mCamera.mTransform;
+		}
+	}
 
 	mRotation += mTimer.GetElapsedTime();
 
@@ -184,6 +201,21 @@ void GameApp::GenerateDepthMap()
 
 	mModel.Render();
 
+	matTrans = Math::Matrix4::Translation(120.0f, -2.0f, 10.0f);
+	matScale = Math::Matrix4::Scaling(0.03f);
+	matWorld = matRot * matScale * matTrans;
+
+	data.wvp = Math::Transpose(matWorld * matView * matProj);
+	data.displacmentScale = 0.15f;
+	mDepthMapConstantBuffer.Set(data);
+	mDepthMapConstantBuffer.BindVS();
+	mLinearSampler.BindVS(0);
+	//mDepthMapConstantBuffer.BindPS();
+	mDepthMapPixelShader.Bind();
+	mDepthMapVertexShader.Bind();
+
+	mModel.Render();
+
 	mDepthMap.EndRender();
 
 }
@@ -193,7 +225,7 @@ void GameApp::DrawScene()
 	Graphics::GraphicsSystem::Get()->BeginRender();
 
 	Math::Matrix4 worldMatrix = Math::Matrix4::Scaling(1.0f);
-	Math::Matrix4 viewMatrix = mCamera.GetViewMatrix();
+	Math::Matrix4 viewMatrix = mCamera.GetViewMatrix(mCurrentCamera->mTransform);
 	Math::Matrix4 CameraProjectionMatrix = mCamera.GetProjectionMatrix(Graphics::GraphicsSystem::Get()->GetAspectRatio());
 
 	Math::Matrix4 LightViewMatrix = mLightCamera.GetViewMatrix();
@@ -207,8 +239,16 @@ void GameApp::DrawScene()
 	mPixelShader.Bind();
 
 
-	worldMatrix = Math::Matrix4::Scaling(0.05) * Math::Matrix4::RotationY(mRotation);
+	worldMatrix = Math::Matrix4::Scaling(0.05f) * Math::Matrix4::RotationY(mRotation);
 	ConstantData data;
+	data.wvp = Math::Transpose(worldMatrix * viewMatrix * CameraProjectionMatrix);
+	mConstantBuffer.Set(data);
+	mConstantBuffer.BindVS();
+	mConstantBuffer.BindPS();
+
+	mModel.Render();
+
+	worldMatrix = Math::Matrix4::RotationY(mRotation) * Math::Matrix4::Translation(120.0f, -2.0f, 10.0f) * Math::Matrix4::Scaling(0.03f);
 	data.wvp = Math::Transpose(worldMatrix * viewMatrix * CameraProjectionMatrix);
 	mConstantBuffer.Set(data);
 	mConstantBuffer.BindVS();
