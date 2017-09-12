@@ -6962,4 +6962,4 @@ MaterialIndex: 0
 822 2731 2743
 2377 2745 2378
 1734 2746 2747
-DiffuseMap: duck.tga
+DiffuseMap: duck.dds

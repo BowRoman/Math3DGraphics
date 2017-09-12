@@ -42,7 +42,7 @@ void Model::Load(const char* filename)
 		fscanf_s(file, "IndexCount: %d\n", &numIndices);
 		fscanf_s(file, "MaterialIndex: %d\n", &materialIndex);
 		mesh->Allocate(numVertices, numIndices);
-		if (materialIndex > numMaterials)
+		if ((materialIndex + 1) > numMaterials)
 		{
 			++numMaterials;
 		}
@@ -67,15 +67,14 @@ void Model::Load(const char* filename)
 
 		Graphics::MeshBuffer* meshBuffer = new MeshBuffer();
 		meshBuffer->Initialize(mesh->mVertices, sizeof(Graphics::Vertex), mesh->mVertexCount, mesh->mIndices, mesh->mIndexCount);
-
+		
 		mModelParts.emplace_back(Part(mesh, meshBuffer, materialIndex));
 	}
-	++numMaterials;
 
 	for (uint32_t i = 0; i < numMaterials; ++i)
 	{
 		char diffuseFilepath[1024];
-		fscanf_s(file, "DiffuseMap: %s/n", diffuseFilepath, 1024);
+		fscanf_s(file, "DiffuseMap: %s\n", diffuseFilepath, 1024);
 		if (diffuseFilepath == "none")
 		{
 			strcpy(diffuseFilepath, "error.jpg");

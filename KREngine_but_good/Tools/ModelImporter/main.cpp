@@ -145,6 +145,7 @@ bool ImportModel(const Params& params)
 		{
 			const aiMaterial* material = scene->mMaterials[i];
 			uint32_t diffuseMapCount = material->GetTextureCount(aiTextureType_DIFFUSE);
+			uint32_t specularMapCount = material->GetTextureCount(aiTextureType_SPECULAR);
 			if (diffuseMapCount > 0)
 			{
 				aiString diffuseFilepath;
@@ -157,6 +158,20 @@ bool ImportModel(const Params& params)
 				else
 				{
 					fprintf(file, "DiffuseMap: none\n");
+				}
+			}
+			if (specularMapCount > 0)
+			{
+				aiString specularFilepath;
+				if (material->GetTexture(aiTextureType_DIFFUSE, 0, &specularFilepath) == AI_SUCCESS)
+				{
+					std::string str = StripPath(specularFilepath.C_Str());
+					str.replace(str.end() - 4, str.end(), ".dds");
+					fprintf(file, "SpecularMap: %s\n", str.c_str());
+				}
+				else
+				{
+					fprintf(file, "SpecularMap: none\n");
 				}
 			}
 		}
