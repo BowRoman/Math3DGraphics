@@ -2,7 +2,6 @@
 
 #include "Math\Inc\EngineMath.h"
 
-
 namespace Graphics
 {
 	class Light

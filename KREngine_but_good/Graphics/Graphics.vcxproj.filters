@@ -26,6 +26,7 @@
     <ClInclude Include="Inc\Model.h" />
     <ClInclude Include="Inc\TextureManager.h" />
     <ClInclude Include="Inc\Forward.h" />
+    <ClInclude Include="Inc\Animation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp" />
@@ -48,5 +49,6 @@
     <ClCompile Include="Src\DepthMap.cpp" />
     <ClCompile Include="Src\Model.cpp" />
     <ClCompile Include="Src\TextureManager.cpp" />
+    <ClCompile Include="Src\Animation.cpp" />
   </ItemGroup>
 </Project>

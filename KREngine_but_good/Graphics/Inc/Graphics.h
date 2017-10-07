@@ -1,6 +1,7 @@
 #ifndef INCLUDED_GRAPHICS_H
 #define INCLUDED_GRAPHICS_H
 
+#include "Animation.h"
 #include "Camera.h"
 #include "Common.h"
 #include "ConstantBuffer.h"

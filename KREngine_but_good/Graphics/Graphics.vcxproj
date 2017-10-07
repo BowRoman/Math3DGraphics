@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Inc\Animation.h" />
     <ClInclude Include="Inc\Camera.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\ConstantBuffer.h" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Animation.cpp" />
     <ClCompile Include="Src\Camera.cpp" />
     <ClCompile Include="Src\ConstantBuffer.cpp" />
     <ClCompile Include="Src\DepthMap.cpp" />
