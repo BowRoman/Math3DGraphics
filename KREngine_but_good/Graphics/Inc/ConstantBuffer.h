@@ -1,7 +1,8 @@
 #ifndef INCLUDED_GRAPHICS_CONSTANTBUFFER_H
 #define INCLUDED_GRAPHICS_CONSTANTBUFFER_H
 
-namespace Graphics {
+namespace Graphics
+{
 
 class ConstantBuffer
 {
@@ -23,7 +24,7 @@ public:
 
 private:
 	ID3D11Buffer* mBuffer;
-};
+}; // class ConstantBuffer
 
 template <typename T>
 class TypedConstantBuffer : public ConstantBuffer
@@ -51,7 +52,7 @@ private:
 		const uint32_t bufferSize = (typeSize % 16) ? ((typeSize / 16) + 1) * 16 : typeSize;
 		return bufferSize;
 	}
-};
+}; // class TypedConstantBuffer
 
 } // namespace Graphics
 

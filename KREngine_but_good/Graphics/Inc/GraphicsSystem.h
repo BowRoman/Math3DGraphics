@@ -1,7 +1,8 @@
 #ifndef INCLUDED_GRAPHICS_GRAPHICSSYSTEM_H
 #define INCLUDED_GRAPHICS_GRAPHICSSYSTEM_H
 
-namespace Graphics {
+namespace Graphics
+{
 
 class GraphicsSystem
 {
@@ -54,7 +55,7 @@ private:
 	DXGI_SWAP_CHAIN_DESC mSwapChainDesc;
 
 	D3D11_VIEWPORT mViewport;
-};
+}; // class GraphicsSystem
 
 } // namespace Graphics
 

@@ -34,5 +34,6 @@ namespace Graphics
 		float mFieldOfView;
 		float mMinFOV;
 		float mMaxFOV;
-	};
-}
+	}; // class Camera
+
+} // namespace Graphics

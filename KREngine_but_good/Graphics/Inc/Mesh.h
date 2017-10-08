@@ -4,29 +4,31 @@
 
 namespace Graphics
 {
-	class Mesh
-	{
 
-	public:
-		Vertex* mVertices;
-		uint32_t mVertexCount;
+class Mesh
+{
 
-		uint32_t* mIndices;
-		uint32_t mIndexCount;
+public:
+	Vertex* mVertices;
+	uint32_t mVertexCount;
 
-	public:
-		Mesh();
-		~Mesh();
+	uint32_t* mIndices;
+	uint32_t mIndexCount;
 
-		Vertex* GetVertices();
-		uint32_t* GetIndices();
+public:
+	Mesh();
+	~Mesh();
 
-		Vertex& GetVertex(uint32_t index);
+	Vertex* GetVertices();
+	uint32_t* GetIndices();
 
-		uint32_t GetVertexCount();
-		uint32_t GetIndexCount();
-		
-		void Allocate(uint32_t vertcount, uint32_t intcount);
-		void Terminate();
-	};
-}
+	Vertex& GetVertex(uint32_t index);
+
+	uint32_t GetVertexCount();
+	uint32_t GetIndexCount();
+	
+	void Allocate(uint32_t vertcount, uint32_t intcount);
+	void Terminate();
+}; // class Mesh
+
+} // namespace Graphics
