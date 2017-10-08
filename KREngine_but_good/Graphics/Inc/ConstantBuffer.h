@@ -14,8 +14,10 @@ public:
 
 	void Set(const void* data);
 	
+	// BindVS: Binds set constant buffer to the given vertex shader slot. Defaults to 0
 	void BindVS(uint32_t slot = 0);
 	void BindGS(uint32_t slot = 0);
+	// BindPS: Binds set constant buffer to the given pixel shader slot. Defaults to 0
 	void BindPS(uint32_t slot = 0);
 	void BindCS(uint32_t slot = 0);
 

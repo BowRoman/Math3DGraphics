@@ -51,7 +51,6 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mCameraTransform.SetPosition(Math::Vector3(0.0f, 2.0f, -5.0f));
 	mCameraTransform.SetDirection(Math::Vector3(0.0f, 0.0f, 1.0f));
 
-
 	mConstantBuffer.Initialize();
 	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::VertexPT::Format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
@@ -98,8 +97,13 @@ void GameApp::OnUpdate()
 	{
 		PostQuitMessage(0);
 	}
-	const float cameraMoveSpeed = 10.0f;
+	const float baseCameraMoveSpeed = 10.0f;
+	float cameraMoveSpeed = baseCameraMoveSpeed;
 	const float cameraTurnSpeed = 1.0f;
+	if (is->IsKeyDown(Keys::LSHIFT))
+	{
+		cameraMoveSpeed = baseCameraMoveSpeed * 2.0;
+	}
 	if (is->IsKeyDown(Keys::W))
 	{
 		mCameraTransform.Walk(cameraMoveSpeed * mTimer.GetElapsedTime());
@@ -115,6 +119,14 @@ void GameApp::OnUpdate()
 	if (is->IsKeyDown(Keys::A))
 	{
 		mCameraTransform.Strafe(-cameraMoveSpeed * mTimer.GetElapsedTime());
+	}
+	if (is->IsKeyDown(Keys::E))
+	{
+		mCameraTransform.Rise(cameraMoveSpeed * mTimer.GetElapsedTime());
+	}
+	if (is->IsKeyDown(Keys::Q))
+	{
+		mCameraTransform.Rise(-cameraMoveSpeed * mTimer.GetElapsedTime());
 	}
 
 	if (is->IsMouseDown(Mouse::RBUTTON))
@@ -145,17 +157,17 @@ void GameApp::OnUpdate()
 
 	mMeshBuffer.Render();
 
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 1000; ++i)
 	{
-		Math::Vector3 p0(-50.0f, 0.0f, -50.0f + i);
-		Math::Vector3 p1(+50.0f, 0.0f, -50.0f + i);
-		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::White());
+		Math::Vector3 p0(-500.0f, 0.0f, -500.0f + i);
+		Math::Vector3 p1(+500.0f, 0.0f, -500.0f + i);
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Cyan());
 	}
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 1000; ++i)
 	{
-		Math::Vector3 p0(-50.0f + i, 0.0f, -50.0f);
-		Math::Vector3 p1(-50.0f + i, 0.0f, +50.0f);
-		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::White());
+		Math::Vector3 p0(-500.0f + i, 0.0f, -500.0f);
+		Math::Vector3 p1(-500.0f + i, 0.0f, +500.0f);
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Orange());
 	}
 
 	Graphics::SimpleDraw::Flush(viewMatrix * projectionMatrix);

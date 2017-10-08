@@ -43,7 +43,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mDepthMapVertexShader.Initialize(L"../Assets/Shaders/DepthMap.fx", Graphics::VertexPT::Format);
 	mDepthMap.Initialize(1024, 1024);
 	mLightCamera.mTransform.SetDirection(Math::Vector3(1.0f, -1.0f, 1.0f));
-	mLightCamera.mTransform.SetPosition(Math::Vector3(-7.0f, 7.0f, -7.0f));
+	mLightCamera.mTransform.SetPosition(Math::Vector3(-10.0f, 10.0f, -10.0f));
 
 	// Plane Mesh
 	mPlaneVertexShader.Initialize(L"../Assets/Shaders/ShadowMapping.fx", Graphics::Vertex::Format);
@@ -187,7 +187,7 @@ void GameApp::GenerateDepthMap()
 	Math::Matrix4 matTrans = Math::Matrix4::Translation(0.0f, 0.0f, 0.0f);
 	Math::Matrix4 matScale = Math::Matrix4::Scaling(0.05f);
 	Math::Matrix4 matRot   = Math::Matrix4::RotationY(mRotation);
-	Math::Matrix4 matWorld = matScale * matTrans * matRot;
+	Math::Matrix4 matWorld = matScale * matRot * matTrans;
 
 	ConstantDepthData data;
 	data.wvp = Math::Transpose(matWorld * matView * matProj);
@@ -201,9 +201,9 @@ void GameApp::GenerateDepthMap()
 
 	mModel.Render();
 
-	matTrans = Math::Matrix4::Translation(120.0f, -2.0f, 10.0f);
+	matTrans = Math::Matrix4::Translation(5.0f, -2.0f, 8.0f);
 	matScale = Math::Matrix4::Scaling(0.03f);
-	matWorld = matRot * matScale * matTrans;
+	matWorld = matScale * matRot * matTrans;
 
 	data.wvp = Math::Transpose(matWorld * matView * matProj);
 	data.displacmentScale = 0.15f;
@@ -228,9 +228,6 @@ void GameApp::DrawScene()
 	Math::Matrix4 viewMatrix = mCamera.GetViewMatrix(mCurrentCamera->mTransform);
 	Math::Matrix4 CameraProjectionMatrix = mCamera.GetProjectionMatrix(Graphics::GraphicsSystem::Get()->GetAspectRatio());
 
-	Math::Matrix4 LightViewMatrix = mLightCamera.GetViewMatrix();
-	Math::Matrix4 LightProjectionMatrix = mLightCamera.GetProjectionMatrix(1);
-
 	mSampler.BindVS(0);
 	mSampler.BindPS(0);
 	mSampler.BindVS(1);
@@ -248,13 +245,16 @@ void GameApp::DrawScene()
 
 	mModel.Render();
 
-	worldMatrix = Math::Matrix4::RotationY(mRotation) * Math::Matrix4::Translation(120.0f, -2.0f, 10.0f) * Math::Matrix4::Scaling(0.03f);
+	worldMatrix = Math::Matrix4::Scaling(0.03f) * Math::Matrix4::RotationY(mRotation) * Math::Matrix4::Translation(5.0f, -2.0f, 8.0f);
 	data.wvp = Math::Transpose(worldMatrix * viewMatrix * CameraProjectionMatrix);
 	mConstantBuffer.Set(data);
 	mConstantBuffer.BindVS();
 	mConstantBuffer.BindPS();
 
 	mModel.Render();
+
+	Math::Matrix4 LightViewMatrix = mLightCamera.GetViewMatrix();
+	Math::Matrix4 LightProjectionMatrix = mLightCamera.GetProjectionMatrix(1);
 
 	//shadow map
 	worldMatrix = Math::Matrix4::Scaling(1.0f);
@@ -277,7 +277,6 @@ void GameApp::DrawScene()
 	mShadowConstantBuffer.BindPS();
 
 	mDepthMap.BindPS(4);
-
 
 	mPlanePixelShader.Bind();
 	mPlaneVertexShader.Bind();

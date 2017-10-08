@@ -26,7 +26,7 @@ Math::Matrix4 Graphics::Animation::GetTransform(float time) const
 {
 	ASSERT(mKeyframes.size() == 0, "[Animation] Error rendering. No Keyframes.");
 
-
+	return Math::Matrix4::Identity();
 }
 
 void Animation::AddKeyframe(Keyframe newFrame)
