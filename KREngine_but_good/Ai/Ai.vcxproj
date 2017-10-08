@@ -31,6 +31,14 @@
     <ClInclude Include="Inc\Graph.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.vcxproj">
+      <Project>{4911d530-4725-4ddb-921e-1af6f10bee65}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Math\Math.vcxproj">
+      <Project>{1d6e9c72-9b4e-4710-8fab-6e6838a9f941}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{08088F60-F098-488F-8FB8-803E94AEB58C}</ProjectGuid>
