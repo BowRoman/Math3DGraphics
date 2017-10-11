@@ -28,7 +28,9 @@ public:
 	~Animation();
 	void Initialize(bool isLooped, uint32_t numKeyframes = 10);
 	void Terminate();
+
 	// TODO: When implementing Play() ensure that the user has given a frame at time 0.0 
+
 	Math::Matrix4 GetTransform(float time) const;
 
 	void SortKeyframes();

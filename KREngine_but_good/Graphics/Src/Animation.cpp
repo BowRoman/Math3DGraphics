@@ -1,6 +1,8 @@
 #include "Precompiled.h"
 #include "Animation.h"
 
+#include <algorithm>
+
 using namespace Graphics;
 
 Animation::Animation()
@@ -25,14 +27,14 @@ void Animation::Terminate()
 // Returns the transform matrix for a given time frame
 Math::Matrix4 Animation::GetTransform(float time) const
 {
-	ASSERT(time < mKeyframes.back().time, "[Animation] Given time exceeds keyframes.")
-	ASSERT(mKeyframes.size() == 0, "[Animation] Error rendering. No Keyframes.");
+	//ASSERT(time < mKeyframes.back().time, "[Animation] Given time exceeds keyframes.");
+	ASSERT(mKeyframes.size() != 0, "[Animation] Error rendering. No Keyframes.");
 
 	int startFrameIdx = 0;
 	int endFrameIdx = 0;
 
 	// iterate through vector to find the two closest keyframes to the given time
-	for (; startFrameIdx < mKeyframes.size() - 1; ++startFrameIdx)
+	for (; startFrameIdx < static_cast<int>(mKeyframes.size()) - 1; ++startFrameIdx)
 	{
 		if (mKeyframes[startFrameIdx].time <= time && mKeyframes[startFrameIdx + 1].time >= time)
 		{
@@ -67,9 +69,9 @@ void Animation::SortKeyframes()
 void Animation::AddKeyframe(Keyframe newFrame)
 {
 	// search the vector to make sure a frame does not already exist with the same time as newFrame
-	if (std::find(mKeyframes.begin(), mKeyframes.end(), [&newFrame](const Keyframe& val)
+	if (std::find_if(mKeyframes.begin(), mKeyframes.end(), [&newFrame](const Keyframe& val)
 	{
-		return val.time == newFrame.time;
+		return (val.time == newFrame.time);
 	}) != mKeyframes.end())
 	{
 		LOG("[Animation] Error: Frame already exists with given time.");
