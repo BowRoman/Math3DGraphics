@@ -1,3 +1,7 @@
+/*
+File: Model.cpp
+Author: Jake Roman-Barnes
+*/
 #include "Precompiled.h"
 #include "Model.h"
 

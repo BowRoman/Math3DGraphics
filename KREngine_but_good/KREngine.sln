@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KREngine", "KREngine\KREngine.vcxproj", "{6AB8624A-732A-4289-AA53-CE0B22F0514F}"
 EndProject
@@ -52,6 +52,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloAi", "HelloAi\HelloAi.vcxproj", "{18E9D11E-D7BC-49BD-8AA6-9B7D9D54FB80}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloAnimation", "HelloAnimation\HelloAnimation.vcxproj", "{BC64A43E-7A58-43E0-875F-79515AD971A9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloRobotArm", "HelloRobotArm\HelloRobotArm.vcxproj", "{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,6 +229,14 @@ Global
 		{BC64A43E-7A58-43E0-875F-79515AD971A9}.Release|x64.Build.0 = Release|x64
 		{BC64A43E-7A58-43E0-875F-79515AD971A9}.Release|x86.ActiveCfg = Release|Win32
 		{BC64A43E-7A58-43E0-875F-79515AD971A9}.Release|x86.Build.0 = Release|Win32
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Debug|x64.ActiveCfg = Debug|x64
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Debug|x64.Build.0 = Debug|x64
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Debug|x86.ActiveCfg = Debug|Win32
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Debug|x86.Build.0 = Debug|Win32
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Release|x64.ActiveCfg = Release|x64
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Release|x64.Build.0 = Release|x64
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Release|x86.ActiveCfg = Release|Win32
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -253,5 +263,6 @@ Global
 		{08088F60-F098-488F-8FB8-803E94AEB58C} = {E79BC0D4-0D2B-4202-8D81-BE3EA8ECCE18}
 		{18E9D11E-D7BC-49BD-8AA6-9B7D9D54FB80} = {1DE91965-B25F-41F1-972D-B671066BD65F}
 		{BC64A43E-7A58-43E0-875F-79515AD971A9} = {1DE91965-B25F-41F1-972D-B671066BD65F}
+		{78EFD5D4-7409-4FA3-9626-18D5EF6B21D1} = {1DE91965-B25F-41F1-972D-B671066BD65F}
 	EndGlobalSection
 EndGlobal

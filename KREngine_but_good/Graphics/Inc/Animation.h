@@ -1,3 +1,8 @@
+/*
+File: Animation.h
+Author: Jake Roman-Barnes
+*/
+
 #pragma once
 
 #include "Math\Inc\EngineMath.h"

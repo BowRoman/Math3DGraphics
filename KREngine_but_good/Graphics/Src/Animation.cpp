@@ -1,3 +1,7 @@
+/*
+File: Animation.cpp
+Author: Jake Roman-Barnes
+*/
 #include "Precompiled.h"
 #include "Animation.h"
 
