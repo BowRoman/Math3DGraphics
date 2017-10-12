@@ -66,11 +66,11 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mPixelShader.Initialize(L"../Assets/Shaders/SimpleDraw.fx");
 	mMeshBuffer.Initialize(KVertices, sizeof(Graphics::VertexPC), kVertexCount, kIndices, kIndexCount);
 
-	mAnimation.Initialize(false, 1);
-	mAnimation.AddKeyframe(0.0f, Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(1.0f, 1.0f, 1.0f), Math::Quaternion::RotationAxis(Math::Vector3::YAxis(), 0.0f));
-	mAnimation.AddKeyframe(4.0f, Math::Vector3(6.0f, 4.0f, 2.0f), Math::Vector3(1.0f, 1.0f, 1.0f), Math::Quaternion::RotationAxis(Math::Vector3::YAxis(), 4.0f));
-	//mAnimation.AddKeyframe(8.0f, Math::Vector3(-2.0f, -2.0f, -2.0f), Math::Vector3(1.0f, 1.0f, 1.0f), Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), 4.0f));
-	//mAnimation.AddKeyframe(12.0f, Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(1.0f, 1.0f, 1.0f), Math::Quaternion::RotationAxis(Math::Vector3::YAxis(), 0.0f));
+	mAnimation.Initialize(true, 4);
+	mAnimation.AddKeyframe(0.0f, Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(1.0f, 1.0f, 1.0f), Math::Quaternion::Identity());
+	mAnimation.AddKeyframe(0.01f, Math::Vector3(6.0f, 4.0f, 2.0f), Math::Vector3(1.0f, 1.0f, 1.0f), Math::Quaternion::RotationAxis(Math::Vector3::YAxis(), 4.0f));
+	mAnimation.AddKeyframe(0.02f, Math::Vector3(-2.0f, -2.0f, -2.0f), Math::Vector3(3.0f, 3.0f, 3.0f), Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), 4.0f));
+	mAnimation.AddKeyframe(0.03f, Math::Vector3(0.0f, 0.0f, 0.0f), Math::Vector3(1.0f, 1.0f, 1.0f), Math::Quaternion::Identity());
 }
 
 

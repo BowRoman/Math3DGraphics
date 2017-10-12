@@ -32,9 +32,10 @@ public:
 	// TODO: When implementing Play() ensure that the user has given a frame at time 0.0 
 
 	Math::Matrix4 GetTransform(float time) const;
+	bool IsLooping() { return bLoop; }
 
+	void SetLooping(bool loop);
 	void SortKeyframes();
-
 	void AddKeyframe(Keyframe newFrame);
 	void AddKeyframe(float keyTime, Math::Vector3 keyPos, Math::Vector3 keyScale, Math::Quaternion keyRot);
 }; // class Animation

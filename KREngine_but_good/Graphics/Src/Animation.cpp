@@ -31,6 +31,11 @@ Math::Matrix4 Animation::GetTransform(float time) const
 	ASSERT(!mKeyframes.empty(), "[Animation] Error rendering. No Keyframes.");
 	//ASSERT(time < mKeyframes.back().time, "[Animation] Given time exceeds keyframes.");
 
+	if (bLoop)
+	{
+		time = std::fmodf(time, mKeyframes.back().time);
+	}
+
 	int startFrameIdx = 0;
 	int endFrameIdx = 0;
 	// iterate through vector to find the two closest keyframes to the given time
@@ -56,7 +61,7 @@ Math::Matrix4 Animation::GetTransform(float time) const
 		ScaleAtTime = mKeyframes.back().scale;
 		RotAtTime = mKeyframes.back().rotation;
 	}
-	// otherwise construct data based on the interpolant between the two keyframes
+	// otherwise blend data based on the interpolant between the two keyframes
 	else
 	{
 		const Keyframe& startFrame = mKeyframes[startFrameIdx];
@@ -70,6 +75,11 @@ Math::Matrix4 Animation::GetTransform(float time) const
 
 	// construct a transform based on the chosen data
 	return Math::Matrix4::Scaling(ScaleAtTime) * Math::Matrix4::RotationQuaternion(RotAtTime) * Math::Matrix4::Translation(PosAtTime);
+}
+
+void Graphics::Animation::SetLooping(bool loop)
+{
+	bLoop = loop;
 }
 
 // Sorts all Keyframes within mKeyframes based on ascending time variables
