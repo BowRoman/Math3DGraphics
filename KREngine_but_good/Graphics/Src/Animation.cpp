@@ -27,12 +27,12 @@ void Animation::Terminate()
 // Returns the transform matrix for a given time frame
 Math::Matrix4 Animation::GetTransform(float time) const
 {
+	ASSERT(time >= 0.0f, "[Animation] Error rendering. Time cannot be negative. (Time travel prohibited)");
+	ASSERT(!mKeyframes.empty(), "[Animation] Error rendering. No Keyframes.");
 	//ASSERT(time < mKeyframes.back().time, "[Animation] Given time exceeds keyframes.");
-	ASSERT(mKeyframes.size() != 0, "[Animation] Error rendering. No Keyframes.");
 
 	int startFrameIdx = 0;
 	int endFrameIdx = 0;
-
 	// iterate through vector to find the two closest keyframes to the given time
 	for (; startFrameIdx < static_cast<int>(mKeyframes.size()) - 1; ++startFrameIdx)
 	{
@@ -43,19 +43,33 @@ Math::Matrix4 Animation::GetTransform(float time) const
 		}
 	}
 
-	// construct a transform based on the given time's interpolant between the two keyframes
-	const Keyframe& startFrame = mKeyframes[startFrameIdx];
-	const Keyframe& endFrame = mKeyframes[endFrameIdx];
-	float interpolant = (time - startFrame.time) / (endFrame.time - startFrame.time);
+	Math::Vector3 PosAtTime;
+	Math::Vector3 ScaleAtTime;
+	Math::Quaternion RotAtTime;
 
-	Math::Vector3 PosAtTime = Math::Lerp(startFrame.position, endFrame.position, interpolant);
-	Math::Vector3 ScaleAtTime = Math::Lerp(startFrame.scale, endFrame.scale, interpolant);
-	Math::Quaternion RotAtTime = Math::Slerp(startFrame.rotation, endFrame.rotation, interpolant);
+	// if theres only one frame
+	// or
+	// if the time extends beyond the last frame, use its data
+	if (endFrameIdx == 0 || time >= mKeyframes.back().time)
+	{
+		PosAtTime = mKeyframes.back().position;
+		ScaleAtTime = mKeyframes.back().scale;
+		RotAtTime = mKeyframes.back().rotation;
+	}
+	// otherwise construct data based on the interpolant between the two keyframes
+	else
+	{
+		const Keyframe& startFrame = mKeyframes[startFrameIdx];
+		const Keyframe& endFrame = mKeyframes[endFrameIdx];
+		float interpolant = (time - startFrame.time) / (endFrame.time - startFrame.time);
 
-	Math::Matrix4 scaleMat = Math::Matrix4::Scaling(ScaleAtTime);
-	Math::Matrix4 rotMat = Math::Matrix4::RotationQuaternion(RotAtTime);
-	Math::Matrix4 transMat = Math::Matrix4::Translation(PosAtTime);
-	return scaleMat * rotMat * transMat;
+		PosAtTime = Math::Lerp(startFrame.position, endFrame.position, interpolant);
+		ScaleAtTime = Math::Lerp(startFrame.scale, endFrame.scale, interpolant);
+		RotAtTime = Math::Slerp(startFrame.rotation, endFrame.rotation, interpolant);
+	}
+
+	// construct a transform based on the chosen data
+	return Math::Matrix4::Scaling(ScaleAtTime) * Math::Matrix4::RotationQuaternion(RotAtTime) * Math::Matrix4::Translation(PosAtTime);
 }
 
 // Sorts all Keyframes within mKeyframes based on ascending time variables
@@ -65,20 +79,28 @@ void Animation::SortKeyframes()
 	std::sort(mKeyframes.begin(), mKeyframes.end());
 }
 
-// Adds the given Keyframe to the mKeyframes vector
+// Adds the given Keyframe to the mKeyframes vector and sorts it
 void Animation::AddKeyframe(Keyframe newFrame)
 {
-	// search the vector to make sure a frame does not already exist with the same time as newFrame
-	if (std::find_if(mKeyframes.begin(), mKeyframes.end(), [&newFrame](const Keyframe& val)
+	if (mKeyframes.empty())
 	{
-		return (val.time == newFrame.time);
-	}) != mKeyframes.end())
-	{
-		LOG("[Animation] Error: Frame already exists with given time.");
-		return;
+		ASSERT(newFrame.time == 0.0f, "[Animation] First added frame not set to time 0.0");
+		mKeyframes.push_back(newFrame);
 	}
-	mKeyframes.push_back(newFrame);
-	SortKeyframes();
+	// search the vector to make sure a frame does not already exist with the same time as newFrame
+	else
+	{
+		if (std::find_if(mKeyframes.begin(), mKeyframes.end(), [&newFrame](const Keyframe& val)
+		{
+			return (val.time == newFrame.time);
+		}) != mKeyframes.end())
+		{
+			LOG("[Animation] Error: Frame already exists with given time.");
+			return;
+		}
+		mKeyframes.push_back(newFrame);
+		SortKeyframes();
+	}
 }
 
 // Constructs a Keyframe from the given values and inserts it into the mKeyframes vector
