@@ -1,6 +1,8 @@
 #include "WinMain.h"
 
-bool HelloX::GameLoop(float deltaTime)
+using namespace HelloX;
+
+bool GameLoop(float deltaTime)
 {
 	float mouseX = static_cast<float>(X::GetMouseScreenX());
 	float mouseY = static_cast<float>(X::GetMouseScreenY());

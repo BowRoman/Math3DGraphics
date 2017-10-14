@@ -8,9 +8,9 @@ X::TextureId scvTextureIds[16];
 X::Math::Vector2 scvPosition;
 float scvAngle = 0.0f;
 
-bool GameLoop(float deltaTime);
-
 }
+
+bool GameLoop(float deltaTime);
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -22,7 +22,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		HelloX::scvTextureIds[i] = X::LoadTexture(buffer);
 	}
 
-	X::Run(HelloX::GameLoop);
+	X::Run(GameLoop);
 	X::Stop();
 	return 0;
 }
