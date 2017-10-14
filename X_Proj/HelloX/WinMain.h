@@ -10,6 +10,8 @@ float scvAngle = 0.0f;
 
 bool GameLoop(float deltaTime);
 
+}
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	X::Start();
@@ -17,12 +19,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		char buffer[128];
 		sprintf_s(buffer, "scv_%02d.png", i + 1);
-		scvTextureIds[i] = X::LoadTexture(buffer);
+		HelloX::scvTextureIds[i] = X::LoadTexture(buffer);
 	}
 
-	X::Run(GameLoop);
+	X::Run(HelloX::GameLoop);
 	X::Stop();
 	return 0;
-}
-
 }
