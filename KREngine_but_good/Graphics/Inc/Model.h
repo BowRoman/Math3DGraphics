@@ -1,3 +1,7 @@
+/*
+File: Model.h
+Author: Jake Roman-Barnes
+*/
 #pragma once
 
 namespace Graphics {

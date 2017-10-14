@@ -56,12 +56,12 @@ void Graphics::HeightMap::GenerateIndices(uint32_t** indices, int &indexCount)
 	int index = 0;
 
 	int length;
-	for (int width = 0; width < mRows - 1; ++width)
+	for (int width = 0; width < static_cast<int>(mRows) - 1; ++width)
 	{
 		length = 0;
 		if (width % 2 == 0) // even rows left to right
 		{
-			for (length = 0; length < mColumns; ++length)
+			for (length = 0; length < static_cast<int>(mColumns); ++length)
 			{
 				(*indices)[index++] = length + (width * mColumns);
 				(*indices)[index++] = length + (width * mColumns) + mColumns;
