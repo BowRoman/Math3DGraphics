@@ -28,7 +28,7 @@ void SetCameraDirection(const Math::Vector3& direction);
 void SetCameraTarget(const Math::Vector3& target);
 
 // Resource Functions
-int LoadTexture(const char* filename);
+TextureId LoadTexture(const char* filename);
 void ClearAllTextures();
 
 // Graphics Functions
@@ -45,7 +45,7 @@ void DrawScreenRect(float l, float t, float r, float b, const Math::Vector4& col
 void DrawScreenCircle(const Math::Vector2& center, float r, const Math::Vector4& color);
 void DrawScreenCircle(float x, float y, float r, const Math::Vector4& color);
 void DrawScreenText(const char* str, float x, float y, float size, const Math::Vector4& color);
-void DrawSprite(int textureId, const Math::Vector2& position);
+void DrawSprite(TextureId textureId, const Math::Vector2& position);
 uint32_t GetScreenWidth();
 uint32_t GetScreenHeight();
 

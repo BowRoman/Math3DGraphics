@@ -25,12 +25,12 @@ namespace
 {
 	struct SpriteCommand
 	{
-		SpriteCommand(int inTextureId, const Math::Vector2& inPosiiton)
+		SpriteCommand(TextureId inTextureId, const Math::Vector2& inPosiiton)
 			: textureId(inTextureId)
 			, position(inPosiiton)
 		{}
 
-		int textureId;
+		TextureId textureId;
 		Math::Vector2 position;
 	};
 
@@ -230,9 +230,6 @@ void Run(bool (*GameLoop)(float))
 			// Begin scene
 			GraphicsSystem::Get()->BeginRender(Math::Vector4(0.1f, 0.1f, 0.1f, 1.0f));
 
-			// Render
-			SimpleDraw::Render(myCamera);
-
 			// Sprites
 			SpriteRenderer::Get()->BeginRender();
 			for (const auto& command : mySpriteCommands)
@@ -245,6 +242,9 @@ void Run(bool (*GameLoop)(float))
 			}
 			mySpriteCommands.clear();
 			SpriteRenderer::Get()->EndRender();
+
+			// Render
+			SimpleDraw::Render(myCamera);
 
 			// Text
 			for (const auto& command : myTextCommands)
@@ -353,7 +353,7 @@ void SetCameraTarget(const Math::Vector3& target)
 
 //----------------------------------------------------------------------------------------------------
 
-int LoadTexture(const char* filename)
+TextureId LoadTexture(const char* filename)
 {
 	XASSERT(initialized, "[XEngine] Engine not started.");
 	return TextureManager::Get()->Load(filename);
@@ -474,7 +474,7 @@ void DrawScreenText(const char* str, float x, float y, float size, const Math::V
 
 //----------------------------------------------------------------------------------------------------
 
-void DrawSprite(int textureId, const Math::Vector2& position)
+void DrawSprite(TextureId textureId, const Math::Vector2& position)
 {
 	XASSERT(initialized, "[XEngine] Engine not started.");
 	mySpriteCommands.emplace_back(textureId, position);

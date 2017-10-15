@@ -1,4 +1,10 @@
+#include <Ai.h>
 #include <XEngine.h>
+
+const size_t numRows = 8;
+const size_t numColumns = 10;
+typedef Ai::Graph<numRows, numColumns> NavGraph;
+typedef Ai::Graph<numRows, numColumns>::Node NavNode;
 
 enum class TileType
 {
@@ -23,18 +29,18 @@ const char* const textureNames[]
 };
 X::TextureId textureIds[std::size(textureNames)];
 
-const int numRows = 8;
-const int numColumns = 10;
-const int tileMap[]
+const float tileSize = 32.0f;
+NavGraph graph;
+const size_t tileMap[]
 {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 2, 3, 1, 1, 1, 1, 1, 1, 1,
-	1, 4, 5, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 2, 3, 1, 1,
-	1, 1, 1, 1, 1, 1, 4, 5, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+	1, 3, 4, 1, 2, 1, 1, 2, 1, 1,
+	1, 5, 6, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 3, 4, 1, 1,
+	1, 1, 1, 1, 1, 1, 5, 6, 1, 1,
+	1, 1, 2, 1, 1, 1, 1, 1, 1, 1,
+	1, 1, 1, 1, 1, 2, 1, 3, 4, 1,
+	1, 1, 1, 1, 1, 1, 1, 5, 6, 1
 };
 
 bool GameLoop(float deltaTime)
@@ -49,6 +55,23 @@ bool GameLoop(float deltaTime)
 			X::DrawSprite(textureIds[tile], position);
 		}
 	}
+
+	X::Math::Vector2 offset(tileSize*0.5f, tileSize*0.5f);
+	for (size_t y = 0; y < numRows; ++y)
+	{
+		for (size_t x = 0; x < numColumns; ++x)
+		{
+			NavNode* node = graph.GetNode(x, y);
+			for (size_t n = 0; n < node->neighborCount; ++n)
+			{
+				X::DrawScreenLine(
+					node->position + offset,
+					node->neighbors[n]->position + offset,
+					X::Math::Vector4::Cyan()
+				);
+			}
+		}
+	}
 	return X::IsKeyPressed(X::Keys::ESCAPE);
 }
 
@@ -59,6 +82,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		textureIds[i] = X::LoadTexture(textureNames[i]);
 	}
+	graph.Initialize(tileSize);
 	X::Run(GameLoop);
 	X::Stop();
 	return 0;
