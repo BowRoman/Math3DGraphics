@@ -22,8 +22,8 @@ namespace
 			{
 				transform = parent->GenerateTransform();
 			}
-			Math::Matrix4 newTransform = Math::Matrix4::RotationQuaternion(rotation) * Math::Matrix4::Translation(translation);
-			transform = transform * newTransform;
+			Math::Matrix4 newTransform = Math::Matrix4::Scaling(1.0f,1.0f,1.0f) * Math::Matrix4::RotationQuaternion(rotation) * Math::Matrix4::Translation(translation);
+			transform = newTransform * transform;
 			return transform;
 		}
 	};
@@ -166,47 +166,68 @@ void GameApp::OnUpdate()
 	const float baseCameraMoveSpeed = 10.0f;
 	float cameraMoveSpeed = baseCameraMoveSpeed;
 	const float cameraTurnSpeed = 1.0f;
+	float dTime = mTimer.GetElapsedTime();
 	if (is->IsKeyDown(Keys::LSHIFT))
 	{
 		cameraMoveSpeed = baseCameraMoveSpeed * 2.0;
 	}
 	if (is->IsKeyDown(Keys::W))
 	{
-		mCameraTransform.Walk(cameraMoveSpeed * mTimer.GetElapsedTime());
+		mCameraTransform.Walk(cameraMoveSpeed * dTime);
 	}
 	if (is->IsKeyDown(Keys::S))
 	{
-		mCameraTransform.Walk(-cameraMoveSpeed * mTimer.GetElapsedTime());
+		mCameraTransform.Walk(-cameraMoveSpeed * dTime);
 	}
 	if (is->IsKeyDown(Keys::D))
 	{
-		mCameraTransform.Strafe(cameraMoveSpeed * mTimer.GetElapsedTime());
+		mCameraTransform.Strafe(cameraMoveSpeed * dTime);
 	}
 	if (is->IsKeyDown(Keys::A))
 	{
-		mCameraTransform.Strafe(-cameraMoveSpeed * mTimer.GetElapsedTime());
+		mCameraTransform.Strafe(-cameraMoveSpeed * dTime);
 	}
 	if (is->IsKeyDown(Keys::E))
 	{
-		mCameraTransform.Rise(cameraMoveSpeed * mTimer.GetElapsedTime());
+		mCameraTransform.Rise(cameraMoveSpeed * dTime);
 	}
 	if (is->IsKeyDown(Keys::Q))
 	{
-		mCameraTransform.Rise(-cameraMoveSpeed * mTimer.GetElapsedTime());
+		mCameraTransform.Rise(-cameraMoveSpeed * dTime);
 	}
 
 	if (is->IsMouseDown(Mouse::RBUTTON))
 	{
-		mCameraTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * mTimer.GetElapsedTime());
-		mCameraTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * mTimer.GetElapsedTime());
+		mCameraTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * dTime);
+		mCameraTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * dTime);
+	}
+
+	// bone control
+	if (is->IsKeyDown(Keys::J))
+	{
+		bendWrist += 1.0 * dTime;
+	}
+	if (is->IsKeyDown(Keys::K))
+	{
+		bendWrist -= 1.0 * dTime;
+	}
+	if (is->IsKeyDown(Keys::N))
+	{
+		bendElbow += 1.0 * dTime;
+	}
+	if (is->IsKeyDown(Keys::M))
+	{
+		bendElbow -= 1.0 * dTime;
 	}
 
 	Graphics::GraphicsSystem::Get()->BeginRender();
 
-	forearm.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), 3.0f);
+	bicep.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), 0.0f);
+	bicep.translation = Math::Vector3(0.0f, 0.0f, 0.0f);
+	forearm.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), bendElbow);
 	forearm.translation = Math::Vector3(0.0f, 3.0f, 0.0f);
 	forearm.parent = &bicep;
-	hand.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), -1.0f);
+	hand.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), bendWrist);
 	hand.translation = Math::Vector3(0.0f, 3.0f, 0.0f);
 	hand.parent = &forearm;
 	hand.GenerateTransform();
@@ -224,7 +245,8 @@ void GameApp::OnUpdate()
 	ConstantData data;
 	for (auto bone : kBones)
 	{
-		data.wvp = Math::Transpose(bone->transform * viewMatrix * projectionMatrix);
+		worldMatrix = bone->transform * Math::Matrix4::Scaling(0.8f) * worldMatrix;
+		data.wvp = Math::Transpose(worldMatrix * viewMatrix * projectionMatrix);
 		mConstantBuffer.Set(data);
 		mConstantBuffer.BindVS(); //matrix to vertex shader
 

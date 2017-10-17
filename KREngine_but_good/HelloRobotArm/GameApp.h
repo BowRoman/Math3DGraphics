@@ -29,4 +29,6 @@ private:
 	Graphics::PixelShader mPixelShader;
 
 	Math::Vector3 mRotation;
+
+	float bendElbow = 0, bendWrist = 0;
 };
