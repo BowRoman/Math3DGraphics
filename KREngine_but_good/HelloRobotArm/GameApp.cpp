@@ -18,9 +18,13 @@ namespace
 		Bone(Math::Vector3 trans, Math::Quaternion rot, Bone* par = nullptr) : translation(trans), rotation(rot), parent(par), transform(Math::Matrix4::Identity()) {}
 		Math::Matrix4 GenerateTransform()
 		{
-			if (parent)
+			if (parent) // grab the parent space
 			{
 				transform = parent->GenerateTransform();
+			}
+			else // reset the transform
+			{
+				transform = Math::Matrix4::Identity();
 			}
 			Math::Matrix4 newTransform = Math::Matrix4::Scaling(1.0f,1.0f,1.0f) * Math::Matrix4::RotationQuaternion(rotation) * Math::Matrix4::Translation(translation);
 			transform = newTransform * transform;
@@ -203,26 +207,35 @@ void GameApp::OnUpdate()
 	}
 
 	// bone control
-	if (is->IsKeyDown(Keys::J))
+	if (is->IsKeyDown(Keys::O))
 	{
 		bendWrist += 1.0 * dTime;
 	}
-	if (is->IsKeyDown(Keys::K))
+	if (is->IsKeyDown(Keys::I))
 	{
 		bendWrist -= 1.0 * dTime;
 	}
-	if (is->IsKeyDown(Keys::N))
+	if (is->IsKeyDown(Keys::K))
 	{
 		bendElbow += 1.0 * dTime;
 	}
-	if (is->IsKeyDown(Keys::M))
+	if (is->IsKeyDown(Keys::J))
 	{
 		bendElbow -= 1.0 * dTime;
+	}
+	if (is->IsKeyDown(Keys::M))
+	{
+		bendShoulder += 1.0 * dTime;
+	}
+	if (is->IsKeyDown(Keys::N))
+	{
+
+		bendShoulder -= 1.0 * dTime;
 	}
 
 	Graphics::GraphicsSystem::Get()->BeginRender();
 
-	bicep.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), 0.0f);
+	bicep.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), bendShoulder);
 	bicep.translation = Math::Vector3(0.0f, 0.0f, 0.0f);
 	forearm.rotation = Math::Quaternion::RotationAxis(Math::Vector3::ZAxis(), bendElbow);
 	forearm.translation = Math::Vector3(0.0f, 3.0f, 0.0f);
@@ -242,10 +255,11 @@ void GameApp::OnUpdate()
 
 	/*Math::Matrix4x4 rotateZ = Math::Matrix4x4::RotateZ(mTimer.GetTotalTime() * 1.0f);
 	worldMatrix *= rotateZ;*/
+	std::vector<Math::Matrix4> boneMatrices = GetWorldTransforms(kBones);
 	ConstantData data;
-	for (auto bone : kBones)
+	for (size_t i = 0; i < kBones.size(); ++i)
 	{
-		worldMatrix = bone->transform * Math::Matrix4::Scaling(0.8f) * worldMatrix;
+		worldMatrix = boneMatrices[i] /** Math::Matrix4::Scaling(0.8f) * worldMatrix*/;
 		data.wvp = Math::Transpose(worldMatrix * viewMatrix * projectionMatrix);
 		mConstantBuffer.Set(data);
 		mConstantBuffer.BindVS(); //matrix to vertex shader
