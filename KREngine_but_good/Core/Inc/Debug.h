@@ -5,7 +5,7 @@
 	#define LOGPRINT printf
 #else 
 	#define LOGPRINT OutputDebugStringA
-
+#endif
 
 #if defined(_DEBUG)
 #define LOG(format, ...)\
@@ -32,7 +32,6 @@
 #define LOG(format, ...)
 #define ASSERT(condition, format, ...)
 #define VERIFY(condition, format, ...) condition;
-#endif
 #endif // #if defined(_DEBUG)
 
 #endif // #ifndef INCLUDED_CORE_DEBUG_H

@@ -1,11 +1,17 @@
+#include <Graphics\Inc\Graphics.h>
+
 #include <assimp/Importer.hpp>		// C++ importer interface
 #include <assimp/scene.h>			// Output data structure
 #include <assimp/postprocess.h>		// Post processing flags
 #include <cstdlib>
 #include <cstdio>
+#include <map>
+#include <vector>
+
+using namespace Graphics;
+
 
 #pragma comment(lib, "assimp.lib")
-
 struct Params
 {
 	Params()
@@ -16,6 +22,35 @@ struct Params
 	const char* inputFilename;
 	const char* outputFilename;
 };
+
+typedef std::map<std::string, uint32_t> BoneIndexMap;
+typedef std::vector<Bone*> Bones;
+
+
+// search to see if the bone has already been added, if it hasn't then add it to the bones array and add a lookup entry to the map
+uint32_t GetBoneIndex(aiBone* bone, Bones& bones, BoneIndexMap& boneIndexMap)
+{
+	// if the bone is already in the map, return its index
+	auto it = boneIndexMap.find(bone->mName.C_Str());
+	if (it != boneIndexMap.end())
+	{
+		return it->second;
+	}
+
+	// new bone is needed
+	uint32_t boneIndex = bones.size();
+	Bone* newBone = new Bone();
+	ASSERT(bone->mName.length <= 0, "Warning: Bone %d has no name.", boneIndex);
+
+	newBone->name = bone->mName.C_Str();
+	newBone->index = boneIndex;
+	newBone->offsetTransform = Convert(bone->mOffsetMatrix);
+
+	bones.push_back(newBone);
+	boneIndexMap.insert(std::make_pair(bone->mName.C_Str(), boneIndex));
+
+	return boneIndex;
+}
 
 const char* StripPath(const char* filePath)
 {
@@ -62,6 +97,12 @@ bool ParseArg(int argc, char* argv[], Params& params)
 	return true;
 }
 
+Math::Matrix4 Convert(const aiMatrix4x4& aiMatrix)
+{
+	Math::Matrix4 mat = *(Math::Matrix4*)&aiMatrix;
+	return Math::Transpose(mat);
+}
+
 bool ImportModel(const Params& params)
 {
 	// Create an instance of the Importer class
@@ -94,6 +135,9 @@ bool ImportModel(const Params& params)
 		printf("Error: Failed to write to output file.\n");
 		return false;
 	}
+
+	BoneIndexMap boneIndexMap;
+	Bones bones;
 
 	// Read mesh data
 	if (scene->HasMeshes())
@@ -133,6 +177,16 @@ bool ImportModel(const Params& params)
 					aiMesh->mFaces[i].mIndices[0],
 					aiMesh->mFaces[i].mIndices[1],
 					aiMesh->mFaces[i].mIndices[2]);
+			}
+
+			// bones
+			if (aiMesh->HasBones())
+			{
+				for (uint32_t i = 0; i < aiMesh->mNumBones; ++i)
+				{
+					aiBone* aiBone = aiMesh->mBones[i];
+					uint32_t boneIndex = GetBoneIndex(aiBone, bones, boneIndexMap);
+				}
 			}
 		}
 	}

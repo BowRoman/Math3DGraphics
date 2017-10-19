@@ -2,6 +2,7 @@
 #define INCLUDED_GRAPHICS_H
 
 #include "Animation.h"
+#include "Bone.h"
 #include "Camera.h"
 #include "Common.h"
 #include "ConstantBuffer.h"

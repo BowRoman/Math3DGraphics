@@ -27,6 +27,7 @@
     <ClInclude Include="Inc\TextureManager.h" />
     <ClInclude Include="Inc\Forward.h" />
     <ClInclude Include="Inc\Animation.h" />
+    <ClInclude Include="Inc\Bone.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp" />

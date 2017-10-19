@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\Animation.h" />
+    <ClInclude Include="Inc\Bone.h" />
     <ClInclude Include="Inc\Camera.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\ConstantBuffer.h" />
