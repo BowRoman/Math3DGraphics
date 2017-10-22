@@ -349,7 +349,7 @@ bool InputSystem::IsMouseDown(uint32_t button) const
 
 bool InputSystem::IsMousePressed(uint32_t button) const
 {
-	return mPrevMouseButtons[button];
+	return mPressedMouseButtons[button];
 }
 
 //----------------------------------------------------------------------------------------------------

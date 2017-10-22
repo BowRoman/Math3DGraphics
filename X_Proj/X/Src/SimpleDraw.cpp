@@ -117,7 +117,7 @@ namespace
 	{
 		XASSERT(!mInitialized, "[SimpleDraw] Already initialized.");
 
-		const int kSimpleShaderSize = strlen(kSimpleShader) + 1;
+		const int kSimpleShaderSize = static_cast<const int>(strlen(kSimpleShader) + 1);
 		mVertexShader.Initialize(kSimpleShader, kSimpleShaderSize, "VS", "vs_5_0", VertexPC::Format);
 		mPixelShader.Initialize(kSimpleShader, kSimpleShaderSize, "PS", "ps_5_0");
 		mConstantBuffer.Initialize();

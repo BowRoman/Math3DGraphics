@@ -18,6 +18,7 @@ struct Vector2
 
 	Vector2() : x(0.0f), y(0.0f) {}
 	Vector2(float inX, float inY) : x(inX), y(inY) {}
+	Vector2(int inX, int inY) : x(static_cast<float>(inX)), y(static_cast<float>(inY)) {}
 
 	static Vector2 Zero()						{ return Vector2(); }
 	static Vector2 One()						{ return Vector2(1.0f, 1.0f); }
