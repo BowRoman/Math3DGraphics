@@ -35,6 +35,12 @@ X::TextureId startPointId;
 X::TextureId endPointId;
 int startX = -1, startY = -1, endX = -1, endY = -1;
 std::list<Ai::Graph<24, 32>::Node*> path;
+enum SearchType
+{
+	DFS = 0,
+	BFS = 1
+};
+SearchType searchMethod = BFS;
 
 const float tileSize = 32.0f;
 NavGraph graph;
@@ -184,16 +190,40 @@ void DrawPath()
 
 void RunPathSearch()
 {
+	if (X::IsKeyPressed(X::Keys::O))
+	{
+		searchMethod = SearchType::DFS;
+	}
+	if (X::IsKeyPressed(X::Keys::P))
+	{
+		searchMethod = SearchType::BFS;
+	}
 	if (startX == -1 || startY == -1 || endX == -1 || endY == -1)
 	{
 		return;
 	}
 	if (X::IsMouseDown(X::Mouse::RBUTTON) || X::IsMouseDown(X::Mouse::LBUTTON))
 	{
-		if (graph.RunBFS(startX, startY, endX, endY))
+		switch (searchMethod)
 		{
-			path = graph.GetPath();
+		case SearchType::DFS:
+		{
+			if (graph.RunDFS(startX, startY, endX, endY))
+			{
+				path = graph.GetPath();
+			}
+			break;
 		}
+		case SearchType::BFS:
+		{
+			if (graph.RunBFS(startX, startY, endX, endY))
+			{
+				path = graph.GetPath();
+			}
+			break;
+		}
+		}
+
 	}
 }
 

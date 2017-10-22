@@ -40,6 +40,7 @@ public:
 	std::list<Node*> GetPath() const;
 	std::list<Node*> GetClosedList() const;
 	bool RunBFS(int startX, int startY, int endX, int endY);
+	bool RunDFS(int startX, int startY, int endX, int endY);
 
 private:
 	void Reset();
@@ -170,6 +171,53 @@ bool Graph<rows, columns>::RunBFS(int startX, int startY, int endX, int endY)
 	{
 		Node* node = mOpenList.front();
 		mOpenList.pop_front();
+
+		// check if the node is at the destination
+		if (node->x == endX && node->y == endY)
+		{
+			found = true;
+		}
+		// iterate through the neighbors
+		else
+		{
+			for (int i = 0; i < node->neighborCount; ++i)
+			{
+				Node* neighbor = node->neighbors[i];
+				// skip if the neighbor is in the open or closed list
+				if (neighbor->bInClosedList)
+				{
+					continue;
+				}
+				if (neighbor->bInOpenList)
+				{
+					continue;
+				}
+				// add to open list
+				mOpenList.push_back(neighbor);
+				neighbor->bInOpenList = true;
+				neighbor->parent = node;
+			}
+		}
+		// add the node to the closed list
+		mClosedList.push_back(node);
+		node->bInClosedList = true;
+	}
+	return found;
+}
+
+template<size_t rows, size_t columns>
+bool Graph<rows, columns>::RunDFS(int startX, int startY, int endX, int endY)
+{
+	Reset();
+
+	mOpenList.push_back(GetNode(startX, startY));
+	GetNode(startX, startY)->bInOpenList = true;
+
+	bool found = false;
+	while (!found && !mOpenList.empty())
+	{
+		Node* node = mOpenList.back();
+		mOpenList.pop_back();
 
 		// check if the node is at the destination
 		if (node->x == endX && node->y == endY)
