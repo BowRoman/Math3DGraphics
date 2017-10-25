@@ -6,6 +6,8 @@
 namespace Ai
 {
 
+#define ImpassibleTerrain = 999.9f
+
 template<size_t rows, size_t columns>
 class Graph
 {
@@ -19,10 +21,10 @@ public:
 
 		Node* parent;
 		bool bInOpenList, bInClosedList;
-		//float gCost;
+		float gCost;
 		//float hCost;
 
-		Node() : x(-1), y(-1), neighborCount(8), parent(nullptr), bInOpenList(false), bInClosedList(false) {}
+		Node() : x(-1), y(-1), neighborCount(8), parent(nullptr), bInOpenList(false), bInClosedList(false), gCost(1.0f) {}
 	};
 private:
 	Node mNodes[rows*columns];

@@ -9,15 +9,16 @@ typedef Ai::Graph<numRows, numColumns>::Node NavNode;
 enum class TileType
 {
 	None		= 0,
-	Grass		= 1,
-	Flower		= 2,
-	TreeTL		= 3,
-	TreeTR		= 4,
-	TreeBL		= 5,
-	TreeBR		= 6,
+	Ground		= 1,
+	Hole		= 2,
+	RockTL		= 3,
+	RockTR		= 4,
+	RockBL		= 5,
+	RockBR		= 6,
 	PathStart	= 7,
 	PathEnd		= 8
 };
+int tileToPlace = 0;
 
 const char* const textureNames[]
 {
@@ -44,7 +45,7 @@ SearchType searchMethod = BFS;
 
 const float tileSize = 32.0f;
 NavGraph graph;
-const size_t tileMap[]
+size_t tileMap[]
 {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 4, 1, 1,
 	1, 3, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 6, 1, 1,
@@ -123,7 +124,7 @@ void DrawPathPoints()
 void PlacePathPoints()
 {
 	float tileSizeOverTwo = 1 / tileSize;
-	if (X::IsMouseDown(X::Mouse::LBUTTON))
+	if (X::IsKeyPressed(X::Keys::S))
 	{
 		int clickedX = static_cast<int>(X::GetMouseScreenX() * tileSizeOverTwo);
 		int clickedY = static_cast<int>(X::GetMouseScreenY() * tileSizeOverTwo);
@@ -134,7 +135,7 @@ void PlacePathPoints()
 			startY = clickedY;
 		}
 	}
-	if (X::IsMouseDown(X::Mouse::RBUTTON))
+	if (X::IsKeyPressed(X::Keys::E))
 	{
 		int clickedX = static_cast<int>(X::GetMouseScreenX() * tileSizeOverTwo);
 		int clickedY = static_cast<int>(X::GetMouseScreenY() * tileSizeOverTwo);
@@ -143,6 +144,29 @@ void PlacePathPoints()
 		{
 			endX = clickedX;
 			endY = clickedY;
+		}
+	}
+}
+
+void PlaceTilePoints()
+{
+	float tileSizeOverTwo = 1 / tileSize;
+	if (X::IsKeyPressed(X::Keys::EQUALS))
+	{
+		tileToPlace = (++tileToPlace % std::size(textureNames));
+	}
+	if (X::IsKeyPressed(X::Keys::MINUS))
+	{
+		tileToPlace = (--tileToPlace % std::size(textureNames));
+	}
+	if (X::IsMouseDown(X::Mouse::LBUTTON))
+	{
+		int clickedX = static_cast<int>(X::GetMouseScreenX() * tileSizeOverTwo);
+		int clickedY = static_cast<int>(X::GetMouseScreenY() * tileSizeOverTwo);
+
+		if (clickedX >= 0 && clickedX < numColumns && clickedY >= 0 && clickedY < numRows)
+		{
+			tileMap[(numColumns*clickedY)+clickedX] = tileToPlace;
 		}
 	}
 }
@@ -202,7 +226,7 @@ void RunPathSearch()
 	{
 		return;
 	}
-	if (X::IsMouseDown(X::Mouse::RBUTTON) || X::IsMouseDown(X::Mouse::LBUTTON))
+	if (X::IsKeyPressed(X::Keys::F1))
 	{
 		switch (searchMethod)
 		{
@@ -231,10 +255,11 @@ void RunPathSearch()
 bool GameLoop(float deltaTime)
 {
 	PlacePathPoints();
+	PlaceTilePoints();
 	RunPathSearch();
 
 	DrawMapTiles();
-	//DrawGraphLines();
+	DrawGraphLines();
 	DrawPathPoints();
 	DrawClosedList();
 	DrawPath();
