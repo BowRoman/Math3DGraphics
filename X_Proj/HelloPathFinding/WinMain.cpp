@@ -153,7 +153,7 @@ void PlaceTiles()
 	float tileSizeOverTwo = 1 / tileSize;
 	if (X::IsKeyPressed(X::Keys::EQUALS))
 	{
-		if (tileToPlace == (int)TileType::RockTL)
+		if (tileToPlace == static_cast<int>(TileType::RockTL))
 		{
 			tileToPlace = ((tileToPlace+4) % std::size(textureNames));
 		}
@@ -164,10 +164,14 @@ void PlaceTiles()
 	}
 	if (X::IsKeyPressed(X::Keys::MINUS))
 	{
-		tileToPlace = (--tileToPlace % std::size(textureNames));
-		if (tileToPlace == 6)
+		--tileToPlace;
+		if (tileToPlace < 0)
 		{
-			tileToPlace = 3;
+			tileToPlace = std::size(textureNames)-1;
+		}
+		if (tileToPlace == static_cast<int>(TileType::RockBR))
+		{
+			tileToPlace = static_cast<int>(TileType::RockTL);
 		}
 	}
 	if (X::IsMouseDown(X::Mouse::LBUTTON))
@@ -178,9 +182,9 @@ void PlaceTiles()
 		if (clickedX >= 0 && clickedX < numColumns && clickedY >= 0 && clickedY < numRows)
 		{
 			tileMap[(numColumns*clickedY)+clickedX] = tileToPlace;
-			if (tileToPlace == 3)
+			if (tileToPlace == static_cast<int>(TileType::RockTL))
 			{
-				tileMap[(numColumns*clickedY) + clickedX + 1] = tileToPlace+1;
+				tileMap[(numColumns*clickedY) + clickedX + 1] = tileToPlace + 1;
 				tileMap[(numColumns*(clickedY + 1)) + clickedX] = tileToPlace + 2;
 				tileMap[(numColumns*(clickedY + 1)) + clickedX + 1] = tileToPlace + 3;
 			}
