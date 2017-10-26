@@ -148,16 +148,27 @@ void PlacePathPoints()
 	}
 }
 
-void PlaceTilePoints()
+void PlaceTiles()
 {
 	float tileSizeOverTwo = 1 / tileSize;
 	if (X::IsKeyPressed(X::Keys::EQUALS))
 	{
-		tileToPlace = (++tileToPlace % std::size(textureNames));
+		if (tileToPlace == (int)TileType::RockTL)
+		{
+			tileToPlace = ((tileToPlace+4) % std::size(textureNames));
+		}
+		else
+		{
+			tileToPlace = (++tileToPlace % std::size(textureNames));
+		}
 	}
 	if (X::IsKeyPressed(X::Keys::MINUS))
 	{
 		tileToPlace = (--tileToPlace % std::size(textureNames));
+		if (tileToPlace == 6)
+		{
+			tileToPlace = 3;
+		}
 	}
 	if (X::IsMouseDown(X::Mouse::LBUTTON))
 	{
@@ -167,6 +178,12 @@ void PlaceTilePoints()
 		if (clickedX >= 0 && clickedX < numColumns && clickedY >= 0 && clickedY < numRows)
 		{
 			tileMap[(numColumns*clickedY)+clickedX] = tileToPlace;
+			if (tileToPlace == 3)
+			{
+				tileMap[(numColumns*clickedY) + clickedX + 1] = tileToPlace+1;
+				tileMap[(numColumns*(clickedY + 1)) + clickedX] = tileToPlace + 2;
+				tileMap[(numColumns*(clickedY + 1)) + clickedX + 1] = tileToPlace + 3;
+			}
 		}
 	}
 }
@@ -255,7 +272,7 @@ void RunPathSearch()
 bool GameLoop(float deltaTime)
 {
 	PlacePathPoints();
-	PlaceTilePoints();
+	PlaceTiles();
 	RunPathSearch();
 
 	DrawMapTiles();
