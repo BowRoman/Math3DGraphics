@@ -20,6 +20,7 @@
 #include "RenderTargetMesh.h"
 #include "Sampler.h"
 #include "SimpleDraw.h"
+#include "SkinnedMesh.h"
 #include "Texture.h"
 #include "TextureManager.h"
 #include "Transform.h"

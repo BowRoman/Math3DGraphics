@@ -5,7 +5,8 @@
 #define VF_UV		0x01 << 2
 #define VF_COLOR	0x01 << 3
 #define VF_TANGENT	0x01 << 4
-
+#define VF_BINDEX	0x01 << 3
+#define VF_BWEIGHT	0x01 << 4
 
 
 namespace Graphics
@@ -63,6 +64,18 @@ namespace Graphics
 		Math::Vector3 tangent;
 		Math::Vector4 color;
 		Math::Vector2 uv;
+	};
+
+	struct VertexBone
+	{
+		static const uint32_t Format = VF_POSITION | VF_NORMAL | VF_TANGENT | VF_COLOR | VF_UV | VF_BINDEX | VF_BWEIGHT;
+		Math::Vector3 position;
+		Math::Vector3 normal;
+		Math::Vector3 tangent;
+		Math::Vector4 color;
+		Math::Vector2 uv;
+		int boneIndex[4] = {};
+		float boneWeight[4] = {};
 	};
 
 }

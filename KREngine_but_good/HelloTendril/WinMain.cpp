@@ -7,7 +7,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int CmdShow)
 {
 	GameApp myApp;
-	myApp.Initialize(hInstance, "Hello Robot Arm", 1024, 768);
+	myApp.Initialize(hInstance, "Hello Tendril", 1024, 768);
 	while (myApp.IsRunning())
 	{
 		myApp.Update();

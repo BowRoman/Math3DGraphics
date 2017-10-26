@@ -26,6 +26,11 @@ struct Params
 typedef std::map<std::string, uint32_t> BoneIndexMap;
 typedef std::vector<Bone*> Bones;
 
+Math::Matrix4 Convert(const aiMatrix4x4& aiMatrix)
+{
+	Math::Matrix4 mat = *(Math::Matrix4*)&aiMatrix;
+	return Math::Transpose(mat);
+}
 
 // search to see if the bone has already been added, if it hasn't then add it to the bones array and add a lookup entry to the map
 uint32_t GetBoneIndex(aiBone* bone, Bones& bones, BoneIndexMap& boneIndexMap)
@@ -97,11 +102,6 @@ bool ParseArg(int argc, char* argv[], Params& params)
 	return true;
 }
 
-Math::Matrix4 Convert(const aiMatrix4x4& aiMatrix)
-{
-	Math::Matrix4 mat = *(Math::Matrix4*)&aiMatrix;
-	return Math::Transpose(mat);
-}
 
 bool ImportModel(const Params& params)
 {
@@ -149,11 +149,11 @@ bool ImportModel(const Params& params)
 		{
 			const aiMesh* aiMesh = scene->mMeshes[meshIndex];
 
-			printf("Reading vertices...\n");
 			fprintf(file, "VertexCount: %d\n", aiMesh->mNumVertices);
 			fprintf(file, "IndexCount: %d\n", aiMesh->mNumFaces * 3);
 			fprintf(file, "MaterialIndex: %d\n", aiMesh->mMaterialIndex);
-
+			
+			printf("Reading vertices...\n");
 			const aiVector3D* positions = aiMesh->mVertices;
 			const aiVector3D* normals = aiMesh->mNormals;
 			const aiVector3D* tangents = aiMesh->mTangents;
@@ -169,6 +169,7 @@ bool ImportModel(const Params& params)
 					texCoords ? texCoords[i].y : 0.0f);
 			}
 
+			// indices
 			printf("Reading indices...\n");
 
 			for (uint32_t i = 0; i < aiMesh->mNumFaces; ++i)
@@ -180,6 +181,8 @@ bool ImportModel(const Params& params)
 			}
 
 			// bones
+			printf("Reading bones...\n");
+
 			if (aiMesh->HasBones())
 			{
 				for (uint32_t i = 0; i < aiMesh->mNumBones; ++i)
