@@ -1,6 +1,7 @@
 #ifndef INCLUDED_GRAPHICS_H
 #define INCLUDED_GRAPHICS_H
 
+#include "AnimatedModel.h"
 #include "Animation.h"
 #include "Bone.h"
 #include "Camera.h"

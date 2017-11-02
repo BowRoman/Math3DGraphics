@@ -101,6 +101,18 @@ void Graphics::MeshBuilder::GenerateStackSliceSphere(Mesh& mesh, const uint32_t 
 
 void Graphics::MeshBuilder::GenerateStackSliceCylinder(SkinnedMesh& mesh, const uint32_t maxStacks, const uint32_t maxSlices, const float radius, int numBones)
 {
+	ASSERT(numBones != 0, "[MeshBuilder] StackSliceCylinder requires at least one bone.");
+	/*
+	o--------o
+	|		 |			 |
+	|		 |			 |
+	|		 |			 |
+	o--------o			(B)
+	|		 |			 |
+	|		 |			 |
+	|		 |			 |
+	o--------o			(B)
+	*/
 	const uint32_t kNumVertices = (maxSlices + 1) * maxStacks;
 	const uint32_t kNumIndices = maxSlices * (maxStacks - 1) * 6;
 	const float kSliceOffset = Math::kTwoPi / maxSlices; // offset between slices
@@ -115,7 +127,7 @@ void Graphics::MeshBuilder::GenerateStackSliceCylinder(SkinnedMesh& mesh, const 
 	const float uStep = 1.0f / maxSlices;
 	const float vStep = 1.0f / maxStacks;
 	int currBoneIdx = 0;
-	float currBoneWeight = 1.0f;
+	float currBonePercentForStack = 0.0f;
 	uint32_t index = 0;
 
 	// TODO: Account for edge case: only one bone.
@@ -153,8 +165,8 @@ void Graphics::MeshBuilder::GenerateStackSliceCylinder(SkinnedMesh& mesh, const 
 			mesh.mVertices[index].boneIndex[1] = currBoneIdx + 1;
 			mesh.mVertices[index].boneIndex[2] = 0;
 			mesh.mVertices[index].boneIndex[3] = 0;
-			mesh.mVertices[index].boneWeight[0] = currBoneWeight;
-			mesh.mVertices[index].boneWeight[1] = 1.0f - currBoneWeight;
+			mesh.mVertices[index].boneWeight[0] = 1.0f - currBonePercentForStack;
+			mesh.mVertices[index].boneWeight[1] = currBonePercentForStack;
 			mesh.mVertices[index].boneWeight[2] = 0.0f;
 			mesh.mVertices[index].boneWeight[3] = 0.0f;
 			++index;

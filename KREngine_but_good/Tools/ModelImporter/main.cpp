@@ -23,6 +23,13 @@ struct Params
 	const char* outputFilename;
 };
 
+struct BoneWeights
+{
+	uint32_t index[4] = {};
+	float weight[4] = {};
+	uint32_t count = 0;
+};
+
 typedef std::map<std::string, uint32_t> BoneIndexMap;
 typedef std::vector<Bone*> Bones;
 
@@ -45,7 +52,7 @@ uint32_t GetBoneIndex(aiBone* bone, Bones& bones, BoneIndexMap& boneIndexMap)
 	// new bone is needed
 	uint32_t boneIndex = bones.size();
 	Bone* newBone = new Bone();
-	ASSERT(bone->mName.length <= 0, "Warning: Bone %d has no name.", boneIndex);
+	ASSERT(bone->mName.length > 0, "Warning: Bone %d has no name.", boneIndex);
 
 	newBone->name = bone->mName.C_Str();
 	newBone->index = boneIndex;
@@ -55,6 +62,53 @@ uint32_t GetBoneIndex(aiBone* bone, Bones& bones, BoneIndexMap& boneIndexMap)
 	boneIndexMap.insert(std::make_pair(bone->mName.C_Str(), boneIndex));
 
 	return boneIndex;
+}
+
+Bone* BuildSkeleton(aiNode& ainode, Bone* parent, Bones& bones, BoneIndexMap& boneIndexMap)
+{
+	Bone* bone = nullptr;
+
+	auto it = boneIndexMap.find(ainode.mName.C_Str());
+	if (it == boneIndexMap.end())
+	{
+		const uint32_t boneIndex = bones.size();
+
+		bone = new Bone();
+		bone->index = boneIndex;
+		bone->offsetTransform = Math::Matrix4::Identity();
+
+		if (ainode.mName.length > 0)
+		{
+			bone->name = ainode.mName.C_Str();
+		}
+		else
+		{
+			char buffer[128];
+			sprintf_s(buffer, 128, "unnamedBone_%u", boneIndex);
+			printf("Warning. Bone %u is unnamed, renamed \"%s\"\n", boneIndex, buffer);
+			bone->name = buffer;
+		}
+
+		bones.push_back(bone);
+		boneIndexMap.insert(std::make_pair(bone->name, bone->index));
+	}
+	else
+	{
+		bone = bones[it->second];
+	}
+
+	bone->transform = Convert(ainode.mTransformation);
+	bone->parent = parent;
+	bone->parentIndex = parent ? parent->index : -1;
+
+	for (uint32_t i = 0; i < ainode.mNumChildren; ++i)
+	{
+		Bone* child = BuildSkeleton(*(ainode.mChildren[i]), bone, bones, boneIndexMap);
+		bone->children.push_back(child);
+		bone->childrenIndex.push_back(child->index);
+	}
+
+	return bone;
 }
 
 const char* StripPath(const char* filePath)
@@ -87,6 +141,17 @@ void PrintHelp()
 		"\n"
 	);
 }
+
+void PrintMatrix(FILE* file, const Math::Matrix4& mat)
+{
+	fprintf(file, "%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
+			mat._11, mat._12, mat._13, mat._14,
+			mat._21, mat._22, mat._23, mat._24, 
+			mat._31, mat._32, mat._33, mat._34, 
+			mat._41, mat._42, mat._43, mat._44
+	);
+}
+
 
 bool ParseArg(int argc, char* argv[], Params& params)
 {
@@ -180,15 +245,50 @@ bool ImportModel(const Params& params)
 					aiMesh->mFaces[i].mIndices[2]);
 			}
 
-			// bones
-			printf("Reading bones...\n");
-
 			if (aiMesh->HasBones())
 			{
+				// bones
+				printf("Reading bone weights...\n");
+
+				std::vector<BoneWeights> boneWeights;
+				boneWeights.resize(aiMesh->mNumVertices);
+
 				for (uint32_t i = 0; i < aiMesh->mNumBones; ++i)
 				{
 					aiBone* aiBone = aiMesh->mBones[i];
 					uint32_t boneIndex = GetBoneIndex(aiBone, bones, boneIndexMap);
+
+					for (uint32_t j = 0; j < aiBone->mNumWeights; ++j)
+					{
+						// Grab the current weight
+						const aiVertexWeight& aiVertexWeight = aiBone->mWeights[j];
+						// Get which vertex this weight is effecting
+						const uint32_t vertexIndex = aiVertexWeight.mVertexId;
+
+						// If your mesh has more than 4 weights per bone you don't deserve to have your model loaded
+						if (boneWeights[vertexIndex].count < 4)
+						{
+							int weightIndex = boneWeights[vertexIndex].count++;
+
+							// Set necessary bone weight info for the current vertex
+							boneWeights[vertexIndex].index[weightIndex] = boneIndex;
+							boneWeights[vertexIndex].weight[weightIndex] = aiVertexWeight.mWeight;
+						}
+					}
+				}
+
+				for (auto boneWeight : boneWeights)
+				{
+					fprintf(file, "%d %d %d %d %d %f %f %f %f\n",
+						boneWeight.count,
+						boneWeight.index[0],
+						boneWeight.index[1],
+						boneWeight.index[2],
+						boneWeight.index[3],
+						boneWeight.weight[0],
+						boneWeight.weight[1],
+						boneWeight.weight[2],
+						boneWeight.weight[3]);
 				}
 			}
 		}
@@ -246,6 +346,31 @@ bool ImportModel(const Params& params)
 					fprintf(file, "MaterialMap: none\n");
 				}
 			}
+		}
+	}
+
+	if (scene->HasAnimations())
+	{
+		printf("Reading skeleton...\n");
+		Bone* root = BuildSkeleton(*scene->mRootNode, nullptr, bones, boneIndexMap);
+
+		fprintf(file, "BoneCount: %d\n", bones.size());
+		for (auto bone : bones)
+		{
+			fprintf(file, "Name: %s\n", bone->name.c_str());
+			fprintf(file, "Index: %d\n", bone->index);
+			fprintf(file, "ParentIndex: %d\n", bone->parentIndex);
+			fprintf(file, "ChildCount: %d\n", bone->children.size());
+			if (!bone->children.empty())
+			{
+				for (auto childIndex : bone->childrenIndex)
+				{
+					fprintf(file, "%d ", childIndex);
+				}
+				fprintf(file, "\n");
+			}
+			PrintMatrix(file, bone->transform);
+			PrintMatrix(file, bone->offsetTransform);
 		}
 	}
 
