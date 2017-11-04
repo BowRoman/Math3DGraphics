@@ -43,6 +43,8 @@ public:
 	std::list<Node*> GetClosedList() const;
 	bool RunBFS(int startX, int startY, int endX, int endY);
 	bool RunDFS(int startX, int startY, int endX, int endY);
+	bool RunDijkstra(int startX, int startY, int endX, int endY, float (*CostFunction)(int, int, int, int));
+	bool RunAStar(int startX, int startY, int endX, int endY, float (*CostFunction)(int, int, int, int));
 
 private:
 	void Reset();
@@ -158,7 +160,7 @@ template<size_t rows, size_t columns>
 std::list<typename Graph<rows, columns>::Node*> Graph<rows, columns>::GetClosedList() const
 {
 	return mClosedList;
-}
+} // std::list<Node*> GetClosedList() const
 
 template<size_t rows, size_t columns>
 bool Graph<rows, columns>::RunBFS(int startX, int startY, int endX, int endY)
@@ -205,7 +207,7 @@ bool Graph<rows, columns>::RunBFS(int startX, int startY, int endX, int endY)
 		node->bInClosedList = true;
 	}
 	return found;
-}
+} // bool RunBFS(int startX, int startY, int endX, int endY)
 
 template<size_t rows, size_t columns>
 bool Graph<rows, columns>::RunDFS(int startX, int startY, int endX, int endY)
@@ -252,6 +254,68 @@ bool Graph<rows, columns>::RunDFS(int startX, int startY, int endX, int endY)
 		node->bInClosedList = true;
 	}
 	return found;
+} // bool RunDFS(int startX, int startY, int endX, int endY)
+
+template<size_t rows, size_t columns>
+bool Graph<rows, columns>::RunDijkstra(int startX, int startY, int endX, int endY, float (*CostFunction)(int,int,int,int))
+{
+	Reset();
+
+	mOpenList.push_back(GetNode(startX, startY));
+	GetNode(startX, startY)->bInOpenList = true;
+
+	bool found = false;
+	while (!found && !mOpenList.empty())
+	{
+		Node* node = mOpenList.front();
+		mOpenList.pop_front();
+
+		// check if the node is at the destination
+		if (node->x == endX && node->y == endY)
+		{
+			found = true;
+		}
+		// iterate through the neighbors
+		else
+		{
+			for (int i = 0; i < node->neighborCount; ++i)
+			{
+				Node* neighbor = node->neighbors[i];
+				// skip if the neighbor is in the open or closed list
+				if (neighbor->bInClosedList)
+				{
+					continue;
+				}
+				if (neighbor->bInOpenList)
+				{
+					continue;
+				}
+				// determine cost of moving to this neighbor
+				float stepCost = CostFunction(node.x, node.y, neighbor.x, neighbor.y);
+				// add to open list based on cost
+				for (std::list<Node*>::const_iterator it = mOpenList.begin(); it != mOpenList.end(); ++it)
+				{
+					if (it->gCost > stepCost)
+					{
+						mOpenList.insert(it,neighbor);
+						break;
+					}
+				}
+				neighbor->bInOpenList = true;
+				neighbor->parent = node;
+			}
+		}
+		// add the node to the closed list
+		mClosedList.push_back(node);
+		node->bInClosedList = true;
+	}
+	return found;
+}
+
+template<size_t rows, size_t columns>
+bool Graph<rows, columns>::RunAStar(int startX, int startY, int endX, int endY, float (*CostFunction)(int, int, int, int))
+{
+
 }
 
 template<size_t rows, size_t columns>
