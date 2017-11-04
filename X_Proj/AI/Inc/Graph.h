@@ -26,10 +26,12 @@ public:
 
 		Node() : x(-1), y(-1), neighborCount(8), parent(nullptr), bInOpenList(false), bInClosedList(false), gCost(1.0f) {}
 	};
+
 private:
 	Node mNodes[rows*columns];
 	std::list<Node*> mOpenList;
 	std::list<Node*> mClosedList;
+
 public:
 	Graph();
 	~Graph();
@@ -48,7 +50,6 @@ public:
 
 private:
 	void Reset();
-
 
 }; // class Graph
 

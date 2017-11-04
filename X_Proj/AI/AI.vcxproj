@@ -22,6 +22,8 @@
     <ClInclude Include="Inc\Ai.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Graph.h" />
+    <ClInclude Include="Inc\State.h" />
+    <ClInclude Include="Inc\StateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Graph.cpp" />

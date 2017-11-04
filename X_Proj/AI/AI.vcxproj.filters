@@ -1,11 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="Inc\Ai.h" />
-    <ClInclude Include="Inc\Common.h" />
-    <ClInclude Include="Inc\Graph.h" />
+    <ClInclude Include="Inc\Ai.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Common.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Graph.h">
+      <Filter>Inc\Graph</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\State.h">
+      <Filter>Inc\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\StateMachine.h">
+      <Filter>Inc\FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Graph.cpp" />
+    <Filter Include="Inc">
+      <UniqueIdentifier>{7d0afef1-1de3-4816-a0e2-91d80e1c004b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{d2091c8b-2b1c-489c-9367-cd27a8d61a13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\Graph">
+      <UniqueIdentifier>{2b52ab98-5f4c-42ff-a02e-736c6c833e50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inc\FSM">
+      <UniqueIdentifier>{b9d4407c-fda3-47f2-894d-a6928b66784f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\Graph.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
