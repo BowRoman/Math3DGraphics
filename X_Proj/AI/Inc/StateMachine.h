@@ -15,13 +15,68 @@ public:
 	StateMachine(AgentType& agent);
 	~StateMachine();
 
-	void AddState(StateType* newState);
+	template<class NewStateType, std::enable_if<std::is_base_of<StateType, NewStateType>::value>>
+	void AddState();
 	void Purge();
 
 	void Update(float deltaTime);
 	void ChangeState(uint32_t index);
 
+private:
+	AgentType& mAgent;
+	StateType* mCurrentState;
+	std::vector<StateType*> mStates;
+
 }; // class State
+
+template<class AgentType>
+StateMachine<AgentType>::StateMachine(AgentType & agent)
+	: mAgent(agent)
+	, mCurrentState(nullptr)
+{
+}
+
+template<class AgentType>
+StateMachine<AgentType>::~StateMachine()
+{
+	XASSERT(mStates.empty(), "[StateMachine] Purge must be called before destruction.");
+}
+
+template<class AgentType>
+template<class NewStateType, std::enable_if<std::is_base_of<State<AgentType>, NewStateType>::value>>
+void StateMachine<AgentType>::AddState()
+{
+	mStates.push_back(new NewStateType())
+}
+
+template<class AgentType>
+void StateMachine<AgentType>::Purge()
+{
+	for (auto& state : mStates)
+	{
+		X::SafeDelete(state);
+	}
+	mStates.clear();
+}
+
+template<class AgentType>
+void StateMachine<AgentType>::Update(float deltaTime)
+{
+	XASSERT(mCurrentState != nullptr, "[StateMachine] mCurrentState cannot be null when Update is called.");
+	mCurrentState->Update(mAgent, deltaTime);
+}
+
+template<class AgentType>
+void StateMachine<AgentType>::ChangeState(uint32_t index)
+{
+	XASSERT(index < (uint32_t)mStates.size(), "[StateMachine] Invalid index: %d.", index);
+	if (mCurrentState)
+	{
+		mCurrentState->Exit(mAgent);
+	}
+	mCurrentState = mStates[index];
+	mCurrentState->Enter(mAgent);
+}
 
 }
 

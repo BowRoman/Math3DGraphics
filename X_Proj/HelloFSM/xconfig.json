@@ -1,0 +1,7 @@
+{
+  "AppName": "Hello FSM",
+  "WinWidth": 1024,
+  "WinHeight": 768,
+  "Fullscreen": false,
+  "Texturepath": "../Assets/Images/"
+}
