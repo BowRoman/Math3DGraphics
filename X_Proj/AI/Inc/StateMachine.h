@@ -15,12 +15,12 @@ public:
 	StateMachine(AgentType& agent);
 	~StateMachine();
 
-	template<class NewStateType, std::enable_if<std::is_base_of<StateType, NewStateType>::value>>
+	template<class NewStateType/*, std::enable_if<std::is_base_of<StateType, NewStateType>::value>*/>
 	void AddState();
 	void Purge();
 
 	void Update(float deltaTime);
-	void ChangeState(uint32_t index);
+	void ChangeState(uint32_t stateIndex);
 
 private:
 	AgentType& mAgent;
@@ -43,7 +43,7 @@ StateMachine<AgentType>::~StateMachine()
 }
 
 template<class AgentType>
-template<class NewStateType, std::enable_if<std::is_base_of<State<AgentType>, NewStateType>::value>>
+template<class NewStateType/*, std::enable_if<std::is_base_of<StateMachine<AgentType>::StateType, NewStateType>::value>*/>
 void StateMachine<AgentType>::AddState()
 {
 	mStates.push_back(new NewStateType())
@@ -67,14 +67,14 @@ void StateMachine<AgentType>::Update(float deltaTime)
 }
 
 template<class AgentType>
-void StateMachine<AgentType>::ChangeState(uint32_t index)
+void StateMachine<AgentType>::ChangeState(uint32_t stateIndex)
 {
 	XASSERT(index < (uint32_t)mStates.size(), "[StateMachine] Invalid index: %d.", index);
 	if (mCurrentState)
 	{
 		mCurrentState->Exit(mAgent);
 	}
-	mCurrentState = mStates[index];
+	mCurrentState = mStates[stateIndex];
 	mCurrentState->Enter(mAgent);
 }
 
