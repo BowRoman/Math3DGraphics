@@ -250,3 +250,7 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Specific allowed files
+!FW1FontWrapper.lib
+!FW1FontWrapper.dll
