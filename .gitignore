@@ -252,4 +252,7 @@ paket-files/
 *.sln.iml
 
 # Specific allowed files
-!/X_Proj/X/External/FW1FontWrapper_1_1/
+!X_Proj/X/External/FW1FontWrapper_1_1/x64/FW1FontWrapper.dll
+!X_Proj/X/External/FW1FontWrapper_1_1/x64/FW1FontWrapper.lib
+!X_Proj/X/External/FW1FontWrapper_1_1/x86/FW1FontWrapper.dll
+!X_Proj/X/External/FW1FontWrapper_1_1/x86/FW1FontWrapper.lib
