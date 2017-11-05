@@ -252,5 +252,5 @@ paket-files/
 *.sln.iml
 
 # Specific allowed files
-!FW1FontWrapper.lib
-!FW1FontWrapper.dll
+!*/FW1FontWrapper.lib
+!*/FW1FontWrapper.dll
