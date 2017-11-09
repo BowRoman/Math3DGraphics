@@ -71,6 +71,21 @@ namespace Graphics {
 			}
 
 			// TODO: Read bone weights
+			for (uint32_t i = 0; i < numVertices; ++i)
+			{
+				Graphics::VertexBone& vert = mesh->GetVertex(i);
+				uint32_t count = 0;
+				fscanf_s(file, "%d %d %d %d %d %f %f %f %f\n",
+						&count,
+						&vert.boneIndex[0],
+						&vert.boneIndex[1],
+						&vert.boneIndex[2],
+						&vert.boneIndex[3],
+						&vert.boneWeight[0],
+						&vert.boneWeight[1],
+						&vert.boneWeight[2],
+						&vert.boneWeight[3]);
+			}
 
 			Graphics::MeshBuffer* meshBuffer = new MeshBuffer();
 			meshBuffer->Initialize(mesh->mVertices, sizeof(Graphics::Vertex), mesh->mVertexCount, mesh->mIndices, mesh->mIndexCount);

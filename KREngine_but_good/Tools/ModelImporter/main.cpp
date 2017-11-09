@@ -276,7 +276,6 @@ bool ImportModel(const Params& params)
 						}
 					}
 				}
-
 				for (auto boneWeight : boneWeights)
 				{
 					fprintf(file, "%d %d %d %d %d %f %f %f %f\n",
