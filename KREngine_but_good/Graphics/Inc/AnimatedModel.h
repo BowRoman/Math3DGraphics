@@ -3,10 +3,11 @@ File: Model.h
 Author: Jake Roman-Barnes
 */
 #pragma once
-
+#include <vector>
+#include "Forward.h"
 namespace Graphics
 {
-	class Bone;
+	struct Bone;
 	class SkinnedMesh;
 	class MeshBuffer;
 	class Texture;
@@ -24,7 +25,7 @@ namespace Graphics
 		void Render();
 
 	private:
-		Bone mRoot;
+		Bone* mRoot;
 
 		struct Part
 		{
@@ -41,3 +42,4 @@ namespace Graphics
 	}; // class Model
 
 } // namespace Graphics
+
