@@ -1,5 +1,5 @@
 /*
-File: Model.h
+File: AnimatedModel.h
 Author: Jake Roman-Barnes
 */
 #pragma once
@@ -24,6 +24,8 @@ namespace Graphics
 
 		void Render();
 
+		Bone* GetRoot() const { return mRoot; }
+
 	private:
 		Bone* mRoot;
 
@@ -33,9 +35,9 @@ namespace Graphics
 			SkinnedMesh* mesh;
 			MeshBuffer* meshBuffer;
 			size_t materialIndex;
-			Bone* mBones;
 		}; // struct Part
 
+		std::vector<Bone*> mBones;
 		std::vector<Part> mModelParts;
 		std::vector<TextureId> mTextureIds;
 

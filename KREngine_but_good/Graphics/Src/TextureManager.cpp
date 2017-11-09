@@ -9,9 +9,9 @@ using namespace Graphics;
 namespace
 {
 	TextureManager* sTextureManager = nullptr;
-}
+} // namespace
 
-void TextureManager::StaticInitialize(const char * root)
+void TextureManager::StaticInitialize(const char* root)
 {
 	ASSERT(sTextureManager == nullptr, "[TextureManager] TextureManager already initialized!");
 	sTextureManager = new TextureManager();
@@ -19,7 +19,7 @@ void TextureManager::StaticInitialize(const char * root)
 	{
 		sTextureManager->SetRootPath(root);
 	}
-}
+} // void StaticInitialize(const char* root)
 
 void TextureManager::StaticTerminate()
 {
@@ -27,17 +27,17 @@ void TextureManager::StaticTerminate()
 	{
 		SafeDelete(sTextureManager);
 	}
-}
+} // void StaticTerminate()
 
 TextureManager* TextureManager::Get()
 {
 	ASSERT(sTextureManager != nullptr, "[Graphics::TextureManager] No manager registered.");
 	return sTextureManager;
-}
+} // TextureManager* Get()
 
 TextureManager::TextureManager()
 {
-}
+} // TextureManager()
 
 TextureManager::~TextureManager()
 {
@@ -47,14 +47,15 @@ TextureManager::~TextureManager()
 		SafeDelete(item.second);
 	}
 	mInventory.clear();
-}
+} // ~TextureManager()
 
-void TextureManager::SetRootPath(const char * root)
+void TextureManager::SetRootPath(const char* root)
 {
 	mRoot = root;
-}
+} // void SetRootPath(const char* root)
 
-int TextureManager::Load(const char * filename)
+// Returns a hashed index for the corresponding texture
+int TextureManager::Load(const char* filename)
 {
 	std::string fullname = mRoot + filename;
 	std::hash<std::string> hasher;
@@ -69,14 +70,14 @@ int TextureManager::Load(const char * filename)
 	}
 
 	return hash;
-}
+} // int Load(const char* filename)
 
 void Graphics::TextureManager::BindVS(TextureId id, uint32_t slot)
 {
 	mInventory[id]->BindVS(slot);
-}
+} // void BindVS(TextureId id, uint32_t slot)
 
 void Graphics::TextureManager::BindPS(TextureId id, uint32_t slot)
 {
 	mInventory[id]->BindPS(slot);
-}
+} // void BindPS(TextureId id, uint32_t slot)
