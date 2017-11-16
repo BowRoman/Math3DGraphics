@@ -3,6 +3,7 @@
 
 #include "AnimatedModel.h"
 #include "Animation.h"
+#include "AnimationClip.h"
 #include "Bone.h"
 #include "Camera.h"
 #include "Common.h"

@@ -36,6 +36,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::Vertex::Format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 	mModel.Load("../Assets/Models/marine2.txt");
+	bPlay = true;
 	mConstantBuffer.Initialize();
 
 }
@@ -104,6 +105,15 @@ void GameApp::OnUpdate()
 	{
 		mCameraTransform.Rise(-cameraMoveSpeed * dTime);
 	}
+	if (is->IsKeyPressed(Keys::P))
+	{
+		bPlay = !bPlay;
+		if (bPlay)
+			mModel.Play();
+		else
+			mModel.Pause();
+
+	}
 
 	if (is->IsMouseDown(Mouse::RBUTTON))
 	{
@@ -126,11 +136,11 @@ void GameApp::OnUpdate()
 	mConstantBuffer.BindVS();
 	mConstantBuffer.BindPS();
 
-	//mModel.Render();
+	mModel.Update(dTime);
 	Graphics::Bone* rootBone;
 	rootBone = mModel.GetRoot();
 	std::vector<Math::Matrix4> matVec;
-	DrawBones(rootBone, matVec);
+	DrawBones(rootBone, Math::Matrix4::Identity());
 
 	for (int i = 0; i < 100; ++i)
 	{
@@ -150,16 +160,23 @@ void GameApp::OnUpdate()
 	Graphics::GraphicsSystem::Get()->EndRender();
 }
 
-void GameApp::DrawBones(Graphics::Bone* bone, std::vector<Math::Matrix4> matVec)
+void GameApp::DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform)
 {
-	Math::Matrix4 worldTransform = Math::Matrix4::Identity();
+	Math::Matrix4 transform = parentTransform;
+	Math::Vector3 pos1 = Math::Vector3(transform._41, transform._42, transform._43);
 	if (bone->parent)
 	{
-		worldTransform = bone->parent->transform * bone->transform;
+		Math::Matrix4 boneMat = bone->transform;
+		transform = boneMat * parentTransform;
+
+		pos1 = Math::Vector3(transform._41, transform._42, transform._43);
+		Math::Vector3 pos2 = Math::Vector3(parentTransform._41, parentTransform._42, parentTransform._43);
+		Graphics::SimpleDraw::DrawLine(pos1, pos2, Math::Vector4::Yellow());
+		//Graphics::SimpleDraw::AddSphere(pos1, 1.0f, Math::Vector4::Green());
 	}
-	matVec.push_back(worldTransform);
+	//Graphics::SimpleDraw::AddSphere(pos1, 0.01f, Math::Vector4::Green());
 	for (int i = 0; i < bone->children.size(); ++i)
 	{
-		DrawBones(bone->children[i], matVec);
+		DrawBones(bone->children[i], transform);
 	}
 }

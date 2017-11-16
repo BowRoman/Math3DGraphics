@@ -4,6 +4,7 @@ Author: Jake Roman-Barnes
 */
 #pragma once
 #include <vector>
+#include "AnimationClip.h"
 #include "Forward.h"
 namespace Graphics
 {
@@ -21,6 +22,12 @@ namespace Graphics
 
 		void Load(const char* filename);
 		void Unload();
+
+		void Play();
+		void Pause();
+		void Reset();
+
+		void Update(float deltaTime);
 
 		void Render();
 
@@ -40,6 +47,7 @@ namespace Graphics
 		std::vector<Bone*> mBones;
 		std::vector<Part> mModelParts;
 		std::vector<TextureId> mTextureIds;
+		std::vector<AnimationClip> mAnimationClips;
 
 	}; // class Model
 

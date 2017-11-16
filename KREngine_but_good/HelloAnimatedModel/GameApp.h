@@ -13,7 +13,7 @@ private:
 	void OnTerminate() override;
 	void OnUpdate() override;
 
-	void DrawBones(Graphics::Bone* bone, std::vector<Math::Matrix4> matVec);
+	void DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform);
 
 	struct ConstantData
 	{
@@ -33,4 +33,6 @@ private:
 	Graphics::AnimatedModel mModel;
 
 	float mRotation;
+
+	bool bPlay;
 };

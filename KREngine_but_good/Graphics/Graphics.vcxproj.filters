@@ -30,6 +30,7 @@
     <ClInclude Include="Inc\Bone.h" />
     <ClInclude Include="Inc\SkinnedMesh.h" />
     <ClInclude Include="Inc\AnimatedModel.h" />
+    <ClInclude Include="Inc\AnimationClip.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp" />
@@ -55,5 +56,6 @@
     <ClCompile Include="Src\Animation.cpp" />
     <ClCompile Include="Src\SkinnedMesh.cpp" />
     <ClCompile Include="Src\AnimatedModel.cpp" />
+    <ClCompile Include="Src\AnimationClip.cpp" />
   </ItemGroup>
 </Project>

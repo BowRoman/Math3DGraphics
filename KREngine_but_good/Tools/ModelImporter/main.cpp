@@ -371,6 +371,68 @@ bool ImportModel(const Params& params)
 			PrintMatrix(file, bone->transform);
 			PrintMatrix(file, bone->offsetTransform);
 		}
+
+		fprintf(file, "AnimationCount: %d\n", scene->mNumAnimations);
+		for (uint32_t animIdx = 0; animIdx < scene->mNumAnimations; ++animIdx)
+		{
+			aiAnimation* aiAnim = scene->mAnimations[animIdx];
+
+			if (aiAnim->mName.length > 0)
+			{
+				fprintf(file, "Name: %s\n", aiAnim->mName.C_Str());
+			}
+			else
+			{
+				char buffer[128];
+				sprintf_s(buffer, 128, "unnamedAnimation_%u", animIdx);
+				printf("Warning. Animation %u is unnamed, renamed \"%s\"\n", animIdx, buffer);
+				fprintf(file, "Name: %s\n", buffer);
+			}
+			fprintf(file, "Duration: %f\n", (float)aiAnim->mDuration);
+			fprintf(file, "TicksPerSecond: %f\n", (float)aiAnim->mTicksPerSecond);
+
+			fprintf(file, "BoneAnimations: %d\n", aiAnim->mNumChannels);
+
+			for (uint32_t boneAnimIdx = 0; boneAnimIdx < aiAnim->mNumChannels; ++boneAnimIdx)
+			{
+				aiNodeAnim* aiNodeAnim = aiAnim->mChannels[boneAnimIdx];
+
+				auto it = boneIndexMap.find(aiNodeAnim->mNodeName.C_Str());
+				if (it == boneIndexMap.end())
+				{
+					printf("Warning. Bone \"%s\" not found, ignoring.\n", aiNodeAnim->mNodeName.C_Str());
+					continue;
+				}
+
+				fprintf(file, "BoneIndex: %d\n", it->second);
+
+				if (aiNodeAnim->mNumPositionKeys != aiNodeAnim->mNumRotationKeys ||
+					aiNodeAnim->mNumPositionKeys != aiNodeAnim->mNumScalingKeys)
+				{
+					printf("ERROR. Mismatched number of animation keys. Unsupported format.\n", aiNodeAnim->mNodeName.C_Str());
+					exit(-1);
+				}
+
+				fprintf(file, "Keyframes: %d\n", aiNodeAnim->mNumPositionKeys);
+
+				for (uint32_t frameIdx = 0; frameIdx < aiNodeAnim->mNumPositionKeys; ++frameIdx)
+				{
+					fprintf(file, "%f %f %f %f %f %f %f %f %f %f %f \n",
+						aiNodeAnim->mPositionKeys[frameIdx].mTime,
+						aiNodeAnim->mPositionKeys[frameIdx].mValue.x,
+						aiNodeAnim->mPositionKeys[frameIdx].mValue.y, 
+						aiNodeAnim->mPositionKeys[frameIdx].mValue.z, 
+						aiNodeAnim->mRotationKeys[frameIdx].mValue.x, 
+						aiNodeAnim->mRotationKeys[frameIdx].mValue.y,
+						aiNodeAnim->mRotationKeys[frameIdx].mValue.z,
+						aiNodeAnim->mRotationKeys[frameIdx].mValue.w,
+						aiNodeAnim->mScalingKeys[frameIdx].mValue.x, 
+						aiNodeAnim->mScalingKeys[frameIdx].mValue.y,
+						aiNodeAnim->mScalingKeys[frameIdx].mValue.z
+					);
+				}
+			}
+		}
 	}
 
 	// All done!

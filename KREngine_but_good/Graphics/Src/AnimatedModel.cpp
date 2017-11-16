@@ -179,6 +179,56 @@ void AnimatedModel::Load(const char* filename)
 		}
 	}
 
+	uint32_t numAnimations = 0;
+	fscanf_s(file, "AnimationCount: %d\n", &numAnimations);
+	mAnimationClips.resize(numAnimations);
+	for (uint32_t animIdx = 0; animIdx < numAnimations; ++animIdx)
+	{
+		char buffer[1024];
+		fscanf_s(file, "Name: %s\n", buffer, 1024);
+		mAnimationClips[animIdx].mName = buffer;
+
+
+		fscanf_s(file, "Duration: %f\n", &mAnimationClips[animIdx].mDuration);
+		fscanf_s(file, "TicksPerSecond: %f\n", &mAnimationClips[animIdx].mTicksPerSecond);
+		if (mAnimationClips[animIdx].mTicksPerSecond <= 0)
+		{
+			mAnimationClips[animIdx].mTicksPerSecond = 5000.0f;
+		}
+
+		uint32_t numBoneAnimations = 0;
+		fscanf_s(file, "BoneAnimations: %d\n", &numBoneAnimations);
+
+		mAnimationClips[animIdx].mBoneAnimations.resize(mBones.size());
+		for (uint32_t i = 0; i < numBoneAnimations; ++i)
+		{
+			uint32_t boneAnimIdx = 0;
+			fscanf_s(file, "BoneIndex: %d\n", &boneAnimIdx);
+
+			uint32_t numKeyframes = 0;
+			fscanf_s(file, "Keyframes: %d\n", &numKeyframes);
+
+			Keyframe newFrame;
+			for (uint32_t frameIdx = 0; frameIdx < numKeyframes; ++frameIdx)
+			{
+				fscanf_s(file, "%f %f %f %f %f %f %f %f %f %f %f \n",
+					&newFrame.time,
+					&newFrame.position.x,
+					&newFrame.position.y,
+					&newFrame.position.z,
+					&newFrame.rotation.x,
+					&newFrame.rotation.y,
+					&newFrame.rotation.z,
+					&newFrame.rotation.w,
+					&newFrame.scale.x,
+					&newFrame.scale.y,
+					&newFrame.scale.z
+				);
+				mAnimationClips[animIdx].mBoneAnimations[boneAnimIdx].AddKeyframe(newFrame);
+			}
+		}
+	}
+
 	fclose(file);
 } // void AnimatedModel::Load(const char* filename)
 
@@ -198,8 +248,45 @@ void AnimatedModel::Unload()
 	SafeDeleteVector(mBones);
 } // void AnimatedModel::Unload()
 
+void AnimatedModel::Play()
+{
+	for (auto& animClip : mAnimationClips)
+	{
+		animClip.Play();
+	}
+}
+
+void AnimatedModel::Pause()
+{
+	for (auto& animClip : mAnimationClips)
+	{
+		animClip.Pause();
+	}
+}
+
+void AnimatedModel::Reset()
+{
+	for (auto& animClip : mAnimationClips)
+	{
+		animClip.Reset();
+	}
+}
+
+void AnimatedModel::Update(float deltaTime)
+{
+	for (auto& animClip : mAnimationClips)
+	{
+		animClip.Update(deltaTime);
+	}
+}
+
 void AnimatedModel::Render()
 {
+	std::vector<Math::Matrix4> transforms;
+	for (int i = 0; i < mBones.size(); ++i)
+	{
+		mBones[i]->transform = mAnimationClips[i].GetTransform();
+	}
 	for (auto& part : mModelParts)
 	{
 		TextureManager::Get()->BindVS(mTextureIds[part.materialIndex], 0);
