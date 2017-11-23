@@ -36,7 +36,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::Vertex::Format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 	mModel.Load("../Assets/Models/marine2.txt");
-	bPlay = true;
+	bPlay = false;
 	mConstantBuffer.Initialize();
 
 }
@@ -112,7 +112,6 @@ void GameApp::OnUpdate()
 			mModel.Play();
 		else
 			mModel.Pause();
-
 	}
 
 	if (is->IsMouseDown(Mouse::RBUTTON))
@@ -137,6 +136,7 @@ void GameApp::OnUpdate()
 	mConstantBuffer.BindPS();
 
 	mModel.Update(dTime);
+	//mModel.Render();
 	Graphics::Bone* rootBone;
 	rootBone = mModel.GetRoot();
 	std::vector<Math::Matrix4> matVec;
@@ -172,9 +172,7 @@ void GameApp::DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform)
 		pos1 = Math::Vector3(transform._41, transform._42, transform._43);
 		Math::Vector3 pos2 = Math::Vector3(parentTransform._41, parentTransform._42, parentTransform._43);
 		Graphics::SimpleDraw::DrawLine(pos1, pos2, Math::Vector4::Yellow());
-		//Graphics::SimpleDraw::AddSphere(pos1, 1.0f, Math::Vector4::Green());
 	}
-	//Graphics::SimpleDraw::AddSphere(pos1, 0.01f, Math::Vector4::Green());
 	for (int i = 0; i < bone->children.size(); ++i)
 	{
 		DrawBones(bone->children[i], transform);

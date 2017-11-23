@@ -48,6 +48,7 @@ namespace Graphics
 		std::vector<Part> mModelParts;
 		std::vector<TextureId> mTextureIds;
 		std::vector<AnimationClip> mAnimationClips;
+		size_t mClipIndex;
 
 	}; // class Model
 

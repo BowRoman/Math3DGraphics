@@ -28,6 +28,7 @@ void ScanMatrix(FILE* file, Math::Matrix4& mat)
 
 
 AnimatedModel::AnimatedModel()
+	: mClipIndex(0)
 {
 
 } // AnimatedModel::AnimatedModel()
@@ -277,15 +278,19 @@ void AnimatedModel::Update(float deltaTime)
 	for (auto& animClip : mAnimationClips)
 	{
 		animClip.Update(deltaTime);
+		for (int i = 0; i < mBones.size(); ++i)
+		{
+			mBones[i]->transform = animClip.mBoneAnimations[i].GetTransform(deltaTime);
+		}
 	}
 }
 
 void AnimatedModel::Render()
 {
-	std::vector<Math::Matrix4> transforms;
 	for (int i = 0; i < mBones.size(); ++i)
 	{
-		mBones[i]->transform = mAnimationClips[i].GetTransform();
+		auto clip = mAnimationClips[mClipIndex];
+		mBones[i]->transform = clip.mBoneAnimations[i].GetTransform(clip.mTicks);
 	}
 	for (auto& part : mModelParts)
 	{

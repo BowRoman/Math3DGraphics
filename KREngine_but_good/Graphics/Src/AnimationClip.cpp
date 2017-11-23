@@ -38,13 +38,15 @@ void AnimationClip::Update(float deltaTime)
 {
 	if (bPlaying)
 	{
-		mTicks = Math::Min(mTicks + (mTicksPerSecond*deltaTime), mDuration);
+		mTicks += mTicksPerSecond*deltaTime;
+		// animations handle looping
 	}
 }
 
 std::vector<Math::Matrix4> AnimationClip::GetTransform()
 {
 	std::vector<Math::Matrix4> transforms;
+	transforms.reserve(mBoneAnimations.size());
 	for (auto& animation : mBoneAnimations)
 	{
 		transforms.push_back(animation.GetTransform(mTicks));

@@ -32,7 +32,11 @@ void Animation::Terminate()
 Math::Matrix4 Animation::GetTransform(float time) const
 {
 	ASSERT(time >= 0.0f, "[Animation] Error rendering. Time cannot be negative. (Time travel prohibited)");
-	ASSERT(!mKeyframes.empty(), "[Animation] Error rendering. No Keyframes.");
+	if (mKeyframes.empty())
+	{
+		return Math::Matrix4::Identity();
+	}
+	//ASSERT(!mKeyframes.empty(), "[Animation] Error rendering. No Keyframes.");
 	//ASSERT(time < mKeyframes.back().time, "[Animation] Given time exceeds keyframes.");
 
 	if (bLoop)
