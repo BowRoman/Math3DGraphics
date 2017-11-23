@@ -38,6 +38,19 @@ AnimatedModel::~AnimatedModel()
 	ASSERT(mModelParts.empty(), "[AnimatedModel] must free mesh memory");
 } // AnimatedModel::~AnimatedModel()
 
+void AnimatedModel::PropegateBoneMatrices(uint32_t boneIndex)
+{
+	Bone* bone = mBones[boneIndex];
+	if (bone->parent)
+	{
+		mBoneMatrices[boneIndex] = bone->transform * bone->parent->transform;
+	}
+	for (int i = 0; i < bone->children.size(); ++i)
+	{
+		PropegateBoneMatrices(bone->childrenIndex[i]);
+	}
+}
+
 void AnimatedModel::Load(const char* filename)
 {
 	FILE* file = nullptr;
@@ -186,9 +199,9 @@ void AnimatedModel::Load(const char* filename)
 	for (uint32_t animIdx = 0; animIdx < numAnimations; ++animIdx)
 	{
 		char buffer[1024];
-		fscanf_s(file, "Name: %s\n", buffer, 1024);
+		fscanf_s(file, "Name: %128[^\n]", buffer, 1024);
 		mAnimationClips[animIdx].mName = buffer;
-
+		fgetc(file);
 
 		fscanf_s(file, "Duration: %f\n", &mAnimationClips[animIdx].mDuration);
 		fscanf_s(file, "TicksPerSecond: %f\n", &mAnimationClips[animIdx].mTicksPerSecond);
@@ -278,10 +291,16 @@ void AnimatedModel::Update(float deltaTime)
 	for (auto& animClip : mAnimationClips)
 	{
 		animClip.Update(deltaTime);
+	}
+
+	if (mAnimationClips[mClipIndex].bPlaying)
+	{
+		std::vector<Math::Matrix4> transforms = mAnimationClips[mClipIndex].GetTransforms();
 		for (int i = 0; i < mBones.size(); ++i)
 		{
-			mBones[i]->transform = animClip.mBoneAnimations[i].GetTransform(deltaTime);
+			mBones[i]->transform = transforms[i];
 		}
+		PropegateBoneMatrices(mRoot->index);
 	}
 }
 

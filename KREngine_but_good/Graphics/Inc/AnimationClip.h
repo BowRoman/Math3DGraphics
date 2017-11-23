@@ -21,7 +21,7 @@ public:
 
 	void Update(float deltaTime);
 
-	std::vector<Math::Matrix4> GetTransform();
+	std::vector<Math::Matrix4> GetTransforms();
 
 private:
 	friend class AnimatedModel;

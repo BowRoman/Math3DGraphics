@@ -3,3 +3,4 @@
 - Run the following command
 ModelImporter.exe ../Assets/Models/Drone_Red.fbx ../Assets/Models/Drone_Red.txt
 ModelImporter.exe ../Assets/Models/marine2.X ../Assets/Models/marine2.txt
+ModelImporter.exe ../Assets/Models/snorlax.fbx ../Assets/Models/snorlax.txt

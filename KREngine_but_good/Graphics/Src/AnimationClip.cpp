@@ -43,7 +43,7 @@ void AnimationClip::Update(float deltaTime)
 	}
 }
 
-std::vector<Math::Matrix4> AnimationClip::GetTransform()
+std::vector<Math::Matrix4> AnimationClip::GetTransforms()
 {
 	std::vector<Math::Matrix4> transforms;
 	transforms.reserve(mBoneAnimations.size());

@@ -102,7 +102,7 @@ void Animation::AddKeyframe(Keyframe newFrame)
 {
 	if (mKeyframes.empty())
 	{
-		ASSERT(newFrame.time == 0.0f, "[Animation] First added frame not set to time 0.0");
+		//ASSERT(newFrame.time == 0.0f, "[Animation] First added frame not set to time 0.0");
 		mKeyframes.push_back(newFrame);
 	}
 	// search the vector to make sure a frame does not already exist with the same time as newFrame

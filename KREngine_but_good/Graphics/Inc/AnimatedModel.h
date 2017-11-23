@@ -8,49 +8,54 @@ Author: Jake Roman-Barnes
 #include "Forward.h"
 namespace Graphics
 {
-	struct Bone;
-	class SkinnedMesh;
-	class MeshBuffer;
-	class Texture;
-	class TextureManager;
 
-	class AnimatedModel
+struct Bone;
+class SkinnedMesh;
+class MeshBuffer;
+class Texture;
+class TextureManager;
+
+class AnimatedModel
+{
+private:
+	void PropegateBoneMatrices(uint32_t boneIndex);
+
+public:
+	AnimatedModel();
+	~AnimatedModel();
+
+	void Load(const char* filename);
+	void Unload();
+
+	void Play();
+	void Pause();
+	void Reset();
+
+	void Update(float deltaTime);
+
+	void Render();
+
+	Bone* GetRoot() const { return mRoot; }
+
+private:
+	Bone* mRoot;
+
+	struct Part
 	{
-	public:
-		AnimatedModel();
-		~AnimatedModel();
+		Part(SkinnedMesh* mes, MeshBuffer* meshbuffer, size_t matIdx) :mesh(mes), meshBuffer(meshbuffer), materialIndex(matIdx) {}
+		SkinnedMesh* mesh;
+		MeshBuffer* meshBuffer;
+		size_t materialIndex;
+	}; // struct Part
 
-		void Load(const char* filename);
-		void Unload();
+	std::vector<Bone*> mBones;
+	std::vector<Math::Matrix4> mBoneMatrices;
+	std::vector<Part> mModelParts;
+	std::vector<TextureId> mTextureIds;
+	std::vector<AnimationClip> mAnimationClips;
+	size_t mClipIndex;
 
-		void Play();
-		void Pause();
-		void Reset();
-
-		void Update(float deltaTime);
-
-		void Render();
-
-		Bone* GetRoot() const { return mRoot; }
-
-	private:
-		Bone* mRoot;
-
-		struct Part
-		{
-			Part(SkinnedMesh* mes, MeshBuffer* meshbuffer, size_t matIdx) :mesh(mes), meshBuffer(meshbuffer), materialIndex(matIdx) {}
-			SkinnedMesh* mesh;
-			MeshBuffer* meshBuffer;
-			size_t materialIndex;
-		}; // struct Part
-
-		std::vector<Bone*> mBones;
-		std::vector<Part> mModelParts;
-		std::vector<TextureId> mTextureIds;
-		std::vector<AnimationClip> mAnimationClips;
-		size_t mClipIndex;
-
-	}; // class Model
+}; // class Model
 
 } // namespace Graphics
 

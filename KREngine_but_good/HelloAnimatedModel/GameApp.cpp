@@ -23,7 +23,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	HookWindow(mWindow.GetWindowHandle());
 
 	Graphics::GraphicsSystem::StaticInitialize(mWindow.GetWindowHandle(), false);
-	Graphics::SimpleDraw::StaticInitialize(10000);
+	Graphics::SimpleDraw::StaticInitialize(100000);
 	Input::InputSystem::StaticInitialize(mWindow.GetWindowHandle());
 	Graphics::TextureManager::StaticInitialize("../Assets/Images/");
 
@@ -35,7 +35,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 
 	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::Vertex::Format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
-	mModel.Load("../Assets/Models/marine2.txt");
+	mModel.Load("../Assets/Models/snorlax.txt");
 	bPlay = false;
 	mConstantBuffer.Initialize();
 
@@ -159,7 +159,10 @@ void GameApp::OnUpdate()
 
 	Graphics::GraphicsSystem::Get()->EndRender();
 }
-
+void GameApp::DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform)
+{
+	mModel.
+}
 void GameApp::DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform)
 {
 	Math::Matrix4 transform = parentTransform;
@@ -171,7 +174,10 @@ void GameApp::DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform)
 
 		pos1 = Math::Vector3(transform._41, transform._42, transform._43);
 		Math::Vector3 pos2 = Math::Vector3(parentTransform._41, parentTransform._42, parentTransform._43);
-		Graphics::SimpleDraw::DrawLine(pos1, pos2, Math::Vector4::Yellow());
+		Math::Vector4 color = Math::Vector4::CyanGreen();
+		Graphics::SimpleDraw::DrawSphere(pos1,5,5,0.05f);
+		Graphics::SimpleDraw::DrawSphere(pos2,5,5,0.05f);
+		Graphics::SimpleDraw::DrawLine(pos1, pos2, color);
 	}
 	for (int i = 0; i < bone->children.size(); ++i)
 	{
