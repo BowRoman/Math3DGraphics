@@ -30,7 +30,7 @@ private:
 }; // class State
 
 template<class AgentType>
-StateMachine<AgentType>::StateMachine(AgentType & agent)
+StateMachine<AgentType>::StateMachine(AgentType& agent)
 	: mAgent(agent)
 	, mCurrentState(nullptr)
 {
@@ -46,7 +46,7 @@ template<class AgentType>
 template<class NewStateType/*, std::enable_if<std::is_base_of<StateMachine<AgentType>::StateType, NewStateType>::value>*/>
 void StateMachine<AgentType>::AddState()
 {
-	mStates.push_back(new NewStateType())
+	mStates.push_back(new NewStateType());
 }
 
 template<class AgentType>
@@ -69,7 +69,7 @@ void StateMachine<AgentType>::Update(float deltaTime)
 template<class AgentType>
 void StateMachine<AgentType>::ChangeState(uint32_t stateIndex)
 {
-	XASSERT(index < (uint32_t)mStates.size(), "[StateMachine] Invalid index: %d.", index);
+	XASSERT(stateIndex < (uint32_t)mStates.size(), "[StateMachine] Invalid index: %d.", stateIndex);
 	if (mCurrentState)
 	{
 		mCurrentState->Exit(mAgent);

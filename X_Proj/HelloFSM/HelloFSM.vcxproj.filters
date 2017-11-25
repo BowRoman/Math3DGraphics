@@ -9,5 +9,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SCV.h" />
+    <ClInclude Include="Constant.h" />
   </ItemGroup>
 </Project>
