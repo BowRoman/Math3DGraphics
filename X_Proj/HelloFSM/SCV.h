@@ -7,6 +7,7 @@ class SCV
 public:
 	enum class State
 	{
+		Move,
 		Harvest,
 		Deposit
 	};
@@ -22,6 +23,7 @@ public:
 	void SetDestination(const X::Math::Vector2& dest) { mDestination = dest; }
 
 	const X::Math::Vector2& GetPosition() const { return mPosition; }
+	const X::Math::Vector2& GetDestination() const { mStateMachine->ChangeState(uint32_t(State::Move)); return mDestination; }
 
 	void ChangeState(State state);
 

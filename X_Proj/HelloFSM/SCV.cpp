@@ -1,6 +1,21 @@
 #include "SCV.h"
 #include "Constant.h"
 
+class MoveState : public Ai::State<SCV>
+{
+public:
+	virtual void Enter(SCV& agent) override
+	{
+	}
+	virtual void Update(SCV& agent, float deltaTime) override
+	{
+	}
+	virtual void Exit(SCV& agent) override
+	{
+
+	}
+};
+
 class HarvestState : public Ai::State<SCV>
 {
 public:
@@ -10,7 +25,7 @@ public:
 	}
 	virtual void Update(SCV& agent, float deltaTime) override
 	{
-		if (X::Math::Distance(agent.GetPosition(), kResourceLocation) < 16.0f)
+		if (X::Math::Distance(agent.GetPosition(), kResourceLocation) < 20.0f)
 		{
 			agent.SetDestination(agent.GetPosition());
 			agent.mCurrentResources += agent.mResourceGatherRate*deltaTime;
@@ -35,7 +50,7 @@ public:
 	}
 	virtual void Update(SCV& agent, float deltaTime) override
 	{
-		if (X::Math::Distance(agent.GetPosition(), kDepositLocation) < 10.0f)
+		if (X::Math::Distance(agent.GetPosition(), kDepositLocation) < 70.0f)
 		{
 			agent.mCurrentResources = 0.0f;
 			agent.ChangeState(SCV::State::Harvest);
@@ -76,13 +91,22 @@ void SCV::Load()
 	mResourceTextureId = X::LoadTexture("bullet2.png");
 
 	mStateMachine = new Ai::StateMachine<SCV>(*this);
+	mStateMachine->AddState<MoveState>();
 	mStateMachine->AddState<HarvestState>();
 	mStateMachine->AddState<DepositState>();
-	mStateMachine->ChangeState(uint32_t(State::Harvest));
+	mStateMachine->ChangeState(uint32_t(State::Move));
 }
 
 void SCV::Update(float deltaTime)
 {
+	if (X::Math::Distance(mDestination, kDepositLocation) < 64)
+	{
+		mStateMachine->ChangeState(uint32_t(State::Deposit));
+	}
+	if (X::Math::Distance(mDestination, kResourceLocation) < 64)
+	{
+		mStateMachine->ChangeState(uint32_t(State::Harvest));
+	}
 	mStateMachine->Update(deltaTime);
 	if (X::Math::Distance(mPosition, mDestination) > 5.0f)
 	{
@@ -96,13 +120,14 @@ void SCV::Draw()
 {
 	int frame = (int)(mAngle / X::Math::kTwoPi * 16.0f) % 16;
 	X::DrawSprite(mTextureIds[frame], mPosition - X::Math::Vector2(32.0f, 32.0f));
-	if (mCurrentResources >= 1.0f)
+	float maxOver3 = mMaxResources / 3;
+	if (mCurrentResources >= maxOver3)
 	{
 		X::DrawSprite(mResourceTextureId, mPosition - X::Math::Vector2(32.0f, 16.0f));
-		if (mCurrentResources >= 2.0f)
+		if (mCurrentResources >= 2.0f * maxOver3)
 		{
 			X::DrawSprite(mResourceTextureId, mPosition - X::Math::Vector2(16.0f, 16.0f));
-			if (mCurrentResources >= 3.0f)
+			if (mCurrentResources >= mMaxResources)
 			{
 				X::DrawSprite(mResourceTextureId, mPosition - X::Math::Vector2(0.0f, 16.0f));
 			}
