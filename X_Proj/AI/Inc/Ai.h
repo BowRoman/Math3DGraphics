@@ -3,11 +3,14 @@
 
 #include "Agent.h"
 #include "Graph.h"
-#include "SeekBehavior.h"
 #include "State.h"
 #include "StateMachine.h"
+#include "World.h"
+
+// Steering
+#include "SeekBehavior.h"
+#include "SeparationBehavior.h"
 #include "SteeringBehavior.h"
 #include "SteeringModule.h"
-#include "World.h"
 
 #endif // #ifndef INCLUDED_AI_AI_H

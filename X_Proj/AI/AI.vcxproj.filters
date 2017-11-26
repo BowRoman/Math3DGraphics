@@ -31,6 +31,9 @@
     <ClInclude Include="Inc\World.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\SeparationBehavior.h">
+      <Filter>Inc\Steering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Inc">
@@ -67,6 +70,9 @@
     </ClCompile>
     <ClCompile Include="Src\World.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SeparationBehavior.cpp">
+      <Filter>Src\Steering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

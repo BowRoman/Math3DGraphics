@@ -34,12 +34,12 @@ void World::AddWall(const X::Math::LineSegment& wall)
 
 } // void World::AddWall(const X::Math::LineSegment& wall)
 
-AgentList World::GetNeighborhood(const X::Math::Circle & range) const
+AgentList World::GetNeighborhood(const X::Math::Circle& range) const
 {
 	AgentList agentList;
 	for (auto agent : mAgentList)
 	{
-		if (X::Math::DistanceSqr(range.center, agent->Position()) < X::Math::Sqr(range.radius));
+		if ((X::Math::DistanceSqr(range.center, agent->Position())) < (X::Math::Sqr(range.radius)))
 		{
 			agentList.push_back(agent);
 		}
@@ -49,7 +49,7 @@ AgentList World::GetNeighborhood(const X::Math::Circle & range) const
 
 void World::RegisterAgent(Agent* agent)
 {
-	XASSERT(std::find(mAgentList.begin(), mAgentList.end(), agent) != mAgentList.end(), "[World] Agent cannot be registered twice.");
+	XASSERT(std::find(mAgentList.begin(), mAgentList.end(), agent) == mAgentList.end(), "[World] Agent cannot be registered twice.");
 	mAgentList.push_back(agent);
 
 } // void World::RegisterAgent(Agent* agent)
