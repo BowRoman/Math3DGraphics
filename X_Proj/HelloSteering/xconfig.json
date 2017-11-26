@@ -1,0 +1,7 @@
+{
+  "AppName": "Hello Steering",
+  "WinWidth": 800,
+  "WinHeight": 600,
+  "FullScreen": false,
+  "TexturePath": "../Assets/Images"
+}

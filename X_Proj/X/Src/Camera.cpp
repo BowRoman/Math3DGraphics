@@ -95,7 +95,7 @@ void Camera::Rise(float distance)
 
 void Camera::Yaw(float degree)
 {
-	Math::Matrix matRotate = Math::Matrix::RotationY(degree * Math::kDegToRad);
+	Math::Matrix4 matRotate = Math::Matrix4::RotationY(degree * Math::kDegToRad);
 	mLook = TransformNormal(mLook, matRotate);
 }
 
@@ -104,7 +104,7 @@ void Camera::Yaw(float degree)
 void Camera::Pitch(float degree)
 {
 	const Math::Vector3 right = Normalize(Cross(Math::Vector3::YAxis(), mLook));
-	const Math::Matrix matRotate = Math::MatrixRotationAxis(right, degree * Math::kDegToRad);
+	const Math::Matrix4 matRotate = Math::MatrixRotationAxis(right, degree * Math::kDegToRad);
 	const Math::Vector3 newLook = TransformNormal(mLook, matRotate);
 	const float dot = Dot(newLook, Math::Vector3::YAxis());
 
@@ -140,7 +140,7 @@ void Camera::SetFarPlane(float farPlane)
 
 //----------------------------------------------------------------------------------------------------
 
-Math::Matrix Camera::GetViewMatrix() const
+Math::Matrix4 Camera::GetViewMatrix() const
 {
 	const Math::Vector3 l = mLook;
 	const Math::Vector3 r = Normalize(Cross(Math::Vector3::YAxis(), l));
@@ -149,7 +149,7 @@ Math::Matrix Camera::GetViewMatrix() const
 	const float dy = -Dot(u, mPosition);
 	const float dz = -Dot(l, mPosition);
 
-	return Math::Matrix
+	return Math::Matrix4
 	(
 		r.x, u.x, l.x, 0.0f,
 		r.y, u.y, l.y, 0.0f,
@@ -160,7 +160,7 @@ Math::Matrix Camera::GetViewMatrix() const
 
 //----------------------------------------------------------------------------------------------------
 
-Math::Matrix Camera::GetProjectionMatrix(uint32_t screenWidth, uint32_t screenHeight) const
+Math::Matrix4 Camera::GetProjectionMatrix(uint32_t screenWidth, uint32_t screenHeight) const
 {
 	const float aspect = (float)screenWidth / (float)screenHeight;
 	const float h = 1 / tan(mFOV * 0.5f);
@@ -169,7 +169,7 @@ Math::Matrix Camera::GetProjectionMatrix(uint32_t screenWidth, uint32_t screenHe
 	const float n = mNearPlane;
 	const float d = f / (f - n);
 
-	return Math::Matrix
+	return Math::Matrix4
 	(
 		w, 0.0f, 0.0f, 0.0f,
 		0.0f, h, 0.0f, 0.0f,
@@ -193,7 +193,7 @@ Math::Ray Camera::ScreenPointToRay(int screenX, int screenY, uint32_t screenWidt
 	ray.org = Math::Vector3::Zero();
 	ray.dir = Normalize(Math::Vector3(dx, dy, 1.0f));
 
-	Math::Matrix invMatView = Inverse(GetViewMatrix());
+	Math::Matrix4 invMatView = Inverse(GetViewMatrix());
 	ray.org = TransformCoord(ray.org, invMatView);
 	ray.dir = TransformNormal(ray.dir, invMatView);
 	return ray;

@@ -18,7 +18,6 @@ struct Vector2
 
 	Vector2() : x(0.0f), y(0.0f) {}
 	Vector2(float inX, float inY) : x(inX), y(inY) {}
-	Vector2(int inX, int inY) : x(static_cast<float>(inX)), y(static_cast<float>(inY)) {}
 
 	static Vector2 Zero()						{ return Vector2(); }
 	static Vector2 One()						{ return Vector2(1.0f, 1.0f); }
@@ -119,21 +118,111 @@ struct Quaternion
 
 //----------------------------------------------------------------------------------------------------
 
-struct Matrix
+struct Matrix3
+{
+	float _11, _12, _13;
+	float _21, _22, _23;
+	float _31, _32, _33;
+
+	Matrix3()
+		: _11(0.0f), _12(0.0f), _13(0.0f)
+		, _21(0.0f), _22(0.0f), _23(0.0f)
+		, _31(0.0f), _32(0.0f), _33(0.0f)
+	{}
+
+	Matrix3(
+		float _11, float _12, float _13,
+		float _21, float _22, float _23,
+		float _31, float _32, float _33)
+		: _11(_11), _12(_12), _13(_13)
+		, _21(_21), _22(_22), _23(_23)
+		, _31(_31), _32(_32), _33(_33)
+	{}
+
+	static Matrix3 Zero()							{ return Matrix3(); }
+	static Matrix3 Identity()						{ return Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix3 Translation(float x, float y)	{ return Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, 1.0f); }
+	static Matrix3 Translation(const Vector2& v)	{ return Matrix3(1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, v.x, v.y, 1.0f); }
+	static Matrix3 Rotation(float rad)				{ return Matrix3(cosf(rad), sinf(rad), 0.0f, -sinf(rad), cosf(rad), 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix3 Scaling(float s)					{ return Matrix3(s, 0.0f, 0.0f, 0.0f, s, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix3 Scaling(float sx, float sy)		{ return Matrix3(sx, 0.0f, 0.0f, 0.0f, sy, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix3 Scaling(const Vector2& s)		{ return Matrix3(s.x, 0.0f, 0.0f, 0.0f, s.y, 0.0f, 0.0f, 0.0f, 1.0f); }
+
+	Matrix3 operator-() const
+	{
+		return Matrix3(
+			-_11, -_12, -_13,
+			-_21, -_22, -_23,
+			-_31, -_32, -_33);
+	}
+	Matrix3 operator+(const Matrix3& rhs) const
+	{
+		return Matrix3(
+			_11 + rhs._11, _12 + rhs._12, _13 + rhs._13,
+			_21 + rhs._21, _22 + rhs._22, _23 + rhs._23,
+			_31 + rhs._31, _32 + rhs._32, _33 + rhs._33);
+	}
+	Matrix3 operator-(const Matrix3& rhs) const
+	{
+		return Matrix3(
+			_11 - rhs._11, _12 - rhs._12, _13 - rhs._13,
+			_21 - rhs._21, _22 - rhs._22, _23 - rhs._23,
+			_31 - rhs._31, _32 - rhs._32, _33 - rhs._33);
+	}
+	Matrix3 operator*(const Matrix3& rhs) const
+	{
+		return Matrix3(
+			(_11 * rhs._11) + (_12 * rhs._21) + (_13 * rhs._31),
+			(_11 * rhs._12) + (_12 * rhs._22) + (_13 * rhs._32),
+			(_11 * rhs._13) + (_12 * rhs._23) + (_13 * rhs._33),
+
+			(_21 * rhs._11) + (_22 * rhs._21) + (_23 * rhs._31),
+			(_21 * rhs._12) + (_22 * rhs._22) + (_23 * rhs._32),
+			(_21 * rhs._13) + (_22 * rhs._23) + (_23 * rhs._33),
+
+			(_31 * rhs._11) + (_32 * rhs._21) + (_33 * rhs._31),
+			(_31 * rhs._12) + (_32 * rhs._22) + (_33 * rhs._32),
+			(_31 * rhs._13) + (_32 * rhs._23) + (_33 * rhs._33));
+	}
+	Matrix3 operator*(float s) const
+	{
+		return Matrix3(
+			_11 * s, _12 * s, _13 * s,
+			_21 * s, _22 * s, _23 * s,
+			_31 * s, _32 * s, _33 * s);
+	}
+	Matrix3 operator/(float s) const
+	{
+		XASSERT(s != 0.0f, "Cannot divide by 0!");
+		const float inv = 1.0f / s;
+		return (*this) * inv;
+	}
+	Matrix3 operator+=(const Matrix3& rhs)
+	{
+		_11 += rhs._11; _12 += rhs._12; _13 += rhs._13;
+		_21 += rhs._21; _22 += rhs._22; _23 += rhs._23;
+		_31 += rhs._31; _32 += rhs._32; _33 += rhs._33;
+		return *this;
+	}
+};
+
+//----------------------------------------------------------------------------------------------------
+
+struct Matrix4
 {
 	float _11, _12, _13, _14;
 	float _21, _22, _23, _24;
 	float _31, _32, _33, _34;
 	float _41, _42, _43, _44;
 
-	Matrix()
-		: _11(1.0f), _12(0.0f), _13(0.0f), _14(0.0f)
-		, _21(0.0f), _22(1.0f), _23(0.0f), _24(0.0f)
-		, _31(0.0f), _32(0.0f), _33(1.0f), _34(0.0f)
-		, _41(0.0f), _42(0.0f), _43(0.0f), _44(1.0f)
+	Matrix4()
+		: _11(0.0f), _12(0.0f), _13(0.0f), _14(0.0f)
+		, _21(0.0f), _22(0.0f), _23(0.0f), _24(0.0f)
+		, _31(0.0f), _32(0.0f), _33(0.0f), _34(0.0f)
+		, _41(0.0f), _42(0.0f), _43(0.0f), _44(0.0f)
 	{}
 
-	Matrix(
+	Matrix4(
 		float _11, float _12, float _13, float _14,
 		float _21, float _22, float _23, float _24,
 		float _31, float _32, float _33, float _34,
@@ -144,44 +233,44 @@ struct Matrix
 		, _41(_41), _42(_42), _43(_43), _44(_44)
 	{}
 
-	static Matrix Zero()										{ return Matrix(); }
-	static Matrix Identity()									{ return Matrix(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f ); }
-	static Matrix Translation(float x, float y, float z)		{ return Matrix(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, z, 1.0f ); }
-	static Matrix Translation(const Vector3& v)					{ return Matrix(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, v.x, v.y, v.z, 1.0f); }
-	static Matrix RotationX(const Vector3& axis, float rad)		{ return Matrix (1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cosf(rad), sinf(rad), 0.0f, 0.0f, -sinf(rad), cosf(rad), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
-	static Matrix RotationY(float rad)							{ return Matrix (cosf(rad), 0.0f, -sinf(rad), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sinf(rad), 0.0f, cosf(rad), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
-	static Matrix RotationZ(float rad)							{ return Matrix (cosf(rad), sinf(rad), 0.0f, 0.0f, -sinf(rad), cosf(rad), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
-	static Matrix Scaling(float s)								{ return Matrix(s, 0.0f, 0.0f, 0.0f, 0.0f, s, 0.0f, 0.0f, 0.0f, 0.0f, s, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
-	static Matrix Scaling(float sx, float sy, float sz)			{ return Matrix(sx, 0.0f, 0.0f, 0.0f, 0.0f, sy, 0.0f, 0.0f, 0.0f, 0.0f, sz, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
-	static Matrix Scaling(const Vector3& s)						{ return Matrix(s.x, 0.0f, 0.0f, 0.0f, 0.0f, s.y, 0.0f, 0.0f, 0.0f, 0.0f, s.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix4 Zero()									{ return Matrix4(); }
+	static Matrix4 Identity()								{ return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f ); }
+	static Matrix4 Translation(float x, float y, float z)	{ return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, x, y, z, 1.0f ); }
+	static Matrix4 Translation(const Vector3& v)			{ return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, v.x, v.y, v.z, 1.0f); }
+	static Matrix4 RotationX(float rad)						{ return Matrix4(1.0f, 0.0f, 0.0f, 0.0f, 0.0f, cosf(rad), sinf(rad), 0.0f, 0.0f, -sinf(rad), cosf(rad), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix4 RotationY(float rad)						{ return Matrix4(cosf(rad), 0.0f, -sinf(rad), 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, sinf(rad), 0.0f, cosf(rad), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix4 RotationZ(float rad)						{ return Matrix4(cosf(rad), sinf(rad), 0.0f, 0.0f, -sinf(rad), cosf(rad), 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix4 Scaling(float s)							{ return Matrix4(s, 0.0f, 0.0f, 0.0f, 0.0f, s, 0.0f, 0.0f, 0.0f, 0.0f, s, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix4 Scaling(float sx, float sy, float sz)	{ return Matrix4(sx, 0.0f, 0.0f, 0.0f, 0.0f, sy, 0.0f, 0.0f, 0.0f, 0.0f, sz, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
+	static Matrix4 Scaling(const Vector3& s)				{ return Matrix4(s.x, 0.0f, 0.0f, 0.0f, 0.0f, s.y, 0.0f, 0.0f, 0.0f, 0.0f, s.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f); }
 
-	Matrix operator-() const
+	Matrix4 operator-() const
 	{
-		return Matrix(
+		return Matrix4(
 			-_11, -_12, -_13, -_14,
 			-_21, -_22, -_23, -_24,
 			-_31, -_32, -_33, -_34,
 			-_41, -_42, -_43, -_44);
 	}
-	Matrix operator+(const Matrix& rhs) const
+	Matrix4 operator+(const Matrix4& rhs) const
 	{
-		return Matrix(
+		return Matrix4(
 			_11 + rhs._11, _12 + rhs._12, _13 + rhs._13, _14 + rhs._14,
 			_21 + rhs._21, _22 + rhs._22, _23 + rhs._23, _24 + rhs._24,
 			_31 + rhs._31, _32 + rhs._32, _33 + rhs._33, _34 + rhs._34,
 			_41 + rhs._41, _42 + rhs._42, _43 + rhs._43, _44 + rhs._44);
 	}
-	Matrix operator-(const Matrix& rhs) const
+	Matrix4 operator-(const Matrix4& rhs) const
 	{
-		return Matrix(
+		return Matrix4(
 			_11 - rhs._11, _12 - rhs._12, _13 - rhs._13, _14 - rhs._14,
 			_21 - rhs._21, _22 - rhs._22, _23 - rhs._23, _24 - rhs._24,
 			_31 - rhs._31, _32 - rhs._32, _33 - rhs._33, _34 - rhs._34,
 			_41 - rhs._41, _42 - rhs._42, _43 - rhs._43, _44 - rhs._44);
 	}
-	Matrix operator*(const Matrix& rhs) const
+	Matrix4 operator*(const Matrix4& rhs) const
 	{
-		return Matrix (
+		return Matrix4(
 			(_11 * rhs._11) + (_12 * rhs._21) + (_13 * rhs._31) + (_14 * rhs._41),
 			(_11 * rhs._12) + (_12 * rhs._22) + (_13 * rhs._32) + (_14 * rhs._42),
 			(_11 * rhs._13) + (_12 * rhs._23) + (_13 * rhs._33) + (_14 * rhs._43),
@@ -202,23 +291,21 @@ struct Matrix
 			(_41 * rhs._13) + (_42 * rhs._23) + (_43 * rhs._33) + (_44 * rhs._43),
 			(_41 * rhs._14) + (_42 * rhs._24) + (_43 * rhs._34) + (_44 * rhs._44));
 	}
-	Matrix operator*(float s) const
+	Matrix4 operator*(float s) const
 	{
-		return Matrix(
+		return Matrix4(
 			_11 * s, _12 * s, _13 * s, _14 * s,
 			_21 * s, _22 * s, _23 * s, _24 * s,
 			_31 * s, _32 * s, _33 * s, _34 * s,
 			_41 * s, _42 * s, _43 * s, _44 * s);
 	}
-	Matrix operator/(float s) const
+	Matrix4 operator/(float s) const
 	{
-		return Matrix(
-			_11 / s, _12 / s, _13 / s, _14 / s,
-			_21 / s, _22 / s, _23 / s, _24 / s,
-			_31 / s, _32 / s, _33 / s, _34 / s,
-			_41 / s, _42 / s, _43 / s, _44 / s);
+		XASSERT(s != 0.0f, "Cannot divide by 0!");
+		const float inv = 1.0f / s;
+		return (*this) * inv;
 	}
-	Matrix operator+=(const Matrix& rhs)
+	Matrix4 operator+=(const Matrix4& rhs)
 	{
 		_11 += rhs._11; _12 += rhs._12; _13 += rhs._13; _14 += rhs._14;
 		_21 += rhs._21; _22 += rhs._22; _23 += rhs._23; _24 += rhs._24;
@@ -396,10 +483,11 @@ inline Vector3 Project(const Vector3& v, const Vector3& n)			{ return n * (Dot(v
 inline Vector2 Reflect(const Vector2& v, const Vector2& normal)		{ return v - (normal * Dot(v, normal) * 2.0f); }
 inline Vector3 Reflect(const Vector3& v, const Vector3& normal)		{ return v - (normal * Dot(v, normal) * 2.0f); }
 
-inline Vector3 GetTranslation(const Matrix& m)						{ return Vector3(m._41, m._42, m._43); }
-inline Vector3 GetRight(const Matrix& m)							{ return Vector3(m._11, m._12, m._13); }
-inline Vector3 GetUp(const Matrix& m)								{ return Vector3(m._21, m._22, m._23); }
-inline Vector3 GetForward(const Matrix& m)							{ return Vector3(m._31, m._32, m._33); }
+inline Vector2 GetTranslation(const Matrix3& m) { return Vector2(m._31, m._32); }
+inline Vector3 GetTranslation(const Matrix4& m) { return Vector3(m._41, m._42, m._43); }
+inline Vector3 GetRight(const Matrix4& m) { return Vector3(m._11, m._12, m._13); }
+inline Vector3 GetUp(const Matrix4& m) { return Vector3(m._21, m._22, m._23); }
+inline Vector3 GetForward(const Matrix4& m) { return Vector3(m._31, m._32, m._33); }
 
 inline Vector3 GetPoint(const Ray& ray, float distance)				{ return ray.org + (ray.dir * distance); }
 
@@ -418,52 +506,96 @@ inline Vector2 Rotate(const Vector2& v, float rad)
 	);
 }
 
-inline float Determinant(const Matrix& m)
+inline float Determinant(const Matrix3& m)
 {
 	float det = 0.0f;
-	det  = (m._11 * (m._22 * (m._33 * m._44 - (m._43 * m._34)) - m._23 * (m._32 * m._44 - (m._42 * m._34)) + m._24 * (m._32 * m._43 - (m._42 * m._33))));
+	det = (m._11 * (m._22 * m._33 - m._23 * m._32));
+	det -= (m._12 * (m._21 * m._33 - m._23 * m._31));
+	det += (m._13 * (m._21 * m._32 - m._22 * m._31));
+	return det;
+}
+
+inline float Determinant(const Matrix4& m)
+{
+	float det = 0.0f;
+	det = (m._11 * (m._22 * (m._33 * m._44 - (m._43 * m._34)) - m._23 * (m._32 * m._44 - (m._42 * m._34)) + m._24 * (m._32 * m._43 - (m._42 * m._33))));
 	det -= (m._12 * (m._21 * (m._33 * m._44 - (m._43 * m._34)) - m._23 * (m._31 * m._44 - (m._41 * m._34)) + m._24 * (m._31 * m._43 - (m._41 * m._33))));
 	det += (m._13 * (m._21 * (m._32 * m._44 - (m._42 * m._34)) - m._22 * (m._31 * m._44 - (m._41 * m._34)) + m._24 * (m._31 * m._42 - (m._41 * m._32))));
 	det -= (m._14 * (m._21 * (m._32 * m._43 - (m._42 * m._33)) - m._22 * (m._31 * m._43 - (m._41 * m._33)) + m._23 * (m._31 * m._42 - (m._41 * m._32))));
 	return det;
 }
 
-inline Matrix Adjoint(const Matrix& m)
+inline Matrix3 Adjoint(const Matrix3& m)
 {
-	return Matrix
+	return Matrix3
 	(
-		 (m._22 * ((m._33 * m._44) - (m._43 * m._34)) - m._23 * ((m._32 * m._44) - (m._42 * m._34)) + m._24 * ((m._32 * m._43) - (m._42 * m._33))),
-		-(m._12 * ((m._33 * m._44) - (m._43 * m._34)) - m._13 * ((m._32 * m._44) - (m._42 * m._34)) + m._14 * ((m._32 * m._43) - (m._42 * m._33))),
-		 (m._12 * ((m._23 * m._44) - (m._43 * m._24)) - m._13 * ((m._22 * m._44) - (m._42 * m._24)) + m._14 * ((m._22 * m._43) - (m._42 * m._23))),
-		-(m._12 * ((m._23 * m._34) - (m._33 * m._24)) - m._13 * ((m._22 * m._34) - (m._32 * m._24)) + m._14 * ((m._22 * m._33) - (m._32 * m._23))),
+		(m._22 * m._33 - m._23 * m._32),
+		-(m._12 * m._33 - m._13 * m._32),
+		(m._12 * m._23 - m._13 * m._22),
 
-		-(m._21 * ((m._33 * m._44) - (m._43 * m._34)) - m._31 * ((m._23 * m._44) - (m._24 * m._43)) + m._41 * ((m._23 * m._34) - (m._24 * m._33))),
-		 (m._11 * ((m._33 * m._44) - (m._43 * m._34)) - m._13 * ((m._31 * m._44) - (m._41 * m._34)) + m._14 * ((m._31 * m._43) - (m._41 * m._33))),
-		-(m._11 * ((m._23 * m._44) - (m._43 * m._24)) - m._13 * ((m._21 * m._44) - (m._41 * m._24)) + m._14 * ((m._21 * m._43) - (m._41 * m._23))),
-		 (m._11 * ((m._23 * m._34) - (m._33 * m._24)) - m._13 * ((m._21 * m._34) - (m._31 * m._24)) + m._14 * ((m._21 * m._33) - (m._31 * m._23))),
+		-(m._21 * m._33 - m._23 * m._31),
+		(m._11 * m._33 - m._13 * m._31),
+		-(m._11 * m._23 - m._13 * m._21),
 
-		 (m._21 * ((m._32 * m._44) - (m._42 * m._34)) - m._31 * ((m._22 * m._44) - (m._42 * m._24)) + m._41 * ((m._22 * m._34) - (m._32 * m._24))),
-		-(m._11 * ((m._32 * m._44) - (m._42 * m._34)) - m._31 * ((m._12 * m._44) - (m._42 * m._14)) + m._41 * ((m._12 * m._34) - (m._32 * m._14))),
-		 (m._11 * ((m._22 * m._44) - (m._42 * m._24)) - m._12 * ((m._21 * m._44) - (m._41 * m._24)) + m._14 * ((m._21 * m._42) - (m._41 * m._22))),
-		-(m._11 * ((m._22 * m._34) - (m._32 * m._24)) - m._21 * ((m._12 * m._34) - (m._32 * m._14)) + m._31 * ((m._12 * m._24) - (m._22 * m._14))),
-
-		-(m._21 * ((m._32 * m._43) - (m._42 * m._33)) - m._31 * ((m._22 * m._43) - (m._42 * m._23)) + m._41 * ((m._22 * m._33) - (m._32 * m._23))),
-		 (m._11 * ((m._32 * m._43) - (m._42 * m._33)) - m._12 * ((m._31 * m._43) - (m._41 * m._33)) + m._13 * ((m._31 * m._42) - (m._41 * m._32))),
-		-(m._11 * ((m._22 * m._43) - (m._42 * m._23)) - m._12 * ((m._21 * m._43) - (m._41 * m._23)) + m._13 * ((m._21 * m._42) - (m._41 * m._22))),
-		 (m._11 * ((m._22 * m._33) - (m._32 * m._23)) - m._12 * ((m._21 * m._33) - (m._31 * m._23)) + m._13 * ((m._21 * m._32) - (m._31 * m._22)))
+		(m._21 * m._32 - m._22 * m._31),
+		-(m._11 * m._32 - m._12 * m._31),
+		(m._11 * m._22 - m._12 * m._21)
 	);
 }
 
-inline Matrix Inverse(const Matrix& m)
+inline Matrix4 Adjoint(const Matrix4& m)
+{
+	return Matrix4
+	(
+		(m._22 * ((m._33 * m._44) - (m._43 * m._34)) - m._23 * ((m._32 * m._44) - (m._42 * m._34)) + m._24 * ((m._32 * m._43) - (m._42 * m._33))),
+		-(m._12 * ((m._33 * m._44) - (m._43 * m._34)) - m._13 * ((m._32 * m._44) - (m._42 * m._34)) + m._14 * ((m._32 * m._43) - (m._42 * m._33))),
+		(m._12 * ((m._23 * m._44) - (m._43 * m._24)) - m._13 * ((m._22 * m._44) - (m._42 * m._24)) + m._14 * ((m._22 * m._43) - (m._42 * m._23))),
+		-(m._12 * ((m._23 * m._34) - (m._33 * m._24)) - m._13 * ((m._22 * m._34) - (m._32 * m._24)) + m._14 * ((m._22 * m._33) - (m._32 * m._23))),
+
+		-(m._21 * ((m._33 * m._44) - (m._43 * m._34)) - m._31 * ((m._23 * m._44) - (m._24 * m._43)) + m._41 * ((m._23 * m._34) - (m._24 * m._33))),
+		(m._11 * ((m._33 * m._44) - (m._43 * m._34)) - m._13 * ((m._31 * m._44) - (m._41 * m._34)) + m._14 * ((m._31 * m._43) - (m._41 * m._33))),
+		-(m._11 * ((m._23 * m._44) - (m._43 * m._24)) - m._13 * ((m._21 * m._44) - (m._41 * m._24)) + m._14 * ((m._21 * m._43) - (m._41 * m._23))),
+		(m._11 * ((m._23 * m._34) - (m._33 * m._24)) - m._13 * ((m._21 * m._34) - (m._31 * m._24)) + m._14 * ((m._21 * m._33) - (m._31 * m._23))),
+
+		(m._21 * ((m._32 * m._44) - (m._42 * m._34)) - m._31 * ((m._22 * m._44) - (m._42 * m._24)) + m._41 * ((m._22 * m._34) - (m._32 * m._24))),
+		-(m._11 * ((m._32 * m._44) - (m._42 * m._34)) - m._31 * ((m._12 * m._44) - (m._42 * m._14)) + m._41 * ((m._12 * m._34) - (m._32 * m._14))),
+		(m._11 * ((m._22 * m._44) - (m._42 * m._24)) - m._12 * ((m._21 * m._44) - (m._41 * m._24)) + m._14 * ((m._21 * m._42) - (m._41 * m._22))),
+		-(m._11 * ((m._22 * m._34) - (m._32 * m._24)) - m._21 * ((m._12 * m._34) - (m._32 * m._14)) + m._31 * ((m._12 * m._24) - (m._22 * m._14))),
+
+		-(m._21 * ((m._32 * m._43) - (m._42 * m._33)) - m._31 * ((m._22 * m._43) - (m._42 * m._23)) + m._41 * ((m._22 * m._33) - (m._32 * m._23))),
+		(m._11 * ((m._32 * m._43) - (m._42 * m._33)) - m._12 * ((m._31 * m._43) - (m._41 * m._33)) + m._13 * ((m._31 * m._42) - (m._41 * m._32))),
+		-(m._11 * ((m._22 * m._43) - (m._42 * m._23)) - m._12 * ((m._21 * m._43) - (m._41 * m._23)) + m._13 * ((m._21 * m._42) - (m._41 * m._22))),
+		(m._11 * ((m._22 * m._33) - (m._32 * m._23)) - m._12 * ((m._21 * m._33) - (m._31 * m._23)) + m._13 * ((m._21 * m._32) - (m._31 * m._22)))
+	);
+}
+
+inline Matrix3 Inverse(const Matrix3& m)
 {
 	const float determinant = Determinant(m);
 	const float invDet = 1.0f / determinant;
 	return Adjoint(m) * invDet;
 }
 
-inline Matrix Transpose(const Matrix& m)
+inline Matrix4 Inverse(const Matrix4& m)
 {
-	return Matrix
+	const float determinant = Determinant(m);
+	const float invDet = 1.0f / determinant;
+	return Adjoint(m) * invDet;
+}
+
+inline Matrix3 Transpose(const Matrix3& m)
+{
+	return Matrix3
+	(
+		m._11, m._21, m._31,
+		m._12, m._22, m._32,
+		m._13, m._23, m._33
+	);
+}
+
+inline Matrix4 Transpose(const Matrix4& m)
+{
+	return Matrix4
 	(
 		m._11, m._21, m._31, m._41,
 		m._12, m._22, m._32, m._42,
@@ -472,7 +604,16 @@ inline Matrix Transpose(const Matrix& m)
 	);
 }
 
-inline Vector3 TransformCoord(const Vector3& v, const Matrix& m)
+inline Vector2 TransformCoord(const Vector2& v, const Matrix3& m)
+{
+	return Vector2
+	(
+		v.x * m._11 + v.y * m._21 + m._31,
+		v.x * m._12 + v.y * m._22 + m._32
+	);
+}
+
+inline Vector3 TransformCoord(const Vector3& v, const Matrix4& m)
 {
 	return Vector3
 	(
@@ -482,7 +623,16 @@ inline Vector3 TransformCoord(const Vector3& v, const Matrix& m)
 	);
 }
 
-inline Vector3 TransformNormal(const Vector3& v, const Matrix& m)
+inline Vector2 TransformNormal(const Vector2& v, const Matrix3& m)
+{
+	return Vector2
+	(
+		v.x * m._11 + v.y * m._21,
+		v.x * m._12 + v.y * m._22
+	);
+}
+
+inline Vector3 TransformNormal(const Vector3& v, const Matrix4& m)
 {
 	return Vector3
 	(
@@ -494,8 +644,8 @@ inline Vector3 TransformNormal(const Vector3& v, const Matrix& m)
 
 Quaternion QuaternionLookRotation(const Vector3& forward, const Vector3& up);
 Quaternion QuaternionRotationAxis(const Vector3& axis, float rad);
-Matrix MatrixRotationAxis(const Vector3& axis, float rad);
-Matrix MatrixRotationQuaternion(const Quaternion& q);
+Matrix4 MatrixRotationAxis(const Vector3& axis, float rad);
+Matrix4 MatrixRotationQuaternion(const Quaternion& q);
 
 Quaternion Slerp(Quaternion q0, Quaternion q1, float t);
 

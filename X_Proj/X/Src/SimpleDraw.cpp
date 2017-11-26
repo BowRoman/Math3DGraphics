@@ -46,7 +46,7 @@ namespace
 
 	struct CBSimpleDraw
 	{
-		Math::Matrix transform;
+		Math::Matrix4 transform;
 	};
 
 	class SimpleDrawImpl
@@ -67,7 +67,7 @@ namespace
 		void AddAABB(const Math::AABB& aabb, const Math::Vector4& color);
 		void AddOBB(const Math::OBB& obb, const Math::Vector4& color);
 		void AddSphere(const Math::Sphere& sphere, const Math::Vector4& color, uint32_t slices, uint32_t rings);
-		void AddTransform(const Math::Matrix& transform);
+		void AddTransform(const Math::Matrix4& transform);
 
 		// Functions to add screen lines
 		void AddScreenLine(const Math::Vector2& v0, const Math::Vector2& v1, const Math::Vector4& color);
@@ -117,7 +117,7 @@ namespace
 	{
 		XASSERT(!mInitialized, "[SimpleDraw] Already initialized.");
 
-		const int kSimpleShaderSize = static_cast<const int>(strlen(kSimpleShader) + 1);
+		const uint32_t kSimpleShaderSize = (uint32_t)strlen(kSimpleShader) + 1;
 		mVertexShader.Initialize(kSimpleShader, kSimpleShaderSize, "VS", "vs_5_0", VertexPC::Format);
 		mPixelShader.Initialize(kSimpleShader, kSimpleShaderSize, "PS", "ps_5_0");
 		mConstantBuffer.Initialize();
@@ -240,10 +240,10 @@ namespace
 	{
 		XASSERT(mInitialized, "[SimpleDraw] Not initialized.");
 
-		Math::Matrix matTrans = Math::Matrix::Translation(obb.center);
-		Math::Matrix matRot = Math::MatrixRotationQuaternion(obb.orientation);
-		Math::Matrix matScale = Math::Matrix::Scaling(obb.extend);
-		Math::Matrix toWorld = matScale * matRot * matTrans;
+		Math::Matrix4 matTrans = Math::Matrix4::Translation(obb.center);
+		Math::Matrix4 matRot = Math::MatrixRotationQuaternion(obb.orientation);
+		Math::Matrix4 matScale = Math::Matrix4::Scaling(obb.extend);
+		Math::Matrix4 toWorld = matScale * matRot * matTrans;
 
 		Math::Vector3 points[] =
 		{
@@ -339,7 +339,7 @@ namespace
 		XASSERT(mNumVertices3D < mMaxVertices, "[SimpleDraw] Too many vertices!");
 	}
 
-	void SimpleDrawImpl::AddTransform(const Math::Matrix& transform)
+	void SimpleDrawImpl::AddTransform(const Math::Matrix4& transform)
 	{
 		Math::Vector3 position = Math::GetTranslation(transform);
 		Math::Vector3 right = Math::GetRight(transform);
@@ -431,8 +431,8 @@ namespace
 		const uint32_t screenWidth = gs->GetWidth();
 		const uint32_t screenHeight = gs->GetHeight();
 
-		const Math::Matrix& matView = camera.GetViewMatrix();
-		const Math::Matrix& matProj = camera.GetProjectionMatrix(screenWidth, screenHeight);
+		const Math::Matrix4& matView = camera.GetViewMatrix();
+		const Math::Matrix4& matProj = camera.GetProjectionMatrix(screenWidth, screenHeight);
 
 		mVertexShader.Bind();
 		mPixelShader.Bind();
@@ -459,7 +459,7 @@ namespace
 
 		const uint32_t w = gs->GetWidth();
 		const uint32_t h = gs->GetHeight();
-		Math::Matrix matInvScreen
+		Math::Matrix4 matInvScreen
 		(
 			2.0f / w, 0.0f, 0.0f, 0.0f,
 			0.0f, -2.0f / h, 0.0f, 0.0f,
@@ -588,7 +588,7 @@ void SimpleDraw::AddSphere(float x, float y, float z, float radius, const Math::
 
 //----------------------------------------------------------------------------------------------------
 
-void SimpleDraw::AddTransform(const Math::Matrix& transform)
+void SimpleDraw::AddTransform(const Math::Matrix4& transform)
 {
 	XASSERT(sSimpleDrawImpl != nullptr, "[SimpleDraw] Not initialized.");
 	sSimpleDrawImpl->AddTransform(transform);

@@ -26,7 +26,7 @@ void AddOBB(const Math::OBB& obb, const Math::Vector4& color);
 void AddSphere(const Math::Sphere& sphere, const Math::Vector4& color, uint32_t slices = 8, uint32_t rings = 4);
 void AddSphere(const Math::Vector3& center, float radius, const Math::Vector4& color, uint32_t slices = 8, uint32_t rings = 4);
 void AddSphere(float x, float y, float z, float radius, const Math::Vector4& color, uint32_t slices = 8, uint32_t rings = 4);
-void AddTransform(const Math::Matrix& transform);
+void AddTransform(const Math::Matrix4& transform);
 
 // Functions for screen space rendering
 void AddScreenLine(const Math::Vector2& v0, const Math::Vector2& v1, const Math::Vector4& color);

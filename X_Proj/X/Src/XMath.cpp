@@ -30,7 +30,7 @@ Quaternion X::Math::QuaternionLookRotation(const Vector3& forward, const Vector3
 	Vector3 z = Normalize(forward);
 	Vector3 x = Normalize(Cross(up, z));
 	Vector3 y = Normalize(Cross(z, x));
-	Matrix mat
+	Matrix4 mat
 	(
 		x.x, x.y, x.z, 0.0f,
 		y.x, y.y, y.z, 0.0f,
@@ -55,7 +55,7 @@ Quaternion X::Math::QuaternionRotationAxis(const Vector3& axis, float rad)
 
 //----------------------------------------------------------------------------------------------------
 
-Matrix X::Math::MatrixRotationAxis(const Vector3& axis, float rad)
+Matrix4 X::Math::MatrixRotationAxis(const Vector3& axis, float rad)
 {
 	const Vector3 u = Normalize(axis);
 	const float x = u.x;
@@ -64,7 +64,7 @@ Matrix X::Math::MatrixRotationAxis(const Vector3& axis, float rad)
 	const float s = sin(rad);
 	const float c = cos(rad);
 
-	return Matrix
+	return Matrix4
 	(
 		c + (x * x * (1.0f - c)),
 		x * y * (1.0f - c) + z * s,
@@ -90,9 +90,9 @@ Matrix X::Math::MatrixRotationAxis(const Vector3& axis, float rad)
 
 //----------------------------------------------------------------------------------------------------
 
-Matrix X::Math::MatrixRotationQuaternion(const Quaternion& q)
+Matrix4 X::Math::MatrixRotationQuaternion(const Quaternion& q)
 {
-	return Matrix
+	return Matrix4
 	(
 		1.0f - (2.0f * q.y * q.y) - (2.0f * q.z * q.z),
 		(2.0f * q.x * q.y) + (2.0f * q.z * q.w),
@@ -473,10 +473,10 @@ bool X::Math::Intersect(const Ray& ray, const AABB& aabb, float& distEntry, floa
 bool X::Math::Intersect(const Ray& ray, const OBB& obb, float& distEntry, float& distExit)
 {
 	// Compute the local-to-world/world-to-local matrices
-	Matrix matTrans = Matrix::Translation(obb.center.x, obb.center.y, obb.center.z);
-	Matrix matRot = MatrixRotationQuaternion(obb.orientation);
-	Matrix matWorld = matRot * matTrans;
-	Matrix matWorldInv = Inverse(matWorld);
+	Matrix4 matTrans = Matrix4::Translation(obb.center.x, obb.center.y, obb.center.z);
+	Matrix4 matRot = MatrixRotationQuaternion(obb.orientation);
+	Matrix4 matWorld = matRot * matTrans;
+	Matrix4 matWorldInv = Inverse(matWorld);
 
 	// Transform the ray into the OBB's local space
 	Vector3 org = TransformCoord(ray.org, matWorldInv);
@@ -502,10 +502,10 @@ bool X::Math::Intersect(const Vector3& point, const AABB& aabb)
 bool X::Math::Intersect(const Vector3& point, const OBB& obb)
 {
 	// Compute the local-to-world/world-to-local matrices
-	Matrix matTrans = Matrix::Translation(obb.center.x, obb.center.y, obb.center.z);
-	Matrix matRot = MatrixRotationQuaternion(obb.orientation);
-	Matrix matWorld = matRot * matTrans;
-	Matrix matWorldInv = Inverse(matWorld);
+	Matrix4 matTrans = Matrix4::Translation(obb.center.x, obb.center.y, obb.center.z);
+	Matrix4 matRot = MatrixRotationQuaternion(obb.orientation);
+	Matrix4 matWorld = matRot * matTrans;
+	Matrix4 matWorldInv = Inverse(matWorld);
 
 	// Transform the point into the OBB's local space
 	Vector3 localPoint = TransformCoord(point, matWorldInv);
@@ -520,9 +520,9 @@ bool X::Math::Intersect(const Vector3& point, const OBB& obb)
 void X::Math::GetCorners(const OBB& obb, std::vector<Vector3>& corners)
 {
 	// Compute the local-to-world matrices
-	Matrix matTrans = Matrix::Translation(obb.center.x, obb.center.y, obb.center.z);
-	Matrix matRot = MatrixRotationQuaternion(obb.orientation);
-	Matrix matWorld = matRot * matTrans;
+	Matrix4 matTrans = Matrix4::Translation(obb.center.x, obb.center.y, obb.center.z);
+	Matrix4 matRot = MatrixRotationQuaternion(obb.orientation);
+	Matrix4 matWorld = matRot * matTrans;
 
 	// Create a local AABB
 	corners.clear();
@@ -548,10 +548,10 @@ void X::Math::GetCorners(const OBB& obb, std::vector<Vector3>& corners)
 bool X::Math::GetContactPoint(const Ray& ray, const OBB& obb, Vector3& point, Vector3& normal)
 {
 	// Compute the local-to-world/world-to-local matrices
-	Matrix matTrans = Matrix::Translation(obb.center.x, obb.center.y, obb.center.z);
-	Matrix matRot = MatrixRotationQuaternion(obb.orientation);
-	Matrix matWorld = matRot * matTrans;
-	Matrix matWorldInv = Inverse(matWorld);
+	Matrix4 matTrans = Matrix4::Translation(obb.center.x, obb.center.y, obb.center.z);
+	Matrix4 matRot = MatrixRotationQuaternion(obb.orientation);
+	Matrix4 matWorld = matRot * matTrans;
+	Matrix4 matWorldInv = Inverse(matWorld);
 
 	// Transform the ray into the OBB's local space
 	Vector3 org = TransformCoord(ray.org, matWorldInv);

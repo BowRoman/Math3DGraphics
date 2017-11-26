@@ -41,8 +41,8 @@ public:
 	float GetNearPlane() const					{ return mNearPlane; }
 	float GetFarPlane() const					{ return mFarPlane; }
 	
-	Math::Matrix GetViewMatrix() const;
-	Math::Matrix GetProjectionMatrix(uint32_t screenWidth, uint32_t screenHeight) const;
+	Math::Matrix4 GetViewMatrix() const;
+	Math::Matrix4 GetProjectionMatrix(uint32_t screenWidth, uint32_t screenHeight) const;
 
 	Math::Ray ScreenPointToRay(int screenX, int screenY, uint32_t screenWidth, uint32_t screenHeight) const;
 
