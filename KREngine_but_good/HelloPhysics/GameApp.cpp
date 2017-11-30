@@ -92,6 +92,49 @@ void GameApp::OnUpdate()
 		mCameraTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * dTime);
 		mCameraTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * dTime);
 	}
+	if (is->IsKeyDown(Keys::ONE))
+	{
+		mPhysicsWorld.ClearDynamic();
+		for (int i = 0; i < 100; ++i)
+		{
+			auto p = new Physics::Particle();
+			p->SetPosition({ 0.0f,0.0f,0.0f });
+			p->SetVelocity({
+				Math::Random::GetF(-0.1f,  +0.1f),
+				Math::Random::GetF(+0.05f, +0.15f),
+				Math::Random::GetF(-0.1f,  +0.1f)
+			});
+			mPhysicsWorld.AddParticle(p);
+		}
+	}
+	if (is->IsKeyDown(Keys::TWO))
+	{
+		mPhysicsWorld.ClearDynamic();
+		for (int i = 0; i < 50; ++i)
+		{
+			auto p0 = new Physics::Particle();
+			p0->SetPosition({ 0.0f,0.0f,0.0f });
+			p0->SetRadius(0.5f);
+			p0->SetVelocity({
+				Math::Random::GetF(-0.1f,  +0.1f),
+				Math::Random::GetF(+0.05f, +0.15f),
+				Math::Random::GetF(-0.1f,  +0.1f)
+			});
+			auto p1 = new Physics::Particle();
+			p1->SetPosition({ 0.0f,0.0f,0.0f });
+			p1->SetRadius(0.5f);
+			p1->SetVelocity({
+				Math::Random::GetF(-0.1f,  +0.1f),
+				Math::Random::GetF(+0.05f, +0.15f),
+				Math::Random::GetF(-0.1f,  +0.1f)
+			});
+			mPhysicsWorld.AddParticle(p0);
+			mPhysicsWorld.AddParticle(p1);
+			auto c0 = new Physics::Spring(p0,p1,1.0f);
+			mPhysicsWorld.AddConstraint(c0);
+		}
+	}
+	mPhysicsWorld.Update(dTime);
 
 	Graphics::GraphicsSystem::Get()->BeginRender();
 
@@ -104,16 +147,17 @@ void GameApp::OnUpdate()
 	{
 		Math::Vector3 p0(-50.0f, -0.1f, -50.0f + i);
 		Math::Vector3 p1(+50.0f, -0.1f, -50.0f + i);
-		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Cyan());
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Black());
 	}
 	for (int i = 0; i < 100; ++i)
 	{
 		Math::Vector3 p0(-50.0f + i, -0.1f, -50.0f);
 		Math::Vector3 p1(-50.0f + i, -0.1f, +50.0f);
-		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Cyan());
+		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Black());
 	}
 
 	Graphics::SimpleDraw::DrawTransform(Math::Matrix4::Identity());
+	mPhysicsWorld.DebugDraw();
 
 	Graphics::SimpleDraw::Flush(viewMatrix * projectionMatrix);
 

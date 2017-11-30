@@ -23,7 +23,7 @@ Particle::Particle(const Math::Vector3& position, float radius, float invMass)
 
 void Particle::DebugDraw() const
 {
-	Graphics::SimpleDraw::DrawSphere(mPosition, 3, 2, mRadius);
+	Graphics::SimpleDraw::DrawSphere(mPosition, 3, 2, mRadius, Math::Vector4::Strobe());
 }
 
 void Particle::SetPosition(Math::Vector3 position)

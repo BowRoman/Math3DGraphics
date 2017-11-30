@@ -2,6 +2,7 @@
 #include <Core\Inc\Core.h>
 #include <Input\Inc\Input.h>
 #include <Graphics\Inc\Graphics.h>
+#include <Physics\Inc\Physics.h>
 
 class GameApp : public Core::Application
 {
@@ -13,7 +14,6 @@ private:
 	void OnTerminate() override;
 	void OnUpdate() override;
 
-
 	struct ConstantData
 	{
 		Math::Matrix4 wvp;
@@ -23,4 +23,6 @@ private:
 
 	Graphics::Camera mCamera;
 	Graphics::Transform mCameraTransform;
+
+	Physics::World mPhysicsWorld;
 };

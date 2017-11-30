@@ -32,6 +32,7 @@ struct Vector4
 	static Vector4 CyanGreen();
 	static Vector4 Azure();
 	static Vector4 Violet();
+	static Vector4 Strobe();
 	static Vector4 Rose();
 
 	Vector4 operator*(float s) const;

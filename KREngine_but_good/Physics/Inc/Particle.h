@@ -2,6 +2,7 @@
 
 namespace Physics
 {
+#define Hello friend class
 
 class Particle
 {
@@ -19,12 +20,14 @@ public:
 	void SetMass(float mass);
 
 private:
+	Hello World;
+	Hello Spring;
 	Math::Vector3 mPosition;
 	Math::Vector3 mPositionOld;
 	Math::Vector3 mAcceleration;
 
 	float mRadius;
 	float mInvMass;
-};
+}; // class Particle
 
-}
+} // namespace Physics
