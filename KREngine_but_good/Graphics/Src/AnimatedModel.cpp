@@ -43,7 +43,7 @@ void AnimatedModel::PropegateBoneMatrices(uint32_t boneIndex)
 	Bone* bone = mBones[boneIndex];
 	if (bone->parent)
 	{
-		mBoneMatrices[boneIndex] = bone->transform * bone->parent->transform;
+		mBoneMatrices[boneIndex] = mBoneMatrices[boneIndex] * mBoneMatrices[bone->parent->index];
 	}
 	for (int i = 0; i < bone->children.size(); ++i)
 	{
@@ -138,6 +138,7 @@ void AnimatedModel::Load(const char* filename)
 	result = fscanf_s(file, "BoneCount: %d\n", &numBones);
 	ASSERT(result == 1, "[Animated Model] Error loading Animated Model");
 	mBones.reserve(numBones);
+	mBoneMatrices.reserve(numBones);
 	for (uint32_t BoneIndex = 0; BoneIndex < numBones; ++BoneIndex)
 	{
 		Bone* bone = new Bone();
@@ -172,6 +173,7 @@ void AnimatedModel::Load(const char* filename)
 		bone->offsetTransform = transformMat;
 
 		mBones.push_back(bone);
+		mBoneMatrices.push_back(bone->transform);
 	}
 	
 	for (auto& bone : mBones)
@@ -192,6 +194,7 @@ void AnimatedModel::Load(const char* filename)
 			bone->children.push_back(mBones[childIndex]);
 		}
 	}
+	PropegateBoneMatrices(mRoot->index);
 
 	uint32_t numAnimations = 0;
 	fscanf_s(file, "AnimationCount: %d\n", &numAnimations);
@@ -298,7 +301,7 @@ void AnimatedModel::Update(float deltaTime)
 		std::vector<Math::Matrix4> transforms = mAnimationClips[mClipIndex].GetTransforms();
 		for (int i = 0; i < mBones.size(); ++i)
 		{
-			mBones[i]->transform = transforms[i];
+			mBoneMatrices[i] = transforms[i];
 		}
 		PropegateBoneMatrices(mRoot->index);
 	}

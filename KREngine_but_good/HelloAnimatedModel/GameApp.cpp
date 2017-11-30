@@ -161,22 +161,16 @@ void GameApp::OnUpdate()
 }
 void GameApp::DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform)
 {
-	mModel.
-}
-void GameApp::DrawBones(Graphics::Bone* bone, Math::Matrix4 parentTransform)
-{
-	Math::Matrix4 transform = parentTransform;
+	Math::Matrix4 transform = mModel.GetBoneTransform(bone->index);
 	Math::Vector3 pos1 = Math::Vector3(transform._41, transform._42, transform._43);
+	Graphics::SimpleDraw::DrawSphere(pos1, 5, 5, 0.05f);
 	if (bone->parent)
 	{
-		Math::Matrix4 boneMat = bone->transform;
-		transform = boneMat * parentTransform;
+		parentTransform = mModel.GetBoneTransform(bone->parentIndex);
 
 		pos1 = Math::Vector3(transform._41, transform._42, transform._43);
 		Math::Vector3 pos2 = Math::Vector3(parentTransform._41, parentTransform._42, parentTransform._43);
 		Math::Vector4 color = Math::Vector4::CyanGreen();
-		Graphics::SimpleDraw::DrawSphere(pos1,5,5,0.05f);
-		Graphics::SimpleDraw::DrawSphere(pos2,5,5,0.05f);
 		Graphics::SimpleDraw::DrawLine(pos1, pos2, color);
 	}
 	for (int i = 0; i < bone->children.size(); ++i)

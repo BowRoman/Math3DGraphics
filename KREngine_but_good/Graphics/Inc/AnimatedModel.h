@@ -36,6 +36,7 @@ public:
 	void Render();
 
 	Bone* GetRoot() const { return mRoot; }
+	Math::Matrix4 GetBoneTransform(uint32_t index) const { return mBoneMatrices[index]; }
 
 private:
 	Bone* mRoot;
