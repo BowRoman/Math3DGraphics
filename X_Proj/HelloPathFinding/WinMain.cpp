@@ -1,6 +1,8 @@
 #include <Ai.h>
 #include <XEngine.h>
 
+#include <limits>
+
 const size_t numRows = 24;
 const size_t numColumns = 32;
 typedef Ai::Graph<numRows, numColumns> NavGraph;
@@ -39,9 +41,12 @@ std::list<Ai::Graph<24, 32>::Node*> path;
 enum SearchType
 {
 	DFS = 0,
-	BFS = 1
+	BFS = 1,
+	Dijkstra = 2,
+	AStar = 3,
+	End
 };
-SearchType searchMethod = BFS;
+int searchMethod = static_cast<int>(BFS);
 
 const float tileSize = 32.0f;
 NavGraph graph;
@@ -124,7 +129,7 @@ void DrawPathPoints()
 void PlacePathPoints()
 {
 	float tileSizeOverTwo = 1 / tileSize;
-	if (X::IsKeyPressed(X::Keys::S))
+	if (X::IsKeyDown(X::Keys::S))
 	{
 		int clickedX = static_cast<int>(X::GetMouseScreenX() * tileSizeOverTwo);
 		int clickedY = static_cast<int>(X::GetMouseScreenY() * tileSizeOverTwo);
@@ -135,7 +140,7 @@ void PlacePathPoints()
 			startY = clickedY;
 		}
 	}
-	if (X::IsKeyPressed(X::Keys::E))
+	if (X::IsKeyDown(X::Keys::E))
 	{
 		int clickedX = static_cast<int>(X::GetMouseScreenX() * tileSizeOverTwo);
 		int clickedY = static_cast<int>(X::GetMouseScreenY() * tileSizeOverTwo);
@@ -208,7 +213,7 @@ void DrawClosedList()
 		X::DrawScreenLine(
 			(*end)->position + offset,
 			(*end)->parent->position + offset,
-			X::Math::Vector4::Green()
+			X::Math::Vector4::Magenta()
 		);
 	}
 }
@@ -233,25 +238,55 @@ void DrawPath()
 	}
 }
 
+float TileCost(const X::Math::Vector2& neighbor)
+{
+	size_t tile = tileMap[static_cast<int>(neighbor.x) + (static_cast<int>(neighbor.y) * 32)];
+	switch (tile)
+	{
+	case 0:
+	case 1:
+		return 1.0f;
+	case 2:
+		return 1.5f;
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+		return std::numeric_limits<float>::max();
+	}
+	return 1.0f;
+}
+
+float DirectionCost(const X::Math::Vector2& node, const X::Math::Vector2& neighbor)
+{
+	X::Math::Vector2 directionOfTravel{ neighbor - node };
+	X::Math::Vector2 directionToTarget{ X::Math::Vector2(endX,endY) - node };
+	// get dot product
+	float dotProd = X::Math::Dot(X::Math::Normalize(directionToTarget), X::Math::Normalize(directionOfTravel));
+	// make direction away from target cost more
+	dotProd *= -1.0f;
+	dotProd++;
+
+	float costMultiplier = 10.0f;
+
+	return dotProd * costMultiplier;
+}
+
 void RunPathSearch()
 {
-	if (X::IsKeyPressed(X::Keys::O))
-	{
-		searchMethod = SearchType::DFS;
-	}
 	if (X::IsKeyPressed(X::Keys::P))
 	{
-		searchMethod = SearchType::BFS;
+		searchMethod = ++searchMethod % static_cast<int>(SearchType::End);
 	}
 	if (startX == -1 || startY == -1 || endX == -1 || endY == -1)
 	{
 		return;
 	}
-	if (X::IsKeyPressed(X::Keys::F1))
-	{
+	/*if (X::IsKeyPressed(X::Keys::F1))
+	{*/
 		switch (searchMethod)
 		{
-		case SearchType::DFS:
+		case static_cast<int>(SearchType::DFS):
 		{
 			if (graph.RunDFS(startX, startY, endX, endY))
 			{
@@ -259,7 +294,7 @@ void RunPathSearch()
 			}
 			break;
 		}
-		case SearchType::BFS:
+		case static_cast<int>(SearchType::BFS):
 		{
 			if (graph.RunBFS(startX, startY, endX, endY))
 			{
@@ -267,9 +302,25 @@ void RunPathSearch()
 			}
 			break;
 		}
+		case static_cast<int>(SearchType::Dijkstra):
+		{
+			if (graph.RunDijkstra(startX, startY, endX, endY, TileCost))
+			{
+				path = graph.GetPath();
+			}
+			break;
+		}
+		case static_cast<int>(SearchType::AStar) :
+		{
+			if (graph.RunAStar(startX, startY, endX, endY, TileCost, DirectionCost))
+			{
+				path = graph.GetPath();
+			}
+			break;
+		}
 		}
 
-	}
+	//}
 }
 
 
@@ -280,7 +331,7 @@ bool GameLoop(float deltaTime)
 	RunPathSearch();
 
 	DrawMapTiles();
-	DrawGraphLines();
+	//DrawGraphLines();
 	DrawPathPoints();
 	DrawClosedList();
 	DrawPath();

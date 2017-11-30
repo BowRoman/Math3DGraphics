@@ -6,8 +6,6 @@
 namespace Ai
 {
 
-#define ImpassibleTerrain = 999.9f
-
 template<size_t rows, size_t columns>
 class Graph
 {
@@ -22,9 +20,9 @@ public:
 		Node* parent;
 		bool bInOpenList, bInClosedList;
 		float gCost;
-		//float hCost;
+		float hCost;
 
-		Node() : x(-1), y(-1), neighborCount(8), parent(nullptr), bInOpenList(false), bInClosedList(false), gCost(1.0f) {}
+		Node() : x{ -1 }, y{ -1 }, neighborCount{ 8 }, parent{nullptr}, bInOpenList{false}, bInClosedList{false}, gCost{ 0.0f }, hCost{ 0.0f } {}
 	};
 
 private:
@@ -45,8 +43,8 @@ public:
 	std::list<Node*> GetClosedList() const;
 	bool RunBFS(int startX, int startY, int endX, int endY);
 	bool RunDFS(int startX, int startY, int endX, int endY);
-	bool RunDijkstra(int startX, int startY, int endX, int endY, float (*CostFunction)(int, int, int, int));
-	bool RunAStar(int startX, int startY, int endX, int endY, float (*CostFunction)(int, int, int, int));
+	bool RunDijkstra(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2&));
+	bool RunAStar(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2&), float (*DirectionCostFunction)(const X::Math::Vector2&, const X::Math::Vector2&));
 
 private:
 	void Reset();
@@ -258,7 +256,7 @@ bool Graph<rows, columns>::RunDFS(int startX, int startY, int endX, int endY)
 } // bool RunDFS(int startX, int startY, int endX, int endY)
 
 template<size_t rows, size_t columns>
-bool Graph<rows, columns>::RunDijkstra(int startX, int startY, int endX, int endY, float (*CostFunction)(int,int,int,int))
+bool Graph<rows, columns>::RunDijkstra(int startX, int startY, int endX, int endY, float (*TileCostFunction)(const X::Math::Vector2&))
 {
 	Reset();
 
@@ -292,15 +290,21 @@ bool Graph<rows, columns>::RunDijkstra(int startX, int startY, int endX, int end
 					continue;
 				}
 				// determine cost of moving to this neighbor
-				float stepCost = CostFunction(node.x, node.y, neighbor.x, neighbor.y);
+				float stepCost = TileCostFunction(X::Math::Vector2(neighbor->x, neighbor->y));
+				neighbor->gCost = node->gCost + stepCost;
 				// add to open list based on cost
-				for (std::list<Node*>::const_iterator it = mOpenList.begin(); it != mOpenList.end(); ++it)
+				std::list<Node*>::iterator it;
+				for (it = mOpenList.begin(); it != mOpenList.end(); ++it)
 				{
-					if (it->gCost > stepCost)
+					if ((*it)->gCost > neighbor->gCost)
 					{
-						mOpenList.insert(it,neighbor);
+						mOpenList.insert(it, neighbor);
 						break;
 					}
+				}
+				if (it == mOpenList.end())
+				{
+					mOpenList.push_back(neighbor);
 				}
 				neighbor->bInOpenList = true;
 				neighbor->parent = node;
@@ -314,9 +318,69 @@ bool Graph<rows, columns>::RunDijkstra(int startX, int startY, int endX, int end
 }
 
 template<size_t rows, size_t columns>
-bool Graph<rows, columns>::RunAStar(int startX, int startY, int endX, int endY, float (*CostFunction)(int, int, int, int))
+bool Graph<rows, columns>::RunAStar(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2 &), float(*DirectionCostFunction)(const X::Math::Vector2 &, const X::Math::Vector2 &))
 {
+	Reset();
+	mOpenList.push_back(GetNode(startX, startY));
+	GetNode(startX, startY)->bInOpenList = true;
 
+	bool found = false;
+	while (!found && !mOpenList.empty())
+	{
+		Node* node = mOpenList.front();
+		mOpenList.pop_front();
+
+		// check if the node is at the destination
+		if (node->x == endX && node->y == endY)
+		{
+			found = true;
+		}
+		// iterate through the neighbors
+		else
+		{
+			for (int i = 0; i < node->neighborCount; ++i)
+			{
+				Node* neighbor = node->neighbors[i];
+				// skip if the neighbor is in the open or closed list
+				if (neighbor->bInClosedList)
+				{
+					continue;
+				}
+				if (neighbor->bInOpenList)
+				{
+					continue;
+				}
+				// determine cost of moving to this neighbor
+				float gCost = TileCostFunction(X::Math::Vector2(neighbor->x, neighbor->y));
+				gCost += node->gCost;
+				neighbor->gCost = gCost;
+
+				float hCost = DirectionCostFunction(X::Math::Vector2(node->x, node->y), X::Math::Vector2(neighbor->x, neighbor->y));
+				neighbor->hCost = hCost;
+				// add to open list based on cost
+				std::list<Node*>::iterator it;
+				for (it = mOpenList.begin(); it != mOpenList.end(); ++it)
+				{
+					if (((*it)->gCost + (*it)->hCost)
+						> (gCost+hCost))
+					{
+						mOpenList.insert(it, neighbor);
+						break;
+					}
+				}
+				if (it == mOpenList.end())
+				{
+					mOpenList.push_back(neighbor);
+				}
+				neighbor->bInOpenList = true;
+				neighbor->parent = node;
+			}
+		}
+		// add the node to the closed list
+		mClosedList.push_back(node);
+		node->bInClosedList = true;
+	}
+	return found;
 }
 
 template<size_t rows, size_t columns>
@@ -329,6 +393,7 @@ void Graph<rows, columns>::Reset()
 		node->parent = nullptr;
 		node->bInOpenList = false;
 		node->bInClosedList = false;
+		node->gCost = 0.0f;
 	}
 	mOpenList.clear();
 	mClosedList.clear();
