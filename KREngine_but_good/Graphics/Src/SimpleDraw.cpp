@@ -57,6 +57,16 @@ public:
 			mVertices[mVertexCount++] = { p1,color };
 		}
 	}
+	void DrawTransform(const Math::Matrix4& trans)
+	{
+		Math::Vector3 pos(trans._41, trans._42, trans._43);
+		Math::Vector3 xPos{ pos + Math::Vector3(trans._11, trans._12, trans._13) };
+		Math::Vector3 yPos{ pos + Math::Vector3(trans._21, trans._22, trans._23) };
+		Math::Vector3 zPos{ pos + Math::Vector3(trans._31, trans._32, trans._33) };
+		DrawLine(pos, xPos, Math::Vector4::Red());
+		DrawLine(pos, yPos, Math::Vector4::Green());
+		DrawLine(pos, zPos, Math::Vector4::Blue());
+	}
 	void DrawSphere(const Math::Vector3& position, uint32_t slices, uint32_t rings, float scale, const Math::Vector4& color)
 	{
 		if (scale > 0 && slices > 0 && rings > 0)
@@ -185,6 +195,12 @@ void SimpleDraw::DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, cons
 {
 	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
 	sSimpleDraw->DrawLine(p0, p1, color);
+}
+
+void SimpleDraw::DrawTransform(const Math::Matrix4& trans)
+{
+	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
+	sSimpleDraw->DrawTransform(trans);
 }
 
 void SimpleDraw::DrawSphere(const Math::Vector3 & position, uint32_t slices, uint32_t rings, float scale, const Math::Vector4& color)

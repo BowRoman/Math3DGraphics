@@ -257,17 +257,13 @@ float TileCost(const X::Math::Vector2& neighbor)
 	return 1.0f;
 }
 
-float DirectionCost(const X::Math::Vector2& node, const X::Math::Vector2& neighbor)
+float DirectionCost(const X::Math::Vector2& neighbor)
 {
-	X::Math::Vector2 directionOfTravel{ neighbor - node };
-	X::Math::Vector2 directionToTarget{ X::Math::Vector2(endX,endY) - node };
+	X::Math::Vector2 directionToTarget{ X::Math::Vector2(endX,endY) - neighbor };
 	// get dot product
-	float dotProd = X::Math::Dot(X::Math::Normalize(directionToTarget), X::Math::Normalize(directionOfTravel));
-	// make direction away from target cost more
-	dotProd *= -1.0f;
-	dotProd++;
+	float dotProd = X::Math::Dot(directionToTarget, directionToTarget);
 
-	float costMultiplier = 10.0f;
+	float costMultiplier = 0.1f;
 
 	return dotProd * costMultiplier;
 }

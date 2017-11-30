@@ -44,7 +44,7 @@ public:
 	bool RunBFS(int startX, int startY, int endX, int endY);
 	bool RunDFS(int startX, int startY, int endX, int endY);
 	bool RunDijkstra(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2&));
-	bool RunAStar(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2&), float (*DirectionCostFunction)(const X::Math::Vector2&, const X::Math::Vector2&));
+	bool RunAStar(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2&), float (*DirectionCostFunction)(const X::Math::Vector2&));
 
 private:
 	void Reset();
@@ -290,13 +290,18 @@ bool Graph<rows, columns>::RunDijkstra(int startX, int startY, int endX, int end
 					continue;
 				}
 				// determine cost of moving to this neighbor
-				float stepCost = TileCostFunction(X::Math::Vector2(neighbor->x, neighbor->y));
-				neighbor->gCost = node->gCost + stepCost;
+				float gCost = TileCostFunction(X::Math::Vector2(neighbor->x, neighbor->y));
+				if (gCost >= std::numeric_limits<float>::max())
+				{
+					continue;
+				}
+				gCost += node->gCost;
+				neighbor->gCost = gCost;
 				// add to open list based on cost
 				std::list<Node*>::iterator it;
 				for (it = mOpenList.begin(); it != mOpenList.end(); ++it)
 				{
-					if ((*it)->gCost > neighbor->gCost)
+					if ((*it)->gCost > gCost)
 					{
 						mOpenList.insert(it, neighbor);
 						break;
@@ -318,7 +323,7 @@ bool Graph<rows, columns>::RunDijkstra(int startX, int startY, int endX, int end
 }
 
 template<size_t rows, size_t columns>
-bool Graph<rows, columns>::RunAStar(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2 &), float(*DirectionCostFunction)(const X::Math::Vector2 &, const X::Math::Vector2 &))
+bool Graph<rows, columns>::RunAStar(int startX, int startY, int endX, int endY, float(*TileCostFunction)(const X::Math::Vector2 &), float(*DirectionCostFunction)(const X::Math::Vector2 &))
 {
 	Reset();
 	mOpenList.push_back(GetNode(startX, startY));
@@ -352,10 +357,14 @@ bool Graph<rows, columns>::RunAStar(int startX, int startY, int endX, int endY, 
 				}
 				// determine cost of moving to this neighbor
 				float gCost = TileCostFunction(X::Math::Vector2(neighbor->x, neighbor->y));
+				if (gCost >= std::numeric_limits<float>::max())
+				{
+					continue;
+				}
 				gCost += node->gCost;
 				neighbor->gCost = gCost;
 
-				float hCost = DirectionCostFunction(X::Math::Vector2(node->x, node->y), X::Math::Vector2(neighbor->x, neighbor->y));
+				float hCost = DirectionCostFunction(X::Math::Vector2(neighbor->x, neighbor->y));
 				neighbor->hCost = hCost;
 				// add to open list based on cost
 				std::list<Node*>::iterator it;
