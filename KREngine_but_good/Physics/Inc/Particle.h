@@ -15,19 +15,23 @@ public:
 
 	void SetPosition(Math::Vector3 position);
 	void SetVelocity(Math::Vector3 velocity) { mPositionOld = mPosition - velocity; }
-	void SetRadius(float radius) { mRadius = radius; }
-	void SetInvMass(float invMass) { mInvMass = invMass; }
+	void SetRadius(float radius);
+	void SetInvMass(float invMass) { bImplicitMass = false; mInvMass = invMass; }
 	void SetMass(float mass);
+
+	void UseImplicitMass() { bImplicitMass = true; }
 
 private:
 	Hello World;
 	Hello Spring;
+	Hello Fixed;
 	Math::Vector3 mPosition;
 	Math::Vector3 mPositionOld;
 	Math::Vector3 mAcceleration;
 
 	float mRadius;
 	float mInvMass;
+	bool bImplicitMass; // If false, the mass will not change unless set by the user
 }; // class Particle
 
 } // namespace Physics

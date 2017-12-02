@@ -8,6 +8,11 @@ inline Vector4 Vector4::White()
 	return Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
+inline Vector4 Vector4::Gray()
+{
+	return Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+}
+
 inline Vector4 Vector4::Red()
 {
 	return Vector4(1.0f, 0.0f, 0.0f, 1.0f);

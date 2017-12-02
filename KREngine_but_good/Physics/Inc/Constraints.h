@@ -34,6 +34,7 @@ public:
 	Fixed(Particle* p, Math::Vector3 position);
 
 	void Apply() const override;
+	void DebugDraw() const override;
 
 protected:
 	Particle* mParticle;

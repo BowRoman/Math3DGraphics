@@ -20,6 +20,7 @@ struct Vector4
 	operator float*() { return (float*)this; }
 
 	static Vector4 Black();
+	static Vector4 Gray();
 	static Vector4 White();
 	static Vector4 Red();
 	static Vector4 Green();

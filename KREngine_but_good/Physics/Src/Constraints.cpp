@@ -23,7 +23,7 @@ void Spring::Apply() const
 
 void Spring::DebugDraw() const
 {
-	Graphics::SimpleDraw::DrawLine(mParticleA->mPosition, mParticleB->mPosition, Math::Vector4::Strobe());
+	Graphics::SimpleDraw::DrawLine(mParticleA->mPosition, mParticleB->mPosition, Math::Vector4::Green());
 }
 
 Fixed::Fixed(Particle* p, Math::Vector3 position)
@@ -35,4 +35,9 @@ Fixed::Fixed(Particle* p, Math::Vector3 position)
 void Fixed::Apply() const
 {
 	mParticle->SetPosition(mPosition);
+}
+
+void Fixed::DebugDraw() const
+{
+	Graphics::SimpleDraw::DrawSphere(mParticle->mPosition, 4, 4, mParticle->mRadius*1.3f, Math::Vector4::Red());
 }
