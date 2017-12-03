@@ -41,4 +41,16 @@ protected:
 	Math::Vector3 mPosition;
 };
 
+class Wall : public Constraint
+{
+public:
+	Wall(Particle* p, Math::Plane plane);
+
+	void Apply() const override;
+
+protected:
+	Particle* mParticle;
+	Math::Plane mPlane;
+};
+
 } // namespace Physics

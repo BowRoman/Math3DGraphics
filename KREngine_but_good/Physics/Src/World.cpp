@@ -84,7 +84,7 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 	}
 
 	float squareDiagonalLength = Math::Sqrt(Math::Sqr(width) * 2.0f); // pythagoras
-	float cubeDiagonalLength = Math::Sqrt(Math::Sqr(width) * Math::Sqr(squareDiagonalLength));
+	//float cubeDiagonalLength = Math::Sqrt(Math::Sqr(width) * Math::Sqr(squareDiagonalLength));
 
 	// diagonals across top
 	for (int i = 0; i < 4; ++i)

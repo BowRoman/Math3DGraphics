@@ -95,16 +95,19 @@ void GameApp::OnUpdate()
 	}
 	if (is->IsKeyPressed(Keys::ONE))
 	{
+		Math::Plane plane{0.0f,1.0f,0.0f,-0.1f };
 		for (int i = 0; i < 100; ++i)
 		{
 			auto p = new Physics::Particle();
-			p->SetPosition({ 0.0f,0.0f,0.0f });
+			p->SetPosition({ 0.0f,3.0f,0.0f });
 			p->SetVelocity({
 				Math::Random::GetF(-0.1f,  +0.1f),
 				Math::Random::GetF(+0.05f, +0.15f),
 				Math::Random::GetF(-0.1f,  +0.1f)
 			});
 			mPhysicsWorld.AddParticle(p);
+			auto c = new Physics::Wall(p, plane);
+			mPhysicsWorld.AddConstraint(c);
 		}
 	}
 	if (is->IsKeyPressed(Keys::TWO))

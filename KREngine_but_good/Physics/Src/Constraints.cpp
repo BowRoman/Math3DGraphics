@@ -41,3 +41,23 @@ void Fixed::DebugDraw() const
 {
 	Graphics::SimpleDraw::DrawSphere(mParticle->mPosition, 4, 4, mParticle->mRadius*1.3f, Math::Vector4::Red());
 }
+
+Wall::Wall(Particle* p, Math::Plane plane)
+	: mParticle{ p }
+	, mPlane{ plane }
+{
+}
+
+void Wall::Apply() const
+{
+	auto pos = mParticle->mPosition;
+	// dot product
+	float distance{ (mPlane.n.x * pos.x) + (mPlane.n.y * pos.y) + (mPlane.n.z * pos.z) + mPlane.d };
+	// if distance is less than plane radius, the point is below the plane.
+	if (distance < mPlane.d)
+	{
+		//auto reflect = ;
+		mParticle->mPosition = mParticle->mPositionOld;
+		//mParticle->mPositionOld = reflect;
+	}
+}

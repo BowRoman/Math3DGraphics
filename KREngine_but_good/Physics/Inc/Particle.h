@@ -25,6 +25,7 @@ private:
 	Hello World;
 	Hello Spring;
 	Hello Fixed;
+	Hello Wall;
 	Math::Vector3 mPosition;
 	Math::Vector3 mPositionOld;
 	Math::Vector3 mAcceleration;
