@@ -261,11 +261,11 @@ float DirectionCost(const X::Math::Vector2& neighbor)
 {
 	X::Math::Vector2 directionToTarget{ X::Math::Vector2(endX,endY) - neighbor };
 	// get dot product
-	float dotProd = X::Math::Dot(directionToTarget, directionToTarget);
+	float distanceSqr = X::Math::MagnitudeSqr(directionToTarget);
 
-	float costMultiplier = 0.1f;
+	float costMultiplier = 0.2f;
 
-	return dotProd * costMultiplier;
+	return distanceSqr * costMultiplier;
 }
 
 void RunPathSearch()
@@ -273,6 +273,10 @@ void RunPathSearch()
 	if (X::IsKeyPressed(X::Keys::P))
 	{
 		searchMethod = ++searchMethod % static_cast<int>(SearchType::End);
+	}
+	if (X::IsKeyPressed(X::Keys::O))
+	{
+		searchMethod = (searchMethod + static_cast<int>(SearchType::End) - 1 ) % static_cast<int>(SearchType::End);
 	}
 	if (startX == -1 || startY == -1 || endX == -1 || endY == -1)
 	{

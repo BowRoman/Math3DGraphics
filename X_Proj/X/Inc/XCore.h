@@ -14,6 +14,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
+#include <functional>
 #include <map>
 #include <memory>
 #include <random>

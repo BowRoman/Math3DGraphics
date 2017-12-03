@@ -5,6 +5,8 @@ using namespace Ai;
 
 Agent::Agent(World& world)
 	: mWorld(world)
+	, mMaxSpeed{ 1.0f }
+	, mMemorySpan{ 5.0f }
 {
 	mWorld.RegisterAgent(this);
 

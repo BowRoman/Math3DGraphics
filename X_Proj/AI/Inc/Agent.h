@@ -33,6 +33,9 @@ public:
 	float& MaxSpeed()							{ return mMaxSpeed; }
 	float MaxSpeed() const						{ return mMaxSpeed; }
 
+	float& MemorySpan()							{ return mMemorySpan; }
+	float MemorySpan() const					{ return mMemorySpan; }
+
 protected:
 	World& mWorld;
 	X::Math::Vector2 mPosition;
@@ -40,6 +43,7 @@ protected:
 	X::Math::Vector2 mDestination;
 	X::Math::Vector2 mHeading;
 	float mMaxSpeed;
+	float mMemorySpan;
 }; // class Agent
 
 using AgentList = std::vector<Agent*>;

@@ -23,7 +23,10 @@
     <ClInclude Include="Inc\Ai.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Graph.h" />
+    <ClInclude Include="Inc\MemoryRecord.h" />
+    <ClInclude Include="Inc\PerceptionModule.h" />
     <ClInclude Include="Inc\SeekBehavior.h" />
+    <ClInclude Include="Inc\Sensor.h" />
     <ClInclude Include="Inc\SeparationBehavior.h" />
     <ClInclude Include="Inc\State.h" />
     <ClInclude Include="Inc\StateMachine.h" />
@@ -34,6 +37,7 @@
   <ItemGroup>
     <ClCompile Include="Src\Agent.cpp" />
     <ClCompile Include="Src\Graph.cpp" />
+    <ClCompile Include="Src\PerceptionModule.cpp" />
     <ClCompile Include="Src\SeekBehavior.cpp" />
     <ClCompile Include="Src\SeparationBehavior.cpp" />
     <ClCompile Include="Src\SteeringModule.cpp" />

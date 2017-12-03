@@ -34,6 +34,15 @@
     <ClInclude Include="Inc\SeparationBehavior.h">
       <Filter>Inc\Steering</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\PerceptionModule.h">
+      <Filter>Inc\Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\MemoryRecord.h">
+      <Filter>Inc\Perception</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Sensor.h">
+      <Filter>Inc\Perception</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Inc">
@@ -54,6 +63,12 @@
     <Filter Include="Src\Steering">
       <UniqueIdentifier>{396dc950-a95e-43e9-ba64-92457627f1bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\Perception">
+      <UniqueIdentifier>{c284fc9c-3fda-4689-a2c2-9d2dc7c68e4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Perception">
+      <UniqueIdentifier>{05b894a4-f14f-40bb-8d7a-b206f5401a39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Graph.cpp">
@@ -73,6 +88,9 @@
     </ClCompile>
     <ClCompile Include="Src\SeparationBehavior.cpp">
       <Filter>Src\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\PerceptionModule.cpp">
+      <Filter>Src\Perception</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

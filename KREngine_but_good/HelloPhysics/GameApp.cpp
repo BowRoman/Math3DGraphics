@@ -22,7 +22,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	HookWindow(mWindow.GetWindowHandle());
 
 	Graphics::GraphicsSystem::StaticInitialize(mWindow.GetWindowHandle(), false);
-	Graphics::SimpleDraw::StaticInitialize(10000);
+	Graphics::SimpleDraw::StaticInitialize(100000);
 	Input::InputSystem::StaticInitialize(mWindow.GetWindowHandle());
 
 	mTimer.Initialize();
@@ -93,9 +93,8 @@ void GameApp::OnUpdate()
 		mCameraTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * dTime);
 		mCameraTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * dTime);
 	}
-	if (is->IsKeyDown(Keys::ONE))
+	if (is->IsKeyPressed(Keys::ONE))
 	{
-		mPhysicsWorld.ClearDynamic();
 		for (int i = 0; i < 100; ++i)
 		{
 			auto p = new Physics::Particle();
@@ -108,9 +107,8 @@ void GameApp::OnUpdate()
 			mPhysicsWorld.AddParticle(p);
 		}
 	}
-	if (is->IsKeyDown(Keys::TWO))
+	if (is->IsKeyPressed(Keys::TWO))
 	{
-		mPhysicsWorld.ClearDynamic();
 		for (int i = 0; i < 50; ++i)
 		{
 			auto p0 = new Physics::Particle();
@@ -135,9 +133,8 @@ void GameApp::OnUpdate()
 			mPhysicsWorld.AddConstraint(c0);
 		}
 	}
-	if (is->IsKeyDown(Keys::THREE))
+	if (is->IsKeyPressed(Keys::THREE))
 	{
-		mPhysicsWorld.ClearDynamic();
 		for (int i = 0; i < 100; ++i)
 		{
 			auto p = new Physics::Particle();
@@ -152,9 +149,8 @@ void GameApp::OnUpdate()
 			mPhysicsWorld.AddConstraint(c);
 		}
 	}
-	if (is->IsKeyDown(Keys::FOUR))
+	if (is->IsKeyPressed(Keys::FOUR))
 	{
-		mPhysicsWorld.ClearDynamic();
 		auto p0 = new Physics::Particle();
 		p0->SetPosition({ 0.0f,0.0f,0.0f });
 		p0->SetRadius(0.5f);
@@ -213,20 +209,18 @@ void GameApp::OnUpdate()
 		mPhysicsWorld.AddConstraint(c4);
 		mPhysicsWorld.AddConstraint(c5);
 	}
-	if (is->IsKeyDown(Keys::FIVE))
+	if (is->IsKeyPressed(Keys::FIVE))
 	{
-		mPhysicsWorld.ClearDynamic();
 		mPhysicsWorld.AddCube(mPhysicsWorld, { 0.0f,0.0f,0.0f }, { 0.0f,10.0f,0.0f }, 2.0f, 10.0f, false);
 	}
-	if (is->IsKeyDown(Keys::SIX))
+	if (is->IsKeyPressed(Keys::SIX))
 	{
-		mPhysicsWorld.ClearDynamic();
 		std::vector<Physics::Particle*> leftParticles;
 		std::vector<Physics::Particle*> rightParticles;
 		auto p0 = new Physics::Particle();
 		auto p1 = new Physics::Particle();
-		p0->SetPosition({ 0.0f,0.0f,-0.5f });
-		p1->SetPosition({ 0.0f,0.0f,+0.5f });
+		p0->SetPosition({ 0.0f,10.0f,-0.5f });
+		p1->SetPosition({ 0.0f,10.0f,+0.5f });
 		leftParticles.push_back(p0);
 		rightParticles.push_back(p1);
 		mPhysicsWorld.AddParticle(p0);
@@ -236,10 +230,10 @@ void GameApp::OnUpdate()
 		for (int i = 0; i < 10; ++i)
 		{
 			p0 = new Physics::Particle();
-			p0->SetPosition({ (i + 1.0f)*0.75f,(i + 1.0f)*0.75f, -0.5f });
+			p0->SetPosition({ (i + 1.0f)*0.75f,(i + 10.0f)*0.75f, -0.5f });
 
 			p1 = new Physics::Particle();
-			p1->SetPosition({ (i + 1.0f)*0.75f,(i + 1.0f)*0.75f, +0.5f });
+			p1->SetPosition({ (i + 1.0f)*0.75f,(i + 10.0f)*0.75f, +0.5f });
 
 			leftParticles.push_back(p0);
 			rightParticles.push_back(p1);
@@ -254,10 +248,14 @@ void GameApp::OnUpdate()
 			mPhysicsWorld.AddConstraint(c1);
 			mPhysicsWorld.AddConstraint(c2);
 		}
-		auto f0 = new Physics::Fixed(leftParticles[0], { 0.0f,0.0f,-0.5f });
-		auto f1 = new Physics::Fixed(rightParticles[0], { 0.0f,0.0f,+0.5f });
+		auto f0 = new Physics::Fixed(leftParticles[0], { 0.0f,10.0f,-0.5f });
+		auto f1 = new Physics::Fixed(rightParticles[0], { 0.0f,10.0f,+0.5f });
 		mPhysicsWorld.AddConstraint(f0);
 		mPhysicsWorld.AddConstraint(f1);
+	}
+	if (is->IsKeyPressed(Keys::GRAVE))
+	{
+		mPhysicsWorld.ClearDynamic();
 	}
 
 	Graphics::GraphicsSystem::Get()->BeginRender();

@@ -13,4 +13,9 @@
 #include "SteeringBehavior.h"
 #include "SteeringModule.h"
 
+// Perception
+#include "MemoryRecord.h"
+#include "PerceptionModule.h"
+#include "Sensor.h"
+
 #endif // #ifndef INCLUDED_AI_AI_H

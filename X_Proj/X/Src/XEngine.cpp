@@ -55,6 +55,7 @@ namespace
 	std::random_device myRandomDevice{};
 	std::mt19937 myRandomEngine{ myRandomDevice() };
 
+	Timer myTimer;
 	Camera myCamera;
 	Font myFont;
 
@@ -178,6 +179,9 @@ void Start(const char* configFileName)
 	TextureManager::StaticInitialize(Config::Get()->GetString("TexturePath", "../Assets/Images"));
 	Gui::Initialize(myWindow);
 
+	// Initialize timer
+	myTimer.Initialize();
+
 	// Initialize camera
 	myCamera.SetFOV(60.0f * Math::kDegToRad);
 	myCamera.SetNearPlane(0.01f);
@@ -199,9 +203,6 @@ void Run(bool (*GameLoop)(float))
 	MSG msg;
 	memset(&msg, 0, sizeof(MSG));
 
-	Timer timer;
-	timer.Initialize();
-
 	// Start the message loop
 	while (WM_QUIT != msg.message)
 	{
@@ -214,9 +215,9 @@ void Run(bool (*GameLoop)(float))
 		{
 			// Update input and timer
 			InputSystem::Get()->Update();
-			timer.Update();
+			myTimer.Update();
 
-			const float kDeltaTime = timer.GetElapsedTime();
+			const float kDeltaTime = myTimer.GetElapsedTime();
 
 			// Begin Gui
 			Gui::BeginRender(kDeltaTime);
@@ -293,6 +294,12 @@ void Stop()
 
 	// Engine shutdown
 	initialized = false;
+}
+
+float TimeSeconds()
+{
+	XASSERT(initialized, "[XEngine] Engine not started.");
+	return myTimer.GetElapsedTime();
 }
 
 //----------------------------------------------------------------------------------------------------

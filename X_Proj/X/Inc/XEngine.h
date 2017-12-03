@@ -16,6 +16,9 @@ void Start(const char* configFileName = nullptr);
 void Run(bool (*GameLoop)(float));
 void Stop();
 
+// Time Functions
+float TimeSeconds();
+
 // Config Functions
 int ConfigGetInt(const char* key, int default = 0);
 bool ConfigGetBool(const char* key, bool default = false);
