@@ -49,22 +49,30 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 		particles[i] = p;
 		world.AddParticle(p);
 	}
+	// top left
 	particles[0]->SetPosition({ position.x - halfWidth, position.y + halfWidth, position.z + halfWidth });
+	// top right
 	particles[1]->SetPosition({ position.x + halfWidth, position.y + halfWidth, position.z + halfWidth });
-	particles[2]->SetPosition({ position.x - halfWidth, position.y + halfWidth, position.z - halfWidth });
-	particles[3]->SetPosition({ position.x + halfWidth, position.y + halfWidth, position.z - halfWidth });
+	// bottom right
+	particles[2]->SetPosition({ position.x + halfWidth, position.y + halfWidth, position.z - halfWidth });
+	// bottom left
+	particles[3]->SetPosition({ position.x - halfWidth, position.y + halfWidth, position.z - halfWidth });
 
+	// top left
 	particles[4]->SetPosition({ position.x - halfWidth, position.y - halfWidth, position.z + halfWidth });
+	// top right
 	particles[5]->SetPosition({ position.x + halfWidth, position.y - halfWidth, position.z + halfWidth });
-	particles[6]->SetPosition({ position.x - halfWidth, position.y - halfWidth, position.z - halfWidth });
-	particles[7]->SetPosition({ position.x + halfWidth, position.y - halfWidth, position.z - halfWidth });
+	// bottom right
+	particles[6]->SetPosition({ position.x + halfWidth, position.y - halfWidth, position.z - halfWidth });
+	// bottom left
+	particles[7]->SetPosition({ position.x - halfWidth, position.y - halfWidth, position.z - halfWidth });
 
 	// top square
 	for (int i = 0; i < 4; ++i)
 	{
 		auto c0 = new Physics::Spring(particles[i], particles[(i + 1) % 4], width);
 		auto c1 = new Physics::Spring(particles[i], particles[(i + 4)], width);
-
+	
 		world.AddConstraint(c0);
 		world.AddConstraint(c1);
 	}
@@ -84,7 +92,7 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 		auto c = new Physics::Spring(particles[i], particles[(i + 2) % 4], squareDiagonalLength);
 		world.AddConstraint(c);
 	}
-
+	
 	// diagonals across bottom
 	for (int i = 0; i < 4; ++i)
 	{
@@ -93,42 +101,44 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 	}
 
 	// diagonals across sides
+	// backslash
 	auto c = new Physics::Spring(particles[0], particles[5], squareDiagonalLength);
 	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[1], particles[7], squareDiagonalLength);
+	
+	c = new Physics::Spring(particles[1], particles[6], squareDiagonalLength);
 	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[2], particles[4], squareDiagonalLength);
+	
+	c = new Physics::Spring(particles[2], particles[7], squareDiagonalLength);
 	world.AddConstraint(c);
-
+	
+	c = new Physics::Spring(particles[3], particles[4], squareDiagonalLength);
+	world.AddConstraint(c);
+	
+	// forward slash
+	c = new Physics::Spring(particles[0], particles[7], squareDiagonalLength);
+	world.AddConstraint(c);
+	
+	c = new Physics::Spring(particles[1], particles[4], squareDiagonalLength);
+	world.AddConstraint(c);
+	
+	c = new Physics::Spring(particles[2], particles[5], squareDiagonalLength);
+	world.AddConstraint(c);
+	
 	c = new Physics::Spring(particles[3], particles[6], squareDiagonalLength);
 	world.AddConstraint(c);
 
-	c = new Physics::Spring(particles[0], particles[6], squareDiagonalLength);
-	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[1], particles[4], squareDiagonalLength);
-	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[2], particles[7], squareDiagonalLength);
-	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[3], particles[5], squareDiagonalLength);
-	world.AddConstraint(c);
-
 	// diagonals across center
-	c = new Physics::Spring(particles[0], particles[7], cubeDiagonalLength);
-	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[1], particles[6], cubeDiagonalLength);
-	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[2], particles[5], cubeDiagonalLength);
-	world.AddConstraint(c);
-
-	c = new Physics::Spring(particles[3], particles[4], cubeDiagonalLength);
-	world.AddConstraint(c);
+	//c = new Physics::Spring(particles[0], particles[6], cubeDiagonalLength);
+	//world.AddConstraint(c);
+	//
+	//c = new Physics::Spring(particles[1], particles[7], cubeDiagonalLength);
+	//world.AddConstraint(c);
+	//
+	//c = new Physics::Spring(particles[2], particles[4], cubeDiagonalLength);
+	//world.AddConstraint(c);
+	//
+	//c = new Physics::Spring(particles[3], particles[5], cubeDiagonalLength);
+	//world.AddConstraint(c);
 
 	if (fixed)
 	{
