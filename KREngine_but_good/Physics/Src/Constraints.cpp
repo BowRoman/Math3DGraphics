@@ -14,6 +14,7 @@ Spring::Spring(Particle* a, Particle* b, float restingDistance)
 
 void Spring::Apply() const
 {
+	//ASSERT((mParticleA->mPosition != mParticleB->mPosition), "[Constraints] Cannot properly apply spring to particles at the same location. (divide by zero)");
 	Math::Vector3 delta = mParticleB->mPosition - mParticleA->mPosition;
 	float distance{ Math::Magnitude(delta) };
 	float diff{ (distance - mRestDistance) / (distance*(mParticleA->mInvMass + mParticleB->mInvMass)) };
@@ -42,22 +43,29 @@ void Fixed::DebugDraw() const
 	Graphics::SimpleDraw::DrawSphere(mParticle->mPosition, 4, 4, mParticle->mRadius*1.3f, Math::Vector4::Red());
 }
 
-Wall::Wall(Particle* p, Math::Plane plane)
+PlaneConstraint::PlaneConstraint(Particle* p, Math::Plane plane, float invRestitution)
 	: mParticle{ p }
 	, mPlane{ plane }
+	, mInvRestitution{ invRestitution }
 {
 }
 
-void Wall::Apply() const
+void PlaneConstraint::Apply() const
 {
-	auto pos = mParticle->mPosition;
-	// dot product
-	float distance{ (mPlane.n.x * pos.x) + (mPlane.n.y * pos.y) + (mPlane.n.z * pos.z) + mPlane.d };
+	// project position vector onto plane normal
+	float distance{ Math::Dot(mPlane.n, mParticle->mPosition) };
+
 	// if distance is less than plane radius, the point is below the plane.
 	if (distance < mPlane.d)
 	{
-		//auto reflect = ;
-		mParticle->mPosition = mParticle->mPositionOld;
-		//mParticle->mPositionOld = reflect;
+		auto velocity = mParticle->mPosition - mParticle->mPositionOld;
+
+		mParticle->mPosition += (mPlane.n * 2.0f * (mPlane.d - Math::Dot(mPlane.n, mParticle->mPosition)));
+
+		auto vertical = (mPlane.n * 2.0f * (mPlane.d - Math::Dot(mPlane.n, mParticle->mPositionOld)));
+		//auto horizontal = velocity - vertical;
+		//auto newVelocity = vertical + horizontal;
+
+		mParticle->mPositionOld += vertical;
 	}
 }

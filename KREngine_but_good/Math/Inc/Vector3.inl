@@ -8,6 +8,11 @@ inline Vector3 Vector3::One()
 	return Vector3(1.0f, 1.0f, 1.0f);
 }
 
+inline Vector3 Vector3::Random()
+{
+	return Vector3(Math::Random::GetF(-1.0f, 1.0f), Math::Random::GetF(-1.0f, 1.0f), Math::Random::GetF(-1.0f, 1.0f));
+}
+
 inline Vector3 Vector3::XAxis()
 {
 	return Vector3(1.0f, 0.0f, 0.0f);

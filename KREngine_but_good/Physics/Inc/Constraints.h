@@ -41,16 +41,17 @@ protected:
 	Math::Vector3 mPosition;
 };
 
-class Wall : public Constraint
+class PlaneConstraint : public Constraint
 {
 public:
-	Wall(Particle* p, Math::Plane plane);
+	PlaneConstraint(Particle* p, Math::Plane plane, float invRestitution = 1.0f);
 
 	void Apply() const override;
 
 protected:
 	Particle* mParticle;
 	Math::Plane mPlane;
+	float mInvRestitution;
 };
 
 } // namespace Physics

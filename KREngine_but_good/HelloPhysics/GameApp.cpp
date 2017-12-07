@@ -61,9 +61,18 @@ void GameApp::OnUpdate()
 	{
 		PostQuitMessage(0);
 	}
-	const float cameraMoveSpeed = 10.0f;
+	const float cameraBaseMoveSpeed = 10.0f;
+	float cameraMoveSpeed = 10.0f;
 	const float cameraTurnSpeed = 1.0f;
 	float dTime = mTimer.GetElapsedTime();
+	if (is->IsKeyDown(Keys::LSHIFT))
+	{
+		cameraMoveSpeed = cameraBaseMoveSpeed * 2.5f;
+	}
+	else
+	{
+		cameraMoveSpeed = cameraBaseMoveSpeed;
+	}
 	if (is->IsKeyDown(Keys::W))
 	{
 		mCameraTransform.Walk(cameraMoveSpeed * dTime);
@@ -93,9 +102,11 @@ void GameApp::OnUpdate()
 		mCameraTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * dTime);
 		mCameraTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * dTime);
 	}
+	// Basic
 	if (is->IsKeyPressed(Keys::ONE))
 	{
-		Math::Plane plane{0.0f,1.0f,0.0f,-0.1f };
+		Math::Vector3 vec{ Math::Normalize(Math::Vector3{ 0.0f,1.0f,0.0f }) };
+		Math::Plane plane{ vec.x,vec.y,vec.z,-0.1f };
 		for (int i = 0; i < 100; ++i)
 		{
 			auto p = new Physics::Particle();
@@ -106,10 +117,11 @@ void GameApp::OnUpdate()
 				Math::Random::GetF(-0.1f,  +0.1f)
 			});
 			mPhysicsWorld.AddParticle(p);
-			auto c = new Physics::Wall(p, plane);
+			auto c = new Physics::PlaneConstraint(p, plane, 0.8f);
 			mPhysicsWorld.AddConstraint(c);
 		}
 	}
+	// Spring
 	if (is->IsKeyPressed(Keys::TWO))
 	{
 		for (int i = 0; i < 50; ++i)
@@ -136,6 +148,7 @@ void GameApp::OnUpdate()
 			mPhysicsWorld.AddConstraint(c0);
 		}
 	}
+	// Fixed
 	if (is->IsKeyPressed(Keys::THREE))
 	{
 		for (int i = 0; i < 100; ++i)
@@ -152,6 +165,7 @@ void GameApp::OnUpdate()
 			mPhysicsWorld.AddConstraint(c);
 		}
 	}
+	// Hanging chain
 	if (is->IsKeyPressed(Keys::FOUR))
 	{
 		auto p0 = new Physics::Particle();
@@ -212,10 +226,12 @@ void GameApp::OnUpdate()
 		mPhysicsWorld.AddConstraint(c4);
 		mPhysicsWorld.AddConstraint(c5);
 	}
-	if (is->IsKeyPressed(Keys::FIVE))
+	// Cube
+	if (is->IsKeyDown(Keys::FIVE))
 	{
-		mPhysicsWorld.AddCube(mPhysicsWorld, { 0.0f,0.0f,0.0f }, { 0.0f,0.0f,1.0f }, 1.0f, 10.0f, false);
+		mPhysicsWorld.AddCube(mPhysicsWorld, { 0.0f,2.0f,0.0f }, { 0.0f,0.0f,1.0f }, 1.0f, 10.0f, false);
 	}
+	// Rope ladder
 	if (is->IsKeyPressed(Keys::SIX))
 	{
 		std::vector<Physics::Particle*> leftParticles;
@@ -255,6 +271,52 @@ void GameApp::OnUpdate()
 		auto f1 = new Physics::Fixed(rightParticles[0], { 0.0f,10.0f,+0.5f });
 		mPhysicsWorld.AddConstraint(f0);
 		mPhysicsWorld.AddConstraint(f1);
+	}
+	// Bridge
+	if (is->IsKeyPressed(Keys::SEVEN))
+	{
+		std::vector<Physics::Particle*> leftParticles;
+		std::vector<Physics::Particle*> rightParticles;
+		auto p0 = new Physics::Particle();
+		auto p1 = new Physics::Particle();
+		p0->SetPosition({ 0.0f,5.0f,-0.5f });
+		p1->SetPosition({ 0.0f,5.0f,+0.5f });
+		leftParticles.push_back(p0);
+		rightParticles.push_back(p1);
+		mPhysicsWorld.AddParticle(p0);
+		mPhysicsWorld.AddParticle(p1);
+		auto c = new Physics::Spring(p0, p1, 1.0f);
+		mPhysicsWorld.AddConstraint(c);
+		int i = 0;
+		for (i = 0; i < 10; ++i)
+		{
+			auto p0 = new Physics::Particle();
+			p0->SetPosition({ i + 1.0f, 5.0f, -0.5f });
+
+			auto p1 = new Physics::Particle();
+			p1->SetPosition({ i + 1.0f, 5.0f, +0.5f });
+
+			leftParticles.push_back(p0);
+			rightParticles.push_back(p1);
+
+			mPhysicsWorld.AddParticle(p0);
+			mPhysicsWorld.AddParticle(p1);
+
+			auto c0 = new Physics::Spring(p0, p1, 1.0f);
+			auto c1 = new Physics::Spring(p0, leftParticles[i], 1.0f);
+			auto c2 = new Physics::Spring(p1, rightParticles[i], 1.0f);
+			mPhysicsWorld.AddConstraint(c0);
+			mPhysicsWorld.AddConstraint(c1);
+			mPhysicsWorld.AddConstraint(c2);
+		}
+		auto f0 = new Physics::Fixed(leftParticles[0], { 0.0f,5.0f,-0.5f });
+		auto f1 = new Physics::Fixed(rightParticles[0], { 0.0f,5.0f,+0.5f });
+		auto f2 = new Physics::Fixed(leftParticles[leftParticles.size() - 1], { 10.0f,5.0f,-0.5f });
+		auto f3 = new Physics::Fixed(rightParticles[rightParticles.size() - 1], { 10.0f,5.0f,+0.5f });
+		mPhysicsWorld.AddConstraint(f0);
+		mPhysicsWorld.AddConstraint(f1);
+		mPhysicsWorld.AddConstraint(f2);
+		mPhysicsWorld.AddConstraint(f3);
 	}
 	if (is->IsKeyPressed(Keys::GRAVE))
 	{
