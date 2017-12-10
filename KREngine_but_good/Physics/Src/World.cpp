@@ -3,6 +3,7 @@
 
 #include "Constraints.h"
 #include "Particle.h"
+#include "PhysicsPlane.h"
 
 using namespace Physics;
 
@@ -32,6 +33,11 @@ void World::AddParticle(Particle* p)
 void World::AddConstraint(Constraint* c)
 {
 	mConstraints.push_back(c);
+}
+
+void Physics::World::AddPhysicsPlane(PhysicsPlane* p)
+{
+	mPlanes.push_back(p);
 }
 
 void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math::Vector3 velocity, float width, float invMass, bool fixed)
@@ -166,6 +172,7 @@ void World::ClearDynamic()
 {
 	SafeDeleteVector(mParticles);
 	SafeDeleteVector(mConstraints);
+	SafeDeleteVector(mPlanes);
 }
 
 void World::DebugDraw() const
@@ -204,5 +211,43 @@ void World::SatisfyConstraints()
 	for (auto c : mConstraints)
 	{
 		c->Apply();
+	}
+
+	// TODO: Optimize. Currently, attaching a plane constraint to the particles leads to better performance
+	for (auto p : mPlanes)
+	{
+		auto plane = p->mPlane;
+		for (auto particle : mParticles)
+		{
+			auto par = *particle;
+			// project position vector onto plane normal
+			float distance{ Math::Dot(plane.n, par.mPosition) };
+			float distanceOld{ Math::Dot(plane.n, par.mPositionOld) };
+
+			// if distance is less than plane radius, the point is below the plane.
+			if (distance < plane.d && distanceOld >= plane.d)
+			{
+				// Calculate velocity
+				auto velocity = par.mPosition - par.mPositionOld;
+
+				// Calculate reflection vector
+				auto velocityVert = (plane.n * (Math::Dot(velocity, plane.n)));
+				auto reflection = velocity - (velocityVert * 2.0f);
+				// Project reflection vector onto normal
+				auto reflectionVert = velocityVert;
+
+				// Move particle position above plane
+				particle->mPosition += reflectionVert;
+
+				// Apply friction and restitution variables to reflection
+				auto reflectionHor = reflection - reflectionVert;
+				reflectionHor *= p->mFriction;
+				reflectionVert *= p->mRestitution;
+				reflection = reflectionVert + reflectionHor;
+
+				// Move particle old position
+				particle->SetVelocity(reflection);
+			}
+		}
 	}
 }

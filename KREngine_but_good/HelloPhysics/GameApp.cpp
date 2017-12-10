@@ -105,8 +105,6 @@ void GameApp::OnUpdate()
 	// Basic
 	if (is->IsKeyPressed(Keys::ONE))
 	{
-		Math::Vector3 vec{ Math::Normalize(Math::Vector3{ 0.0f,1.0f,0.0f }) };
-		Math::Plane plane{ vec.x,vec.y,vec.z,-0.1f };
 		for (int i = 0; i < 100; ++i)
 		{
 			auto p = new Physics::Particle();
@@ -117,8 +115,11 @@ void GameApp::OnUpdate()
 				Math::Random::GetF(-0.1f,  +0.1f)
 			});
 			mPhysicsWorld.AddParticle(p);
-			auto c = new Physics::PlaneConstraint(p, plane, 0.8f);
-			mPhysicsWorld.AddConstraint(c);
+
+			//Math::Vector3 vec{ Math::Normalize(Math::Vector3{ 0.0f,1.0f,0.0f }) };
+			//Math::Plane plane{ vec.x,vec.y,vec.z,-0.1f };
+			//auto c = new Physics::PlaneConstraint(p, plane, 0.9f, 0.9f);
+			//mPhysicsWorld.AddConstraint(c);
 		}
 	}
 	// Spring
@@ -146,6 +147,13 @@ void GameApp::OnUpdate()
 			mPhysicsWorld.AddParticle(p1);
 			auto c0 = new Physics::Spring(p0, p1, 1.0f);
 			mPhysicsWorld.AddConstraint(c0);
+
+			//Math::Vector3 vec{ Math::Normalize(Math::Vector3{ 0.0f,1.0f,0.0f }) };
+			//Math::Plane plane{ vec.x,vec.y,vec.z,-0.1f };
+			//auto c1 = new Physics::PlaneConstraint(p0, plane, 0.9f, 0.9f);
+			//auto c2 = new Physics::PlaneConstraint(p1, plane, 0.9f, 0.9f);
+			//mPhysicsWorld.AddConstraint(c1);
+			//mPhysicsWorld.AddConstraint(c2);
 		}
 	}
 	// Fixed
@@ -246,7 +254,7 @@ void GameApp::OnUpdate()
 		mPhysicsWorld.AddParticle(p1);
 		auto c = new Physics::Spring(p0, p1, 1.0f);
 		mPhysicsWorld.AddConstraint(c);
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 12; ++i)
 		{
 			p0 = new Physics::Particle();
 			p0->SetPosition({ (i + 1.0f)*0.75f,(i + 10.0f)*0.75f, -0.5f });
@@ -318,10 +326,12 @@ void GameApp::OnUpdate()
 		mPhysicsWorld.AddConstraint(f2);
 		mPhysicsWorld.AddConstraint(f3);
 	}
-	if (is->IsKeyPressed(Keys::GRAVE))
+	if (is->IsKeyDown(Keys::GRAVE))
 	{
 		mPhysicsWorld.ClearDynamic();
 	}
+	Physics::PhysicsPlane* groundPlane = new Physics::PhysicsPlane(Math::Plane{ 0.0f,1.0f,0.0f,-0.1f });
+	mPhysicsWorld.AddPhysicsPlane(groundPlane);
 
 	Graphics::GraphicsSystem::Get()->BeginRender();
 

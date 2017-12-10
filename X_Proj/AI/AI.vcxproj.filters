@@ -43,6 +43,18 @@
     <ClInclude Include="Inc\Sensor.h">
       <Filter>Inc\Perception</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\DecisionModule.h">
+      <Filter>Inc\GDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Goal.h">
+      <Filter>Inc\GDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\GoalComposite.h">
+      <Filter>Inc\GDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Strategy.h">
+      <Filter>Inc\GDB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Inc">
@@ -69,6 +81,9 @@
     <Filter Include="Src\Perception">
       <UniqueIdentifier>{05b894a4-f14f-40bb-8d7a-b206f5401a39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Inc\GDB">
+      <UniqueIdentifier>{e5c5dc4a-fabb-45d0-a831-bd84976bb49a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Graph.cpp">
@@ -92,5 +107,16 @@
     <ClCompile Include="Src\PerceptionModule.cpp">
       <Filter>Src\Perception</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Inc\DecisionModule.inl">
+      <Filter>Inc\GDB</Filter>
+    </None>
+    <None Include="Inc\Goal.inl">
+      <Filter>Inc\GDB</Filter>
+    </None>
+    <None Include="Inc\GoalComposite.inl">
+      <Filter>Inc\GDB</Filter>
+    </None>
   </ItemGroup>
 </Project>

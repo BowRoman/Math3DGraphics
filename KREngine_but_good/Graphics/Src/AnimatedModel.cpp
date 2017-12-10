@@ -45,7 +45,7 @@ void AnimatedModel::PropegateBoneMatrices(uint32_t boneIndex)
 	{
 		mBoneMatrices[boneIndex] = mBoneMatrices[boneIndex] * mBoneMatrices[bone->parent->index];
 	}
-	for (int i = 0; i < bone->children.size(); ++i)
+	for (int i = 0; i < static_cast<int>(bone->children.size()); ++i)
 	{
 		PropegateBoneMatrices(bone->childrenIndex[i]);
 	}
@@ -299,7 +299,7 @@ void AnimatedModel::Update(float deltaTime)
 	if (mAnimationClips[mClipIndex].bPlaying)
 	{
 		std::vector<Math::Matrix4> transforms = mAnimationClips[mClipIndex].GetTransforms();
-		for (int i = 0; i < mBones.size(); ++i)
+		for (int i = 0; i < static_cast<int>(mBones.size()); ++i)
 		{
 			mBoneMatrices[i] = transforms[i];
 		}
@@ -309,7 +309,7 @@ void AnimatedModel::Update(float deltaTime)
 
 void AnimatedModel::Render()
 {
-	for (int i = 0; i < mBones.size(); ++i)
+	for (int i = 0; i < static_cast<int>(mBones.size()); ++i)
 	{
 		auto clip = mAnimationClips[mClipIndex];
 		mBones[i]->transform = clip.mBoneAnimations[i].GetTransform(clip.mTicks);

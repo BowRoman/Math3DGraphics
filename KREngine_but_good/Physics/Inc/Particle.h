@@ -12,7 +12,6 @@ public:
 
 	void DebugDraw() const;
 
-
 	void SetPosition(Math::Vector3 position);
 	void SetVelocity(Math::Vector3 velocity) { mPositionOld = mPosition - velocity; }
 	void SetRadius(float radius);

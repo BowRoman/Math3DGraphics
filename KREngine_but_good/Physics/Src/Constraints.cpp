@@ -43,10 +43,11 @@ void Fixed::DebugDraw() const
 	Graphics::SimpleDraw::DrawSphere(mParticle->mPosition, 4, 4, mParticle->mRadius*1.3f, Math::Vector4::Red());
 }
 
-PlaneConstraint::PlaneConstraint(Particle* p, Math::Plane plane, float invRestitution)
+PlaneConstraint::PlaneConstraint(Particle* p, Math::Plane plane, float restitution, float friction)
 	: mParticle{ p }
 	, mPlane{ plane }
-	, mInvRestitution{ invRestitution }
+	, mRestitution{ restitution }
+	, mFriction{ friction }
 {
 }
 
@@ -54,18 +55,29 @@ void PlaneConstraint::Apply() const
 {
 	// project position vector onto plane normal
 	float distance{ Math::Dot(mPlane.n, mParticle->mPosition) };
+	float distanceOld{ Math::Dot(mPlane.n, mParticle->mPositionOld) };
 
 	// if distance is less than plane radius, the point is below the plane.
-	if (distance < mPlane.d)
+	if (distance < mPlane.d && distanceOld >= mPlane.d)
 	{
+		// Calculate velocity
 		auto velocity = mParticle->mPosition - mParticle->mPositionOld;
 
-		mParticle->mPosition += (mPlane.n * 2.0f * (mPlane.d - Math::Dot(mPlane.n, mParticle->mPosition)));
+		// Calculate reflection vector
+		auto reflection = velocity - (mPlane.n * 2.0f * (Math::Dot(velocity, mPlane.n)));
+		// Project reflection vector onto normal
+		auto reflectionVert = (mPlane.n * (Math::Dot(reflection, mPlane.n)));
 
-		auto vertical = (mPlane.n * 2.0f * (mPlane.d - Math::Dot(mPlane.n, mParticle->mPositionOld)));
-		//auto horizontal = velocity - vertical;
-		//auto newVelocity = vertical + horizontal;
+		// Move particle position above plane
+		mParticle->mPosition += reflectionVert;
 
-		mParticle->mPositionOld += vertical;
+		// Apply friction and restitution variables to reflection
+		auto reflectionHor = reflection - reflectionVert;
+		reflectionHor *= mFriction;
+		reflectionVert *= mRestitution;
+		reflection = reflectionVert + reflectionHor;
+
+		// Move particle old position
+		mParticle->SetVelocity(reflection);
 	}
 }

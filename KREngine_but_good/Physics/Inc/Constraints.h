@@ -2,7 +2,6 @@
 
 namespace Physics
 {
-#define Hello friend class
 
 class Constraint
 {
@@ -44,14 +43,15 @@ protected:
 class PlaneConstraint : public Constraint
 {
 public:
-	PlaneConstraint(Particle* p, Math::Plane plane, float invRestitution = 1.0f);
+	PlaneConstraint(Particle* p, Math::Plane plane, float invRestitution = 1.0f, float invFriction = 1.0f);
 
 	void Apply() const override;
 
 protected:
 	Particle* mParticle;
 	Math::Plane mPlane;
-	float mInvRestitution;
+	float mRestitution;
+	float mFriction;
 };
 
 } // namespace Physics

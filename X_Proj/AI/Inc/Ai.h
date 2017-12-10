@@ -2,10 +2,12 @@
 #define INCLUDED_AI_H
 
 #include "Agent.h"
+#include "World.h"
+
+// Graph
 #include "Graph.h"
 #include "State.h"
 #include "StateMachine.h"
-#include "World.h"
 
 // Steering
 #include "SeekBehavior.h"
@@ -17,5 +19,11 @@
 #include "MemoryRecord.h"
 #include "PerceptionModule.h"
 #include "Sensor.h"
+
+// Goal-Based
+#include "DecisionModule.h"
+#include "Goal.h"
+#include "GoalComposite.h"
+#include "Strategy.h"
 
 #endif // #ifndef INCLUDED_AI_AI_H

@@ -22,6 +22,9 @@
     <ClInclude Include="Inc\Agent.h" />
     <ClInclude Include="Inc\Ai.h" />
     <ClInclude Include="Inc\Common.h" />
+    <ClInclude Include="Inc\DecisionModule.h" />
+    <ClInclude Include="Inc\Goal.h" />
+    <ClInclude Include="Inc\GoalComposite.h" />
     <ClInclude Include="Inc\Graph.h" />
     <ClInclude Include="Inc\MemoryRecord.h" />
     <ClInclude Include="Inc\PerceptionModule.h" />
@@ -32,6 +35,7 @@
     <ClInclude Include="Inc\StateMachine.h" />
     <ClInclude Include="Inc\SteeringBehavior.h" />
     <ClInclude Include="Inc\SteeringModule.h" />
+    <ClInclude Include="Inc\Strategy.h" />
     <ClInclude Include="Inc\World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -47,6 +51,11 @@
     <ProjectReference Include="..\X\X.vcxproj">
       <Project>{6682bfd4-c79f-49bd-a114-6ee8fb79e8c3}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Inc\DecisionModule.inl" />
+    <None Include="Inc\Goal.inl" />
+    <None Include="Inc\GoalComposite.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

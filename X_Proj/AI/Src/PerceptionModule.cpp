@@ -41,6 +41,7 @@ void PerceptionModule::Update(float deltaTime, ImportanceCalculator impCalc)
 		else
 		{
 			impCalc(*record);
+			++iter;
 		}
 	}
 
