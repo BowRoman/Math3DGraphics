@@ -11,7 +11,12 @@ World::World()
 	: mTimer{ 0.0f }
 {}
 
-World::~World() {}
+World::~World()
+{
+	ASSERT(mParticles.empty(), "[World] Particle vector must be cleared before destruction.");
+	ASSERT(mConstraints.empty(), "[World] Constraint vector must be cleared before destruction.");
+	ASSERT(mPlanes.empty(), "[World] Plane vector must be cleared before destruction.");
+}
 
 void World::Update(float deltaTime)
 {
@@ -51,7 +56,6 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 		auto p = new Physics::Particle();
 		p->SetRadius(0.3f);
 		p->SetInvMass(particleinvMass);
-		p->SetVelocity(velocity);
 		particles[i] = p;
 		world.AddParticle(p);
 	}
@@ -72,6 +76,11 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 	particles[6]->SetPosition({ position.x + halfWidth, position.y - halfWidth, position.z - halfWidth });
 	// bottom left
 	particles[7]->SetPosition({ position.x - halfWidth, position.y - halfWidth, position.z - halfWidth });
+
+	for (int i = 0; i < 8; ++i)
+	{
+		particles[i]->SetVelocity(velocity);
+	}
 
 	// top square
 	for (int i = 0; i < 4; ++i)
@@ -168,11 +177,19 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 
 }
 
+// Clears all pointer containers
 void World::ClearDynamic()
 {
 	SafeDeleteVector(mParticles);
 	SafeDeleteVector(mConstraints);
 	SafeDeleteVector(mPlanes);
+}
+
+// Clears particle and constraint containers
+void World::ClearParticles()
+{
+	SafeDeleteVector(mParticles);
+	SafeDeleteVector(mConstraints);
 }
 
 void World::DebugDraw() const
@@ -213,7 +230,6 @@ void World::SatisfyConstraints()
 		c->Apply();
 	}
 
-	// TODO: Optimize. Currently, attaching a plane constraint to the particles leads to better performance
 	for (auto p : mPlanes)
 	{
 		auto plane = p->mPlane;
@@ -234,15 +250,30 @@ void World::SatisfyConstraints()
 				auto velocityVert = (plane.n * (Math::Dot(velocity, plane.n)));
 				auto reflection = velocity - (velocityVert * 2.0f);
 				// Project reflection vector onto normal
-				auto reflectionVert = velocityVert;
+				auto reflectionVert = (plane.n * (Math::Dot(reflection, plane.n)));
 
 				// Move particle position above plane
 				particle->mPosition += reflectionVert;
 
 				// Apply friction and restitution variables to reflection
 				auto reflectionHor = reflection - reflectionVert;
-				reflectionHor *= p->mFriction;
-				reflectionVert *= p->mRestitution;
+
+				if (Math::MagnitudeSqr(reflectionVert) <= 0.0001f) // magic number
+				{
+					reflectionVert = Math::Vector3::Zero();
+				}
+				else
+				{
+					reflectionVert *= p->mRestitution;
+				}
+				if (Math::MagnitudeSqr(reflectionHor) <= 0.0001f) // magic number
+				{
+					reflectionHor = Math::Vector3::Zero();
+				}
+				else
+				{
+					reflectionHor *= p->mFriction;
+				}
 				reflection = reflectionVert + reflectionHor;
 
 				// Move particle old position

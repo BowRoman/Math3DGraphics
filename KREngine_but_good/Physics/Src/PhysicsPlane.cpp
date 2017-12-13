@@ -12,7 +12,7 @@ PhysicsPlane::PhysicsPlane()
 
 PhysicsPlane::PhysicsPlane(Math::Plane const& plane, float friction, float restitution)
 	: mPlane{ plane }
-	, mFriction{ 1.0f }
-	, mRestitution{ 1.0f }
+	, mFriction{ friction }
+	, mRestitution{ restitution }
 {
 }
