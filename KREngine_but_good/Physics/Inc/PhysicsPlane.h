@@ -11,6 +11,7 @@ public:
 	~PhysicsPlane() {}
 
 	void Apply(ParticleVec& particles);
+	void Apply(Particle* particles);
 private:
 	friend class World;
 

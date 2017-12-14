@@ -32,9 +32,25 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mCameraTransform.SetDirection(Math::Vector3(0.0f, 0.0f, 1.0f));
 
 
-	Physics::PhysicsPlane* groundPlane = new Physics::PhysicsPlane(Math::Plane{ 0.0f,1.0f,0.0f,-0.1f }, 0.7f, 0.7f);
-	mPhysicsWorld.AddPhysicsPlane(groundPlane);
-	Physics::PhysicsOBB* box = new Physics::PhysicsOBB();
+	//Physics::PhysicsPlane* groundPlane = new Physics::PhysicsPlane(Math::Plane{ 0.0f,1.0f,0.0f,-0.1f }, 0.7f, 0.7f);
+	//mPhysicsWorld.AddPhysicsPlane(groundPlane);
+
+	Math::OBB obb;
+	obb.center = { 0.0f,-1.0f,0.0f };
+	obb.extend = { 6.0f,2.0f,2.0f };
+	Physics::PhysicsOBB* box = new Physics::PhysicsOBB(obb);
+	mPhysicsWorld.AddPhysicsOBB(box);
+
+	obb.center = { 0.0f,0.0f,5.0f };
+	obb.extend = { 6.0f,3.0f,2.0f };
+	obb.rot = Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), 20.0f * Math::kDegToRad);
+	box = new Physics::PhysicsOBB(obb);
+	mPhysicsWorld.AddPhysicsOBB(box);
+
+	obb.center = { 0.0f,0.0f,-3.0f };
+	obb.extend = { 6.0f,3.0f,2.0f };
+	obb.rot = Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), (-20.0f) * Math::kDegToRad);
+	box = new Physics::PhysicsOBB(obb);
 	mPhysicsWorld.AddPhysicsOBB(box);
 }
 
@@ -111,15 +127,11 @@ void GameApp::OnUpdate()
 	// Basic
 	if (is->IsKeyPressed(Keys::ONE))
 	{
-		for (int i = 0; i < 100; ++i)
+		for (int i = 0; i < 50; ++i)
 		{
 			auto p = new Physics::Particle();
-			p->SetPosition({ 0.0f,3.0f,0.0f });
-			p->SetVelocity({
-				Math::Random::GetF(-0.1f,  +0.1f),
-				Math::Random::GetF(+0.05f, +0.15f),
-				Math::Random::GetF(-0.1f,  +0.1f)
-			});
+			p->SetPosition({ mCameraTransform.GetPosition() });
+			p->SetVelocity({ mCameraTransform.GetDirection()*0.5f });
 			mPhysicsWorld.AddParticle(p);
 
 			//Math::Vector3 vec{ Math::Normalize(Math::Vector3{ 0.0f,1.0f,0.0f }) };

@@ -114,6 +114,16 @@ Quaternion Math::Slerp(Quaternion q0, Quaternion q1, float t)
 	);
 }
 
+
+Matrix4 Math::GetTransform(const OBB& obb)
+{
+	Matrix4 matTrans = Matrix4::Translation(obb.center.x, obb.center.y, obb.center.z);
+	Matrix4 matRot = Matrix4::RotationQuaternion(obb.rot);
+	Matrix4 matWorld = matRot * matTrans;
+
+	return matWorld;
+}
+
 bool Math::Intersect(const Ray& ray, const Vector3& a, const Vector3& b, const Vector3& c, float& distance)
 {
 	// Reference: https://en.wikipedia.origin/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm

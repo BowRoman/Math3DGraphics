@@ -23,49 +23,54 @@ void Physics::PhysicsPlane::Apply(ParticleVec& particles)
 {
 	for (auto particle : particles)
 	{
-		Physics::Particle par = *particle;
-		// project position vector onto plane normal
-		float distance{ Math::Dot(mPlane.n, par.mPosition) };
-		float distanceOld{ Math::Dot(mPlane.n, par.mPositionOld) };
+		Apply(particle);
+	}
+}
 
-		// if distance is less than plane radius, the point is below the plane.
-		if (distance < mPlane.d && distanceOld >= mPlane.d)
+void Physics::PhysicsPlane::Apply(Particle* particle)
+{
+	Physics::Particle par = *particle;
+	// project position vector onto plane normal
+	float distance{ Math::Dot(mPlane.n, par.mPosition) };
+	float distanceOld{ Math::Dot(mPlane.n, par.mPositionOld) };
+
+	// if distance is less than plane radius, the point is below the plane.
+	if (distance < mPlane.d && distanceOld >= mPlane.d)
+	{
+		// Calculate velocity
+		auto velocity = par.mPosition - par.mPositionOld;
+
+		// Calculate reflection vector
+		auto velocityVert = (mPlane.n * (Math::Dot(velocity, mPlane.n)));
+		auto reflection = velocity - (velocityVert * 2.0f);
+		// Project reflection vector onto normal
+		auto reflectionVert = (mPlane.n * (Math::Dot(reflection, mPlane.n)));
+
+		// Move particle position above plane
+		particle->mPosition += reflectionVert;
+
+		// Apply friction and restitution variables to reflection
+		auto reflectionHor = reflection - reflectionVert;
+
+		if (Math::MagnitudeSqr(reflectionVert) <= 0.0001f) // magic number
 		{
-			// Calculate velocity
-			auto velocity = par.mPosition - par.mPositionOld;
-
-			// Calculate reflection vector
-			auto velocityVert = (mPlane.n * (Math::Dot(velocity, mPlane.n)));
-			auto reflection = velocity - (velocityVert * 2.0f);
-			// Project reflection vector onto normal
-			auto reflectionVert = (mPlane.n * (Math::Dot(reflection, mPlane.n)));
-
-			// Move particle position above plane
-			particle->mPosition += reflectionVert;
-
-			// Apply friction and restitution variables to reflection
-			auto reflectionHor = reflection - reflectionVert;
-
-			if (Math::MagnitudeSqr(reflectionVert) <= 0.0001f) // magic number
-			{
-				reflectionVert = Math::Vector3::Zero();
-			}
-			else
-			{
-				reflectionVert *= mRestitution;
-			}
-			if (Math::MagnitudeSqr(reflectionHor) <= 0.0001f) // magic number
-			{
-				reflectionHor = Math::Vector3::Zero();
-			}
-			else
-			{
-				reflectionHor *= mFriction;
-			}
-			reflection = reflectionVert + reflectionHor;
-
-			// Move particle old position
-			particle->SetVelocity(reflection);
+			reflectionVert = Math::Vector3::Zero();
 		}
+		else
+		{
+			reflectionVert *= mRestitution;
+		}
+		if (Math::MagnitudeSqr(reflectionHor) <= 0.0001f) // magic number
+		{
+			reflectionHor = Math::Vector3::Zero();
+		}
+		else
+		{
+			reflectionHor *= mFriction;
+		}
+		reflection = reflectionVert + reflectionHor;
+
+		// Move particle old position
+		particle->SetVelocity(reflection);
 	}
 }
