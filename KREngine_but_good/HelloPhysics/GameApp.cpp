@@ -34,6 +34,8 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 
 	Physics::PhysicsPlane* groundPlane = new Physics::PhysicsPlane(Math::Plane{ 0.0f,1.0f,0.0f,-0.1f }, 0.7f, 0.7f);
 	mPhysicsWorld.AddPhysicsPlane(groundPlane);
+	Physics::PhysicsOBB* box = new Physics::PhysicsOBB();
+	mPhysicsWorld.AddPhysicsOBB(box);
 }
 
 

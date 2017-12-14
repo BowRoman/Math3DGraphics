@@ -33,6 +33,9 @@
     <ClInclude Include="Inc\PhysicsPlane.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\PhysicsOBB.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
@@ -48,6 +51,9 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\PhysicsPlane.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\PhysicsOBB.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

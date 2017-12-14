@@ -3,6 +3,7 @@
 
 #include "Constraints.h"
 #include "Particle.h"
+#include "PhysicsOBB.h"
 #include "PhysicsPlane.h"
 
 using namespace Physics;
@@ -43,6 +44,11 @@ void World::AddConstraint(Constraint* c)
 void Physics::World::AddPhysicsPlane(PhysicsPlane* p)
 {
 	mPlanes.push_back(p);
+}
+
+void Physics::World::AddPhysicsOBB(PhysicsOBB* obb)
+{
+	mOBBs.push_back(obb);
 }
 
 void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math::Vector3 velocity, float width, float invMass, bool fixed)
@@ -183,6 +189,7 @@ void World::ClearDynamic()
 	SafeDeleteVector(mParticles);
 	SafeDeleteVector(mConstraints);
 	SafeDeleteVector(mPlanes);
+	SafeDeleteVector(mOBBs);
 }
 
 // Clears particle and constraint containers
@@ -201,6 +208,10 @@ void World::DebugDraw() const
 	for (const auto c : mConstraints)
 	{
 		c->DebugDraw();
+	}
+	for (const auto o : mOBBs)
+	{
+		o->DebugDraw();
 	}
 }
 
@@ -232,53 +243,11 @@ void World::SatisfyConstraints()
 
 	for (auto p : mPlanes)
 	{
-		auto plane = p->mPlane;
-		for (auto particle : mParticles)
-		{
-			auto par = *particle;
-			// project position vector onto plane normal
-			float distance{ Math::Dot(plane.n, par.mPosition) };
-			float distanceOld{ Math::Dot(plane.n, par.mPositionOld) };
+		p->Apply(mParticles);
+	}
 
-			// if distance is less than plane radius, the point is below the plane.
-			if (distance < plane.d && distanceOld >= plane.d)
-			{
-				// Calculate velocity
-				auto velocity = par.mPosition - par.mPositionOld;
-
-				// Calculate reflection vector
-				auto velocityVert = (plane.n * (Math::Dot(velocity, plane.n)));
-				auto reflection = velocity - (velocityVert * 2.0f);
-				// Project reflection vector onto normal
-				auto reflectionVert = (plane.n * (Math::Dot(reflection, plane.n)));
-
-				// Move particle position above plane
-				particle->mPosition += reflectionVert;
-
-				// Apply friction and restitution variables to reflection
-				auto reflectionHor = reflection - reflectionVert;
-
-				if (Math::MagnitudeSqr(reflectionVert) <= 0.0001f) // magic number
-				{
-					reflectionVert = Math::Vector3::Zero();
-				}
-				else
-				{
-					reflectionVert *= p->mRestitution;
-				}
-				if (Math::MagnitudeSqr(reflectionHor) <= 0.0001f) // magic number
-				{
-					reflectionHor = Math::Vector3::Zero();
-				}
-				else
-				{
-					reflectionHor *= p->mFriction;
-				}
-				reflection = reflectionVert + reflectionHor;
-
-				// Move particle old position
-				particle->SetVelocity(reflection);
-			}
-		}
+	for (auto o : mOBBs)
+	{
+		o->Apply(mParticles);
 	}
 }
