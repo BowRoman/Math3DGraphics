@@ -31,12 +31,34 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mCameraTransform.SetPosition(Math::Vector3(0.0f, 10.0f, -10.0f));
 	mCameraTransform.SetDirection(Math::Vector3(0.0f, 0.0f, 1.0f));
 
+
+	//Physics::PhysicsPlane* groundPlane = new Physics::PhysicsPlane(Math::Plane{ 0.0f,1.0f,0.0f,-0.1f }, 0.7f, 0.7f);
+	//mPhysicsWorld.AddPhysicsPlane(groundPlane);
+
+	Math::OBB obb;
+	obb.center = { 0.0f,-1.0f,0.0f };
+	obb.extend = { 6.0f,2.0f,2.0f };
+	Physics::PhysicsOBB* box = new Physics::PhysicsOBB(obb);
+	mPhysicsWorld.AddPhysicsOBB(box);
+
+	obb.center = { 0.0f,0.0f,5.0f };
+	obb.extend = { 6.0f,3.0f,2.0f };
+	obb.rot = Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), 20.0f * Math::kDegToRad);
+	box = new Physics::PhysicsOBB(obb);
+	mPhysicsWorld.AddPhysicsOBB(box);
+
+	obb.center = { 0.0f,0.0f,-3.0f };
+	obb.extend = { 6.0f,3.0f,2.0f };
+	obb.rot = Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), (-20.0f) * Math::kDegToRad);
+	box = new Physics::PhysicsOBB(obb);
+	mPhysicsWorld.AddPhysicsOBB(box);
 }
 
 
 void GameApp::OnTerminate()
 {
 	//Terminate
+	mPhysicsWorld.ClearDynamic();
 
 	Input::InputSystem::StaticTerminate();
 	Graphics::SimpleDraw::StaticTerminate();
@@ -105,15 +127,11 @@ void GameApp::OnUpdate()
 	// Basic
 	if (is->IsKeyPressed(Keys::ONE))
 	{
-		for (int i = 0; i < 100; ++i)
+		for (int i = 0; i < 50; ++i)
 		{
 			auto p = new Physics::Particle();
-			p->SetPosition({ 0.0f,3.0f,0.0f });
-			p->SetVelocity({
-				Math::Random::GetF(-0.1f,  +0.1f),
-				Math::Random::GetF(+0.05f, +0.15f),
-				Math::Random::GetF(-0.1f,  +0.1f)
-			});
+			p->SetPosition({ mCameraTransform.GetPosition() });
+			p->SetVelocity({ mCameraTransform.GetDirection()*0.5f });
 			mPhysicsWorld.AddParticle(p);
 
 			//Math::Vector3 vec{ Math::Normalize(Math::Vector3{ 0.0f,1.0f,0.0f }) };
@@ -235,9 +253,9 @@ void GameApp::OnUpdate()
 		mPhysicsWorld.AddConstraint(c5);
 	}
 	// Cube
-	if (is->IsKeyDown(Keys::FIVE))
+	if (is->IsKeyPressed(Keys::FIVE))
 	{
-		mPhysicsWorld.AddCube(mPhysicsWorld, { 0.0f,2.0f,0.0f }, { 0.0f,0.0f,1.0f }, 1.0f, 10.0f, false);
+		mPhysicsWorld.AddCube(mPhysicsWorld, { 0.0f,2.0f,0.0f }, Math::Vector3::Random()*0.2f, 1.0f, 10.0f, false);
 	}
 	// Rope ladder
 	if (is->IsKeyPressed(Keys::SIX))
@@ -328,10 +346,8 @@ void GameApp::OnUpdate()
 	}
 	if (is->IsKeyDown(Keys::GRAVE))
 	{
-		mPhysicsWorld.ClearDynamic();
+		mPhysicsWorld.ClearParticles();
 	}
-	Physics::PhysicsPlane* groundPlane = new Physics::PhysicsPlane(Math::Plane{ 0.0f,1.0f,0.0f,-0.1f });
-	mPhysicsWorld.AddPhysicsPlane(groundPlane);
 
 	Graphics::GraphicsSystem::Get()->BeginRender();
 

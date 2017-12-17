@@ -24,6 +24,8 @@ private:
 	Hello World;
 	Hello Spring;
 	Hello Fixed;
+	Hello PhysicsOBB;
+	Hello PhysicsPlane;
 	Hello PlaneConstraint;
 	Math::Vector3 mPosition;
 	Math::Vector3 mPositionOld;

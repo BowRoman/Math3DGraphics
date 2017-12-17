@@ -32,7 +32,7 @@ struct Vector3
 	Vector3& operator/=(float s);
 
 	bool operator==(const Vector3& rhs) const { return (x == rhs.x && y == rhs.y && z == rhs.z); }
-	bool operator!=(const Vector3& rhs) const { return (x != rhs.x && y != rhs.y && z != rhs.z); }
+	bool operator!=(const Vector3& rhs) const { return (x != rhs.x || y != rhs.y || z != rhs.z); }
 };
 
 #include "Vector3.inl"

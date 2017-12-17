@@ -88,6 +88,8 @@ Vector3 Lerp(const Vector3& v0, const Vector3& v1, float t);
 Quaternion Lerp(Quaternion q0, Quaternion q1, float t);
 Quaternion Slerp(Quaternion q0, Quaternion q1, float t);
 
+Matrix4 GetTransform(const OBB& obb);
+
 bool Intersect(const Ray& ray, const Vector3& a, const Vector3& b, const Vector3& c, float& distance);
 bool Intersect(const Ray& ray, const Plane& plane, float& distance);
 bool Intersect(const Ray& ray, const AABB& aabb, float& distEntry, float& distExit);

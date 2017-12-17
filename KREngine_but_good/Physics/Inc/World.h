@@ -31,8 +31,10 @@ public:
 	void AddParticle(Particle* p);
 	void AddConstraint(Constraint* c);
 	void AddPhysicsPlane(PhysicsPlane* p);
+	void AddPhysicsOBB(PhysicsOBB* obb);
 	void AddCube(Physics::World& world, Math::Vector3 position, Math::Vector3 velocity, float width = 1.0f, float mass = 1.0f, bool fixed = false);
 	void ClearDynamic();
+	void ClearParticles();
 
 	void DebugDraw() const;
 
@@ -45,6 +47,7 @@ private:
 	ParticleVec mParticles;
 	ConstraintVec mConstraints;
 	PhysicsPlaneVec mPlanes;
+	PhysicsOBBVec mOBBs;
 	float mTimer;
 
 }; // class World
