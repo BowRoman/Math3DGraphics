@@ -26,6 +26,7 @@ public:
 
 	X::Math::Vector2& Destination()				{ return mDestination; }
 	const X::Math::Vector2& Destination() const { return mDestination; }
+	void SetDestination(X::Math::Vector2 dest)  { mDestination = dest; }
 
 	X::Math::Vector2& Heading()					{ return mHeading; }
 	const X::Math::Vector2& Heading() const		{ return mHeading; }

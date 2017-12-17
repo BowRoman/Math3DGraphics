@@ -1,0 +1,7 @@
+{
+  "AppName": "Hello My Honey",
+  "WinWidth": 1024,
+  "WinHeight": 768,
+  "Fullscreen": false,
+  "Texturepath": "../Assets/Images/"
+}

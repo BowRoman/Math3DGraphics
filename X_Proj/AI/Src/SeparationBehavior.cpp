@@ -11,7 +11,7 @@ X::Math::Vector2 SeparationBehavior::Calculate(Agent& agent)
 	X::Math::Circle range(agent.Position(), radius);
 	auto neighborhood = agent.GetWorld().GetNeighborhood(range);
 
-	X::Math::Vector2 separation;
+	X::Math::Vector2 separation = X::Math::Vector2::Zero();
 	for (auto neighbor : neighborhood)
 	{
 		if (neighbor == &agent)
@@ -20,8 +20,8 @@ X::Math::Vector2 SeparationBehavior::Calculate(Agent& agent)
 		}
 
 		X::Math::Vector2 neighborToAgent = agent.Position() - neighbor->Position();
-		float distanctToAgent = X::Math::Magnitude(neighborToAgent);
-		separation += (neighborToAgent / distanctToAgent) * (radius - distanctToAgent);
+		float distanceToAgent = X::Math::Magnitude(neighborToAgent);
+		separation += (neighborToAgent / distanceToAgent) * X::Math::Min((radius - distanceToAgent), agent.MaxSpeed());
 	}
 	return separation;
 }
