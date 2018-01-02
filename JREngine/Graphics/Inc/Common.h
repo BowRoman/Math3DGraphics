@@ -14,4 +14,6 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
+#include "Forward.h"
+
 #endif // #ifndef INCLUDED_GRAPHICS_COMMON_H

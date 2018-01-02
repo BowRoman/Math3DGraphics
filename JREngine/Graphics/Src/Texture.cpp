@@ -17,7 +17,7 @@ Texture::~Texture()
 	ASSERT(mShaderResourceView == nullptr, "[Sampler] Texture not released.");
 }
 
-void Texture::Initialize(const wchar_t * filename)
+void Texture::Initialize(const wchar_t* filename)
 {
 	ID3D11Device *device = GraphicsSystem::Get()->GetDevice();
 	ID3D11DeviceContext *context = GraphicsSystem::Get()->GetContext();
@@ -30,6 +30,13 @@ void Texture::Initialize(const wchar_t * filename)
 	{
 		DirectX::CreateWICTextureFromFile(device, context, filename, nullptr, &mShaderResourceView);
 	}
+}
+
+void Graphics::Texture::Initialize(const char* fileName)
+{
+	wchar_t wbuffer[1024];
+	mbstowcs_s(nullptr, wbuffer, fileName, 1024);
+	Initialize(wbuffer);
 }
 
 void Texture::Terminate()

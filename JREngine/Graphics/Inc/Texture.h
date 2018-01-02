@@ -10,7 +10,8 @@ public:
 	Texture();
 	~Texture();
 
-	void Initialize(const wchar_t *filename);
+	void Initialize(const wchar_t* filename);
+	void Initialize(const char* fileName);
 	void Terminate();
 
 	void BindVS(uint32_t slot);

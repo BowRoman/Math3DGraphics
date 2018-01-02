@@ -1,89 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Inc">
-      <UniqueIdentifier>{83d871a6-df80-454a-aef0-3b82b7c75299}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src">
-      <UniqueIdentifier>{5ef0e78b-7595-4242-81cf-6cfb41ca6cd6}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="Inc\AABB.h" />
+    <ClInclude Include="Inc\Circle.h" />
+    <ClInclude Include="Inc\Common.h" />
+    <ClInclude Include="Inc\EngineMath.h" />
+    <ClInclude Include="Inc\Matrix.h" />
+    <ClInclude Include="Inc\OBB.h" />
+    <ClInclude Include="Inc\Plane.h" />
+    <ClInclude Include="Inc\Quaternion.h" />
+    <ClInclude Include="Inc\Random.h" />
+    <ClInclude Include="Inc\Ray.h" />
+    <ClInclude Include="Inc\Rect.h" />
+    <ClInclude Include="Inc\Sphere.h" />
+    <ClInclude Include="Inc\Vector2.h" />
+    <ClInclude Include="Inc\Vector3.h" />
+    <ClInclude Include="Inc\Vector4.h" />
+    <ClInclude Include="Inc\Matrix4.h" />
+    <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Inc\Vector4.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Common.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Precompiled.h">
-      <Filter>Src</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\EngineMath.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\AABB.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Circle.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\OBB.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Plane.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Quaternion.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Random.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Ray.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Rect.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Sphere.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Vector2.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Vector3.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
-    <ClInclude Include="Inc\Matrix4.h">
-      <Filter>Inc</Filter>
-    </ClInclude>
+    <ClCompile Include="Src\EngineMath.cpp" />
+    <ClCompile Include="Src\Precompiled.cpp" />
+    <ClCompile Include="Src\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Precompiled.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\EngineMath.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Random.cpp">
-      <Filter>Src</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Inc\Math.inl">
-      <Filter>Inc</Filter>
-    </None>
-    <None Include="Inc\Quaternion.inl">
-      <Filter>Inc</Filter>
-    </None>
-    <None Include="Inc\Vector3.inl">
-      <Filter>Inc</Filter>
-    </None>
-    <None Include="Inc\Vector4.inl">
-      <Filter>Inc</Filter>
-    </None>
-    <None Include="Inc\Matrix4.inl">
-      <Filter>Inc</Filter>
-    </None>
+    <None Include="Inc\Math.inl" />
+    <None Include="Inc\Matrix.inl" />
+    <None Include="Inc\Quaternion.inl" />
+    <None Include="Inc\Vector3.inl" />
+    <None Include="Inc\Vector4.inl" />
+    <None Include="Inc\Matrix4.inl" />
   </ItemGroup>
 </Project>

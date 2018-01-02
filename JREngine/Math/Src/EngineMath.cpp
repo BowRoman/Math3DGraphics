@@ -11,6 +11,7 @@ const float Math::kRootTwo		= 1.41421356237309f;
 const float Math::kRootThree	= 1.73205080756887f;
 const float Math::kDegToRad		= kPi / 180.0f;
 const float Math::kRadToDeg		= 180.0f / kPi;
+const float Math::KEpsilon		= 0.000001f;
 
 Quaternion Quaternion::RotationAxis(const Vector3& axis, float rad)
 {
@@ -111,6 +112,16 @@ Quaternion Math::Slerp(Quaternion q0, Quaternion q1, float t)
 		(q0.z * scale0) + (q1.z * scale1),
 		(q0.w * scale0) + (q1.w * scale1)
 	);
+}
+
+
+Matrix4 Math::GetTransform(const OBB& obb)
+{
+	Matrix4 matTrans = Matrix4::Translation(obb.center.x, obb.center.y, obb.center.z);
+	Matrix4 matRot = Matrix4::RotationQuaternion(obb.rot);
+	Matrix4 matWorld = matRot * matTrans;
+
+	return matWorld;
 }
 
 bool Math::Intersect(const Ray& ray, const Vector3& a, const Vector3& b, const Vector3& c, float& distance)

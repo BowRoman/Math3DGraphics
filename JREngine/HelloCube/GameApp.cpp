@@ -83,7 +83,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 
 	mConstantBuffer.Initialize();
 	mMeshBuffer.Initialize(kVertices, sizeof(Graphics::VertexPC), kVertexCount, kIndices, kIndexCount);
-	mVertexShader.Initialize(L"../Assets/Shaders/Transform.fx", Graphics::VertexPC::format);
+	mVertexShader.Initialize(L"../Assets/Shaders/Transform.fx", Graphics::VertexPC::Format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Transform.fx");
 }
 

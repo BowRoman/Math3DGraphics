@@ -8,8 +8,8 @@ Graphics::MeshBuffer::MeshBuffer()
 	, mIndexBuffer(nullptr)
 	, mVertexSize(0)
 	, mVertexCapacity(0)
-	, mVertexCount(0)
-	, mIndexCount(0)
+	, mNumVertices(0)
+	, mNumIndices(0)
 	, mTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
 {
 }
@@ -22,12 +22,12 @@ Graphics::MeshBuffer::~MeshBuffer()
 void Graphics::MeshBuffer::Initialize(const void* vertices, uint32_t vertexSize, uint32_t vertexCount)
 {
 	mVertexSize = vertexSize;
-	mVertexCount = vertexCount;
+	mNumVertices = vertexCount;
 
 	//create vertex buffer
 	D3D11_BUFFER_DESC bd = {};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = mVertexSize * mVertexCount; // memory size in VRAM
+	bd.ByteWidth = mVertexSize * mNumVertices; // memory size in VRAM
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
@@ -43,12 +43,12 @@ void Graphics::MeshBuffer::Initialize(const void* vertices, uint32_t vertexSize,
 {
 	Initialize(vertices, vertexSize, vertexCount);
 
-	mIndexCount = indexCount;
+	mNumIndices = indexCount;
 
 	//create index buffer
 	D3D11_BUFFER_DESC bd = {};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(uint32_t) * mIndexCount; // memory size in VRAM
+	bd.ByteWidth = sizeof(uint32_t) * mNumIndices; // memory size in VRAM
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
@@ -63,7 +63,7 @@ void Graphics::MeshBuffer::Initialize(const void* vertices, uint32_t vertexSize,
 void Graphics::MeshBuffer::InitializeDynamic(uint32_t vertexSize, uint32_t vertexCapacity)
 {
 	mVertexSize = vertexSize;
-	mVertexCount = 0;
+	mNumVertices = 0;
 	mVertexCapacity = vertexCapacity;
 
 	//create vertex buffer
@@ -90,7 +90,7 @@ void Graphics::MeshBuffer::SetVertexBuffer(const void * vertices, uint32_t verte
 
 	ID3D11DeviceContext *context = Graphics::GraphicsSystem::Get()->GetContext();
 
-	mVertexCount = vertexCount;
+	mNumVertices = vertexCount;
 
 	if (vertexCount > 0)
 	{
@@ -139,16 +139,16 @@ void Graphics::MeshBuffer::Render()
 	context->IASetPrimitiveTopology(mTopology);
 
 	// draw mesh
-	if (mIndexCount == 0)
+	if (mNumIndices == 0)
 	{
 		// using vertex buffer only
-		context->Draw(mVertexCount, 0);
+		context->Draw(mNumVertices, 0);
 	}
 	else
 	{
 		// using index buffer
 		// set index buffer
 		context->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-		context->DrawIndexed(mIndexCount, 0, 0);
+		context->DrawIndexed(mNumIndices, 0, 0);
 	}
 }

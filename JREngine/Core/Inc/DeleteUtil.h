@@ -1,21 +1,31 @@
-#ifndef INCLUDED_CORE_DELETEUTIL_H
-#define INCLUDED_CORE_DELETEUTIL_H
+#pragma once
 
-template<class T>
+
+template<typename T>
 inline void SafeDelete(T*& ptr)
 {
 	delete ptr;
 	ptr = nullptr;
 }
 
-template<class T>
+template<typename T>
 inline void SafeDeleteArray(T*& ptr)
 {
 	delete[] ptr;
 	ptr = nullptr;
 }
 
-template<class T>
+template<typename T>
+inline void SafeDeleteVector(std::vector<T*>& vec)
+{
+	for (auto element : vec)
+	{
+		SafeDelete(element);
+	}
+	vec.clear();
+}
+
+template<typename T>
 inline void SafeRelease(T*& ptr)
 {
 	if (ptr)
@@ -24,5 +34,3 @@ inline void SafeRelease(T*& ptr)
 		ptr = nullptr;
 	}
 }
-
-#endif // INCLUDED_CORE_DELETEUTIL_H

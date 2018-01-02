@@ -53,6 +53,20 @@
     <ClInclude Include="Inc\MeshBuilder.h" />
     <ClInclude Include="Inc\Terrain.h" />
     <ClInclude Include="Inc\Mesh.h" />
+    <ClInclude Include="Inc\AnimatedModel.h" />
+    <ClInclude Include="Inc\Animation.h" />
+    <ClInclude Include="Inc\AnimationClip.h" />
+    <ClInclude Include="Inc\Bone.h" />
+    <ClInclude Include="Inc\TextureManager.h" />
+    <ClInclude Include="Inc\SkinnedMesh.h" />
+    <ClInclude Include="Inc\RenderTargetMesh.h" />
+    <ClInclude Include="Inc\RenderTarget.h" />
+    <ClInclude Include="Inc\Model.h" />
+    <ClInclude Include="Inc\Material.h" />
+    <ClInclude Include="Inc\Light.h" />
+    <ClInclude Include="Inc\HeightMap.h" />
+    <ClInclude Include="Inc\Forward.h" />
+    <ClInclude Include="Inc\DepthMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GraphicsSystem.cpp">
@@ -88,5 +102,15 @@
     <ClCompile Include="Src\MeshBuilder.cpp" />
     <ClCompile Include="Src\Terrain.cpp" />
     <ClCompile Include="Src\Mesh.cpp" />
+    <ClCompile Include="Src\AnimatedModel.cpp" />
+    <ClCompile Include="Src\Animation.cpp" />
+    <ClCompile Include="Src\AnimationClip.cpp" />
+    <ClCompile Include="Src\DepthMap.cpp" />
+    <ClCompile Include="Src\HeightMap.cpp" />
+    <ClCompile Include="Src\Model.cpp" />
+    <ClCompile Include="Src\RenderTarget.cpp" />
+    <ClCompile Include="Src\RenderTargetMesh.cpp" />
+    <ClCompile Include="Src\SkinnedMesh.cpp" />
+    <ClCompile Include="Src\TextureManager.cpp" />
   </ItemGroup>
 </Project>

@@ -58,8 +58,8 @@ void Terrain::Initialize(const char* rawFileName, uint32_t cols, uint32_t rows, 
 	uint32_t intcount = (mColumns * 2) * (mRows - 1) + (mRows - 2);
 	mMesh.Allocate(rows*cols, intcount);
 
-	float startingX = origin.x - ((rows*scale)*0.5);
-	float startingZ = origin.z - ((cols*scale)*0.5);
+	float startingX = origin.x - ((rows*scale)*0.5f);
+	float startingZ = origin.z - ((cols*scale)*0.5f);
 	for (uint32_t i = 0; i < cols; ++i)
 	{
 		for (uint32_t j = 0; j < rows; ++j)
@@ -122,12 +122,12 @@ void Terrain::GenerateIndices()
 	int index = 0;
 	int length = 0;
 
-	for (int width = 0; width < mRows - 1; ++width)
+	for (int width = 0; width < static_cast<int>(mRows) - 1; ++width)
 	{
 		length = 0;
 		if (width % 2 == 0) // even rows left to right
 		{
-			for (length = 0; length < mColumns; ++length)
+			for (length = 0; length < static_cast<int>(mColumns); ++length)
 			{
 				(indices)[index++] = length + (width * mColumns);
 				(indices)[index++] = length + (width * mColumns) + mColumns;

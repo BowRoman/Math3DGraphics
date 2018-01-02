@@ -51,7 +51,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 
 	mConstantBuffer.Initialize();
 	mMeshBuffer.Initialize(kVertices, sizeof(Graphics::VertexPT), kVertexCount, kIndices, kIndexCount);
-	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::VertexPT::format);
+	mVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::VertexPT::Format);
 	mPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 
 	mTexture.Initialize(L"../Assets/Images/brick.jpg");

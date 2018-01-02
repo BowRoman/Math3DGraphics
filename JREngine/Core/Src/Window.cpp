@@ -6,24 +6,22 @@
 
 using namespace Core;
 
-// checks data on this side before sending it to DefWindowProcA
 LRESULT CALLBACK WinProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-		case WM_CLOSE:
-		{
-			DestroyWindow(handle);
-			return 0;
-		}
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+	case WM_CLOSE:
+	{
+		DestroyWindow(handle);
+		return 0;
+	}
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
 	}
 	return DefWindowProcA(handle, message, wParam, lParam);
 }
+
 
 Window::Window()
 	: mInstance(nullptr)
@@ -40,6 +38,7 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, int width, int heigh
 	mInstance = instance;
 	mAppName = appName;
 
+
 	// Every Windows Window requires at least one window object.
 	// Three things are involved:
 	// 1)	Register a window class.
@@ -50,7 +49,7 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, int width, int heigh
 	WNDCLASSEXA wcex;
 	wcex.cbSize = sizeof(WNDCLASSEXA);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WinProc; // if you use "... = DefWindowProcA" instead, the WinProc class is not required
+	wcex.lpfnWndProc = WinProc;
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = instance;
@@ -100,6 +99,7 @@ void Window::Initialize(HINSTANCE instance, LPCSTR appName, int width, int heigh
 void Window::Terminate()
 {
 	DestroyWindow(mWindow);
+
 	VERIFY(UnregisterClassA(mAppName.c_str(), mInstance), "[Window] Failed to unregister window class.");
 
 	mWindow = nullptr;

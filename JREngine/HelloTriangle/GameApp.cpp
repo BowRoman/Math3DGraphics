@@ -43,7 +43,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	Input::InputSystem::StaticInitialize(mWindow.GetWindowHandle());
 
 	mMeshBuffer.Initialize(kVertices, sizeof(Graphics::VertexPC), kVertexCount, kIndices, kIndexCount);
-	mVertexShader.Initialize(L"../Assets/Shaders/DoColour.fx", Graphics::VertexPC::format);
+	mVertexShader.Initialize(L"../Assets/Shaders/DoColour.fx", Graphics::VertexPC::Format);
 	mPixelShader.Initialize(L"../Assets/Shaders/DoColour.fx");
 }
 

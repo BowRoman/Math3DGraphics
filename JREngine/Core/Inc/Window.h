@@ -1,27 +1,27 @@
 #ifndef INCLUDED_CORE_WINDOW_H
 #define INCLUDED_CORE_WINDOW_H
 
-namespace Core {
-
-class Window
+namespace Core
 {
-public:
-	Window();
-	~Window();
 
-	void Initialize(HINSTANCE instance, LPCSTR appName, int width, int height);
-	void Terminate();
+	class Window
+	{
+	public:
+		Window();
+		~Window();
 
-	bool ProcessMessage();
+		void Initialize(HINSTANCE instance, LPCSTR appName, int width, int height);
+		void Terminate();
 
-	HWND GetWindowHandle() const { return mWindow; }
+		bool ProcessMessage();
 
-private:
-	HINSTANCE mInstance;
-	HWND mWindow;
+		HWND GetWindowHandle() const { return mWindow; }
 
-	std::string mAppName;
-};
+	private:
+		HINSTANCE mInstance;
+		HWND mWindow;
+		std::string mAppName;
+	};
 
 } // namespace Core
 

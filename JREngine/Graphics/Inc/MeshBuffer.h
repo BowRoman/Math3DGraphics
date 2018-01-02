@@ -33,8 +33,8 @@ private:
 
 	uint32_t mVertexSize;
 	uint32_t mVertexCapacity;
-	uint32_t mVertexCount;
-	uint32_t mIndexCount;
+	uint32_t mNumVertices;
+	uint32_t mNumIndices;
 
 	D3D11_PRIMITIVE_TOPOLOGY mTopology;
 }; // class MeshBuffer

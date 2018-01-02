@@ -91,7 +91,7 @@ private:
     ComPtr<ID3D11Buffer> mVertexBuffer;
     ComPtr<ID3D11Buffer> mIndexBuffer;
 
-    UINT mIndexCount;
+    UINT mNumIndices;
 
     // Only one of these helpers is allocated per D3D device context, even if there are multiple GeometricPrimitive instances.
     class SharedResources
@@ -196,7 +196,7 @@ void GeometricPrimitive::Impl::Initialize(ID3D11DeviceContext* deviceContext, co
     CreateBuffer(device.Get(), vertices, D3D11_BIND_VERTEX_BUFFER, &mVertexBuffer);
     CreateBuffer(device.Get(), indices, D3D11_BIND_INDEX_BUFFER, &mIndexBuffer);
 
-    mIndexCount = static_cast<UINT>(indices.size());
+    mNumIndices = static_cast<UINT>(indices.size());
 }
 
 
@@ -282,7 +282,7 @@ void GeometricPrimitive::Impl::Draw(
     // Draw the primitive.
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    deviceContext->DrawIndexed(mIndexCount, 0, 0);
+    deviceContext->DrawIndexed(mNumIndices, 0, 0);
 }
 
 

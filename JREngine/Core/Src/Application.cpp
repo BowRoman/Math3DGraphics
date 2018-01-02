@@ -1,49 +1,49 @@
 #include "Precompiled.h"
 #include "Application.h"
 
+
 using namespace Core;
 
-Application::Application()
-	: mInstance(nullptr)
+
+Core::Application::Application()
+	:mInstance(nullptr)
 	, mWindow(nullptr)
 	, mRunning(true)
 {
 
 }
 
-Application::~Application()
+Core::Application::~Application()
 {
 
 }
 
-void Application::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height)
+void Core::Application::Initialize(HINSTANCE instance, LPCSTR appName, uint32_t width, uint32_t height)
 {
 	mInstance = instance;
 	mAppName = appName;
-	
 	CoInitialize(nullptr);
-
 	OnInitialize(width, height);
 }
 
-void Application::Terminate()
+void Core::Application::Terminate()
 {
 	OnTerminate();
 
 	CoUninitialize();
 }
 
-void Application::HookWindow(HWND hWnd)
+void Core::Application::HookWindow(HWND hWnd)
 {
 	mWindow = hWnd;
 }
 
-void Application::UnhookWindow()
+void Core::Application::UnhookWindow()
 {
 	mWindow = nullptr;
 }
 
-void Application::Update()
+void Core::Application::Update()
 {
 	OnUpdate();
 }
