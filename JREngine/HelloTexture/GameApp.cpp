@@ -96,7 +96,7 @@ void GameApp::OnUpdate()
 
 	// camera control
 	float deltaTime = mTimer.GetElapsedTime();
-	const float boostModifyer = 1.6;
+	const float boostModifyer = 1.6f;
 	const float cameraMoveSpeed = iS->IsKeyDown(Keys::LSHIFT) ? 10.f : 10.f*boostModifyer;
 	const float cameraTurnSpeed = 0.7f;
 	if (iS->IsKeyDown(Keys::W))

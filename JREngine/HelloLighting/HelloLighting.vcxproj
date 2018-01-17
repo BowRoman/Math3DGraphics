@@ -119,6 +119,20 @@
   <ItemGroup>
     <ClInclude Include="GameApp.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.vcxproj">
+      <Project>{4911d530-4725-4ddb-921e-1af6f10bee65}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Graphics\Graphics.vcxproj">
+      <Project>{0671ca3a-bca1-4561-935f-0519c579f6b6}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Input\Input.vcxproj">
+      <Project>{422b1df4-f1a4-4c64-bcdb-3f1baaaaa768}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Math\Math.vcxproj">
+      <Project>{1d6e9c72-9b4e-4710-8fab-6e6838a9f941}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
