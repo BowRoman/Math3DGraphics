@@ -41,6 +41,7 @@ void Particle::SetRadius(float radius)
 	{
 		if (radius != 0.0f)
 		{
+			// generate implicit mass based on volume of the sphere
 			mInvMass = 1 / (1.3333333f * Math::kPi * (radius*radius*radius));
 		}
 	}

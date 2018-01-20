@@ -1,7 +1,8 @@
 #ifndef INCLUDED_GRAPHICS_CONSTANTBUFFER_H
 #define INCLUDED_GRAPHICS_CONSTANTBUFFER_H
 
-namespace Graphics {
+namespace Graphics
+{
 
 class ConstantBuffer
 {

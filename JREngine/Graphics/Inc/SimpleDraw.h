@@ -1,8 +1,11 @@
 #ifndef INCLUDED_GRAPHICS_SIMPLEDRAW_H
 #define INCLUDED_GRAPHICS_SIMPLEDRAW_H
 
-namespace Graphics{
-namespace SimpleDraw{
+namespace Graphics
+{
+
+namespace SimpleDraw
+{
 
 void StaticInitialize(uint32_t capacity);
 void StaticTerminate();
@@ -13,6 +16,7 @@ void DrawSphere(const Math::Vector3& position, uint32_t slices = 6, uint32_t rin
 void Flush(const Math::Matrix4& matViewProj);
 
 } // namespace SimpleDraw
+
 } // namespace Graphics
 
 #endif // #ifndef INCLUDED_GRAPHICS_SIMPLEDRAW_H

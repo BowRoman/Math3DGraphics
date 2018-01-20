@@ -1,7 +1,8 @@
 #ifndef INCLUDED_GRAPHICS_GRAPHICSSYSTEM_H
 #define INCLUDED_GRAPHICS_GRAPHICSSYSTEM_H
 
-namespace Graphics {
+namespace Graphics
+{
 
 class GraphicsSystem
 {

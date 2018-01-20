@@ -3,7 +3,8 @@
 
 #include "Mesh.h"
 
-namespace Graphics {
+namespace Graphics
+{
 
 class MeshBuilder
 {
