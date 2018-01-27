@@ -23,7 +23,7 @@
     <ProjectGuid>{B0A69FDA-0D94-44A8-AD79-A700B5B6759A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>HelloPostProcess</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
