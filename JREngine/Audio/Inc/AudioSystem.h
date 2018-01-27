@@ -24,6 +24,8 @@ public:
 	void Initialize();
 	void Terminate();
 
+	void Update();
+
 	std::unique_ptr<DirectX::AudioEngine> mAudioEngine;
 
 }; // class AudioSystem

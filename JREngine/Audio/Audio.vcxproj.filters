@@ -15,6 +15,12 @@
     <ClCompile Include="Src\Precompiled.cpp">
       <Filter>Src</Filter>
     </ClCompile>
+    <ClCompile Include="Src\AudioSystem.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\SoundManager.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Precompiled.h">
@@ -27,6 +33,12 @@
       <Filter>Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\AudioSystem.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\SoundManager.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\Forward.h">
       <Filter>Inc</Filter>
     </ClInclude>
   </ItemGroup>
