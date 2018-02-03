@@ -8,7 +8,4 @@
     <ClInclude Include="GameApp.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="HelloAudio.rc" />
-  </ItemGroup>
 </Project>

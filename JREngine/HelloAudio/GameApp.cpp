@@ -127,7 +127,7 @@ void GameApp::OnUpdate()
 		}
 		songPlaying = !songPlaying;
 	}
-	if (is->IsKeyPressed(Keys::S))
+	if (is->IsKeyPressed(Keys::O))
 	{
 		Audio::SoundManager::Get()->Stop(instIds[0]);
 		songPlaying = false;
