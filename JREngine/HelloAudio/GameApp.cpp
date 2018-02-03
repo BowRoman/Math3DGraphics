@@ -32,6 +32,18 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mCameraTransform.SetPosition(Math::Vector3(0.0f, 10.0f, -10.0f));
 	mCameraTransform.SetDirection(Math::Vector3(0.0f, 0.0f, 1.0f));
 
+	// Particles
+	Physics::Settings settings;
+	settings.gravity = Math::Vector3::Zero();
+	mPhysicsWorld.Setup(settings);
+	for (int i = 0; i < 51; ++i)
+	{
+		auto p = new Physics::Particle();
+		p->SetPosition({ -12.5f + (static_cast<float>(i)*0.5f), 0.0f, 0.0f });
+		mPhysicsWorld.AddParticle(p);
+	}
+
+	// Audio
 	Audio::AudioSystem::StaticInitialize();
 	Audio::SoundManager::StaticInitialize();
 	auto soundMng = Audio::SoundManager::Get();
@@ -135,18 +147,6 @@ void GameApp::OnUpdate()
 	if (is->IsKeyPressed(Keys::ONE))
 	{
 		Audio::SoundManager::Get()->PlayEffect(soundIds[0]);
-	}
-	// Fixed
-	if (is->IsKeyPressed(Keys::THREE))
-	{
-		for (int i = 0; i < 50; ++i)
-		{
-			auto p = new Physics::Particle();
-			p->SetPosition({ 0.0f,0.0f,0.0f });
-			mPhysicsWorld.AddParticle(p);
-			auto c = new Physics::Fixed(p, Math::Vector3(Math::Random::GetF(-5.0f, 5.0f), Math::Random::GetF(-5.0f, 5.0f), Math::Random::GetF(-5.0f, 5.0f)));
-			mPhysicsWorld.AddConstraint(c);
-		}
 	}
 
 	Graphics::GraphicsSystem::Get()->BeginRender();

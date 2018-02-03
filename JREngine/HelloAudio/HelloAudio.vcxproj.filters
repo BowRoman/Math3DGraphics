@@ -6,6 +6,5 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameApp.h" />
-    <ClInclude Include="resource.h" />
   </ItemGroup>
 </Project>

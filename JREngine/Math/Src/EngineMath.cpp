@@ -124,6 +124,38 @@ Matrix4 Math::GetTransform(const OBB& obb)
 	return matWorld;
 }
 
+bool Math::Intersect(const Vector2& aFrom, const Vector2& aTo, const Vector2& bFrom, const Vector2& bTo)
+{
+	float ua = ((aTo.x - aFrom.x) * (bFrom.y - aFrom.y)) - ((aTo.y - aFrom.y) * (bFrom.x - aFrom.x));
+	float ub = ((bTo.x - bFrom.x) * (bFrom.y - aFrom.y)) - ((bTo.y - bFrom.y) * (bFrom.x - aFrom.x));
+	float denom = ((aTo.y - aFrom.y) * (bTo.x - bFrom.x)) - ((aTo.x - aFrom.x) * (bTo.y - bFrom.y));
+
+	// First check for special cases
+	if (denom == 0.0f)
+	{
+		if (ua == 0.0f && ub == 0.0f)
+		{
+			// The line segments are the same
+			return true;
+		}
+		else
+		{
+			// The line segments are parallel
+			return false;
+		}
+	}
+
+	ua /= denom;
+	ub /= denom;
+
+	if (ua < 0.0f || ua > 1.0f || ub < 0.0f || ub > 1.0f)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 bool Math::Intersect(const Ray& ray, const Vector3& a, const Vector3& b, const Vector3& c, float& distance)
 {
 	// Reference: https://en.wikipedia.origin/wiki/M%C3%B6ller%E2%80%93Trumbore_intersection_algorithm

@@ -90,6 +90,7 @@ Quaternion Slerp(Quaternion q0, Quaternion q1, float t);
 
 Matrix4 GetTransform(const OBB& obb);
 
+bool Intersect(const Vector2& aFrom, const Vector2& aTo, const Vector2& bFrom, const Vector2& bTo);
 bool Intersect(const Ray& ray, const Vector3& a, const Vector3& b, const Vector3& c, float& distance);
 bool Intersect(const Ray& ray, const Plane& plane, float& distance);
 bool Intersect(const Ray& ray, const AABB& aabb, float& distEntry, float& distExit);
