@@ -14,23 +14,28 @@ namespace
 void SoundManager::StaticInitialize()
 {
 	ASSERT(nullptr == sSoundManager, "[SoundManager] Manager not cleared, cannot initialize.");
+	sSoundManager = new SoundManager;
 
 } // void SoundManager::StaticInitialize()
 
 void SoundManager::StaticTerminate()
 {
 	ASSERT(nullptr != sSoundManager, "[SoundManager] Manager not active, cannot terminate.");
+	delete sSoundManager;
+	sSoundManager = nullptr;
 
 } // void SoundManager::StaticTerminate()
 
 SoundManager* SoundManager::Get()
 {
 	ASSERT(nullptr != sSoundManager, "[SoundManager] Manager not active, cannot get.");
+	return sSoundManager;
 
 } // SoundManager* SoundManager::Get()
 
 SoundManager::SoundManager()
 {
+	mInstances.resize(4);
 
 } // SoundManager::SoundManager()
 
@@ -38,12 +43,12 @@ SoundManager::~SoundManager()
 {
 	ASSERT(mInventory.empty(), "[SoundManager] Inventory must be cleared before destruction.");
 
-
 } // SoundManager::~SoundManager()
 
 void SoundManager::SetFilePath(const char* root)
 {
 	mRoot = root;
+
 } // void SoundManager::SetFilePath(const char * root)
 
 SoundId SoundManager::Load(const char* filename)
@@ -59,11 +64,12 @@ SoundId SoundManager::Load(const char* filename)
 		wchar_t wbuffer[1024];
 		mbstowcs_s(nullptr, wbuffer, fullPath.c_str(), 1024);
 
-		auto effect = std::make_unique<DirectX::SoundEffect>(AudioSystem::Get()->mAudioEngine, wbuffer);
+		auto effect = std::make_unique<DirectX::SoundEffect>(AudioSystem::Get()->mAudioEngine.get(), wbuffer);
 		result.first->second = std::move(effect);
 	}
 
 	return hash;
+
 } // SoundId SoundManager::Load(const char * filename)
 
 void SoundManager::Clear()
@@ -107,7 +113,7 @@ InstanceId Audio::SoundManager::CreateInstance(SoundId id)
 	auto effect = iter->second->CreateInstance();
 
 	// Check for available indexes
-	for (int i = 0; i < mInstances.max_size(); ++i)
+	for (int i = 0; i < static_cast<int>(mInstances.max_size()); ++i)
 	{
 		if (!mInstances[i])
 		{
@@ -126,7 +132,14 @@ InstanceId Audio::SoundManager::CreateInstance(SoundId id)
 
 void Audio::SoundManager::Play(InstanceId id, bool looping)
 {
-	mInstances[id]->Play(looping);
+	if (mInstances[id]->GetState() == DirectX::SoundState::PAUSED)
+	{
+		mInstances[id]->Resume();
+	}
+	else
+	{
+		mInstances[id]->Play(looping);
+	}
 
 } // void Audio::SoundManager::Play(InstanceId id, bool looping)
 
@@ -141,4 +154,9 @@ void SoundManager::Pause(InstanceId id)
 	mInstances[id]->Pause();
 
 } // void SoundManager::Pause(SoundId id)
+
+bool Audio::SoundManager::IsPlaying(InstanceId id)
+{
+	return mInstances[id]->GetState() == DirectX::SoundState::PLAYING;
+}
 

@@ -35,6 +35,7 @@ public:
 	void Play(InstanceId id, bool looping = false);
 	void Stop(InstanceId id);
 	void Pause(InstanceId id);
+	bool IsPlaying(InstanceId id);
 
 	// TODO: 3D sound control
 	// ListenerId CreateListener(std::function<Math::Vector3()> fPosition);

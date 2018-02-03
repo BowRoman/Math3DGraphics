@@ -1,7 +1,9 @@
 #pragma once
+#include <Audio\Inc\Audio.h>
 #include <Core\Inc\Core.h>
 #include <Input\Inc\Input.h>
 #include <Graphics\Inc\Graphics.h>
+#include <Physics\Inc\Physics.h>
 
 class GameApp : public Core::Application
 {
@@ -23,12 +25,5 @@ private:
 	Graphics::Camera mCamera;
 	Graphics::Transform mCameraTransform;
 
-	Graphics::TypedConstantBuffer<ConstantData> mConstantBuffer;
-	Graphics::MeshBuffer mMeshBuffer;
-	Graphics::VertexShader mVertexShader;
-	Graphics::PixelShader mPixelShader;
-
-	Math::Vector3 mRotation;
-
-	float bendElbow = 0, bendWrist = 0, bendShoulder = 0;
+	Physics::World mPhysicsWorld;
 };
