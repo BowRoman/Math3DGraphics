@@ -68,19 +68,19 @@ SoundId SoundManager::Load(const char* filename)
 
 void SoundManager::Clear()
 {
-	for (auto& item : mInstances)
+	for (auto& inst : mInstances)
+	{
+		if (inst)
+		{
+			inst->Stop();
+			inst.reset();
+		}
+	}
+	for (auto& item : mInventory)
 	{
 		if (item.second)
 		{
-			item.second->Stop();
 			item.second.reset();
-		}
-	}
-	for (auto& inst : mInventory)
-	{
-		if (inst.second)
-		{
-			inst.second.reset();
 		}
 	}
 	mInstances.clear();
@@ -92,37 +92,53 @@ void SoundManager::Clear()
 // This does not create an instance, sound cannot be stopped or paused
 void SoundManager::PlayEffect(SoundId id)
 {
-	auto iter = mInstances.find(id);
-	if (iter != mInstances.end())
+	auto iter = mInventory.find(id);
+	if (iter != mInventory.end())
 	{
 		iter->second->Play();
 	}
 
 } // void SoundManager::PlayEffect(SoundId id)
 
-void Audio::SoundManager::CreateInstance(SoundId id)
+InstanceId Audio::SoundManager::CreateInstance(SoundId id)
 {
-}
+	auto iter = mInventory.find(id);
+	ASSERT(iter != mInventory.end(), "[SoundManager] Not a valid SoundId.");
+	auto effect = iter->second->CreateInstance();
+
+	// Check for available indexes
+	for (int i = 0; i < mInstances.max_size(); ++i)
+	{
+		if (!mInstances[i])
+		{
+			mInstances[i].swap(effect);
+			effect.reset();
+
+			return i;
+		}
+	}
+
+	// No slots available
+	mInstances.push_back(std::move(effect));
+	return mInstances.size() - 1;
+
+} // InstanceId Audio::SoundManager::CreateInstance(SoundId id)
 
 void Audio::SoundManager::Play(InstanceId id, bool looping)
 {
-}
+	mInstances[id]->Play(looping);
+
+} // void Audio::SoundManager::Play(InstanceId id, bool looping)
 
 void SoundManager::Stop(InstanceId id)
 {
-	auto iter = mInstances.find(id);
-	if (iter != mInstances.end())
-	{
-		iter->second->Stop();
-	}
+	mInstances[id]->Stop();
+
 } // void SoundManager::Stop(SoundId id)
 
 void SoundManager::Pause(InstanceId id)
 {
-	auto iter = mInstances.find(id);
-	if (iter != mInstances.end())
-	{
-		iter->second->Pause();
-	}
+	mInstances[id]->Pause();
+
 } // void SoundManager::Pause(SoundId id)
 

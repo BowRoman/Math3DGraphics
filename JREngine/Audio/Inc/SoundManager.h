@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 namespace DirectX { class SoundEffect; class SoundEffectInstance; }
 
@@ -30,7 +31,7 @@ public:
 	// Basic sound control
 	void PlayEffect(SoundId id);
 
-	void CreateInstance(SoundId id);
+	InstanceId CreateInstance(SoundId id);
 	void Play(InstanceId id, bool looping = false);
 	void Stop(InstanceId id);
 	void Pause(InstanceId id);
@@ -43,7 +44,7 @@ private:
 	std::string mRoot;
 
 	std::unordered_map<SoundId, std::unique_ptr<DirectX::SoundEffect>> mInventory;
-	std::unordered_map<InstanceId, std::unique_ptr<DirectX::SoundEffectInstance>> mInstances;
+	std::vector<std::unique_ptr<DirectX::SoundEffectInstance>> mInstances;
 
 }; // class SoundManager
 
