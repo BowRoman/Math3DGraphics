@@ -38,7 +38,7 @@ void Physics::PhysicsOBB::Apply(ParticleVec& particles)
 			oldPos.z = Math::Clamp(oldPos.z, mOBB.extend.z * -0.5f, mOBB.extend.z * 0.5f);
 
 			//------------------------X------------------------------
-			if (Math::Intersect({ oldPos.x,oldPos.y }, {})
+			if (Math::Compare(oldPos.x, (mOBB.extend.x * 0.5f), 0.001f))
 			{
 				Physics::PhysicsPlane plane(Plane{ Math::Vector3::XAxis(), (mOBB.extend.x * 0.5f) }, mRestitution, mRestitution);
 				plane.Apply(particle);
