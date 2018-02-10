@@ -53,7 +53,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{1304AAE7
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTKAudio_Desktop_2017_Win8", "External\DirectXTK\Audio\DirectXTKAudio_Desktop_2017_Win8.vcxproj", "{4F150A30-CECB-49D1-8283-6A3F57438CF5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Audio", "Audio\Audio.vcxproj", "{DF2F6714-F4B3-4847-B4EB-7F448C2FC54B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioDirectX", "AudioDirectX\AudioDirectX.vcxproj", "{DF2F6714-F4B3-4847-B4EB-7F448C2FC54B}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloAudio", "HelloAudio\HelloAudio.vcxproj", "{7B63A1C4-BD56-445E-AC51-F6AE60EFCAE2}"
 EndProject
