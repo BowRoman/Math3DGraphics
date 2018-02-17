@@ -2,8 +2,6 @@
 #include <Input\Inc\Input.h>
 #include "GameApp.h"
 
-
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int CmdShow)
 {
 	GameApp myApp;

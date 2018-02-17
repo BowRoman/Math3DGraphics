@@ -185,7 +185,7 @@ sizet JRAudioEngine::LoadSound(const std::string& soundName, bool b3D, bool bLoo
 		ErrorCheck(mAudioEngineImpl->mSystem->createSound(fullPath.c_str(), eMode, nullptr, &sound));
 
 		// add sound pointer to map
-		auto effect = std::unique_ptr<FMOD::Sound>(new FMOD::Sound(&sound));
+		auto effect = std::unique_ptr<FMOD::Sound>(std::move(sound));
 		result.first->second = std::move(effect);
 	}
 
