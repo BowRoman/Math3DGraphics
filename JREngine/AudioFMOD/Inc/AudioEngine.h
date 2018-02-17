@@ -1,15 +1,19 @@
 #pragma once
 
+#include <memory>
+
 namespace Audio
 {
 
-class Implementation
+class AudioEngineImpl
 {
-public:
+private:
 
-	Implementation();
-	~Implementation();
+	AudioEngineImpl();
+	~AudioEngineImpl();
 
+	void Initialize();
+	void Terminate();
 	void Update();
 
 	uInt mNextChannelId;
@@ -18,8 +22,8 @@ public:
 
 	FMOD::System* mSystem;
 
-	typedef std::map<std::string, FMOD::Sound*> SoundMap;
-	typedef std::map<int, FMOD::Channel*> ChannelMap;
+	typedef std::unordered_map<uInt, std::unique_ptr<FMOD::Sound>> SoundMap;
+	typedef std::unordered_map<int, FMOD::Channel*> ChannelMap;
 
 	SoundMap mSounds;
 	ChannelMap mChannels;
@@ -28,30 +32,47 @@ public:
 
 	FStudio::System* mStudioSystem;
 
-	typedef std::map<std::string, FStudio::Bank*> BankMap;
-	typedef std::map<std::string, FStudio::EventInstance*> EventMap;
+	typedef std::unordered_map<std::string, FStudio::Bank*> BankMap;
+	typedef std::unordered_map<std::string, FStudio::EventInstance*> EventMap;
 
 	BankMap mBanks;
 	EventMap mEvents;
 
+	friend class JRAudioEngine;
+
 }; // class Implementation
 
-class AudioEngine
+class JRAudioEngine
 {
+private:
+	AudioEngineImpl* mAudioEngineImpl;
+
 public:
-	static void Initialize();
-	static void Update();
-	static void Terminate();
-	static int ErrorCheck(FMOD_RESULT result);
+	std::string mRoot;
+
+public:
+	static void StaticInitialize();
+	static void StaticTerminate();
+	static JRAudioEngine* Get();
+
+public:
+	JRAudioEngine();
+	~JRAudioEngine();
+
+	void Initialize();
+	void Terminate();
+	void Update();
+	static void ErrorCheck(FMOD_RESULT result);
+
+	uInt LoadSound(const std::string& soundName, bool b3D = true, bool bLooping = false, bool bStream = false);
+	void UnloadSound(uInt soundHash);
 
 	void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
 	void LoadEvent(const std::string& eventName);
-	void LoadSound(const std::string& soundName, bool b3D = true, bool bLooping = false, bool bStream = false);
 
-	void UnloadSound(const std::string& soundName);
 	void Set3DListenerAndOrientation(const Math::Vector3& vPos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f);
 
-	void PlayGivenSound(const std::string& soundName, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f);
+	int PlayGivenSound(uInt soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 });
 	void PlayEvent(const std::string& eventName);
 
 	void StopChannel(int channelId);
@@ -60,6 +81,7 @@ public:
 	void GetEventParameter(const std::string& eventName, const std::string& eventParameter, float* parameter);
 	void SetEventParameter(const std::string& eventName, const std::string& parameterName, float value);
 	void StopAllChannels();
+
 	void SetChannel3DPosition(int channelId, const Math::Vector3& pos);
 	void SetChannelVolume(int channelId, float volumeDB);
 
