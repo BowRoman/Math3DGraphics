@@ -57,6 +57,36 @@ void AudioEngineImpl::Update()
 
 } // void AudioEngineImpl::Update()
 
+void AudioEngineImpl::Clear()
+{
+	for (auto& events : mEvents)
+	{
+		if (nullptr != events.second)
+		{
+			events.second->stop(FMOD_STUDIO_STOP_IMMEDIATE);
+			events.second->release();
+		}
+	}
+	for (auto& bank : mBanks)
+	{
+		if (nullptr != bank.second)
+		{
+			bank.second->unload();
+		}
+	}
+	for (auto& channel : mChannels)
+	{
+		if (nullptr != channel.second)
+		{
+			channel.second->stop();
+		}
+	}
+	mEvents.clear();
+	mBanks.clear();
+	mSounds.clear();
+	mChannels.clear();
+}
+
 //-------------------------------------------[/Implementation]-------------------------------------------
 
 //-------------------------------------------[Engine]-------------------------------------------
@@ -115,7 +145,6 @@ void JRAudioEngine::Terminate()
 {
 	ASSERT(nullptr != mAudioEngineImpl, "[AudioEngine] mAudioEngineImpl not cleared, cannot be initialized.");
 	mAudioEngineImpl->Terminate();
-	SafeDelete(mAudioEngineImpl);
 
 } // void JRAudioEngine::Terminate()
 
@@ -156,7 +185,7 @@ sizet JRAudioEngine::LoadSound(const std::string& soundName, bool b3D, bool bLoo
 		ErrorCheck(mAudioEngineImpl->mSystem->createSound(fullPath.c_str(), eMode, nullptr, &sound));
 
 		// add sound pointer to map
-		auto effect = std::make_unique<FMOD::Sound>(sound);
+		auto effect = std::unique_ptr<FMOD::Sound>(new FMOD::Sound(&sound));
 		result.first->second = std::move(effect);
 	}
 
@@ -222,7 +251,7 @@ void JRAudioEngine::Set3DListenerAndOrientation(const Math::Vector3& pos, float 
 
 // Finds and plays the specified sound if it exists. Sound position will only affect sounds created as 3D
 // Returns ID of the channel the sound is on
-int JRAudioEngine::PlayGivenSound(sizet soundHash, float volumeDB, const Math::Vector3& pos, float minDist, float maxDist)
+sizet JRAudioEngine::Play(sizet soundHash, float volumeDB, const Math::Vector3& pos, float minDist, float maxDist)
 {
 	sizet channelId = mAudioEngineImpl->mNextChannelId++;
 	auto findIter = mAudioEngineImpl->mSounds.find(soundHash);

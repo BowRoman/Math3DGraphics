@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{4911D530-4725-4DDB-921E-1AF6F10BEE65}"
 EndProject
@@ -58,6 +58,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloAudio", "HelloAudio\HelloAudio.vcxproj", "{7B63A1C4-BD56-445E-AC51-F6AE60EFCAE2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioFMOD", "AudioFMOD\AudioFMOD.vcxproj", "{033D57DB-F03F-4552-A7F1-28CDF95FFD78}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloAudioFMOD", "HelloAudioFMOD\HelloAudioFMOD.vcxproj", "{59AB179C-CB7B-423B-887B-E37AEAC897E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -257,6 +259,14 @@ Global
 		{033D57DB-F03F-4552-A7F1-28CDF95FFD78}.Release|x64.Build.0 = Release|x64
 		{033D57DB-F03F-4552-A7F1-28CDF95FFD78}.Release|x86.ActiveCfg = Release|Win32
 		{033D57DB-F03F-4552-A7F1-28CDF95FFD78}.Release|x86.Build.0 = Release|Win32
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Debug|x64.ActiveCfg = Debug|x64
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Debug|x64.Build.0 = Debug|x64
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Debug|x86.ActiveCfg = Debug|Win32
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Debug|x86.Build.0 = Debug|Win32
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Release|x64.ActiveCfg = Release|x64
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Release|x64.Build.0 = Release|x64
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Release|x86.ActiveCfg = Release|Win32
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -286,5 +296,9 @@ Global
 		{DF2F6714-F4B3-4847-B4EB-7F448C2FC54B} = {B8E66790-B8F9-4F69-B9F3-4A9208D960C8}
 		{7B63A1C4-BD56-445E-AC51-F6AE60EFCAE2} = {C208CE02-4808-44E2-9B68-3D464E1DB461}
 		{033D57DB-F03F-4552-A7F1-28CDF95FFD78} = {B8E66790-B8F9-4F69-B9F3-4A9208D960C8}
+		{59AB179C-CB7B-423B-887B-E37AEAC897E8} = {C208CE02-4808-44E2-9B68-3D464E1DB461}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12765CB4-00EE-462D-A4E0-30D740E45F58}
 	EndGlobalSection
 EndGlobal

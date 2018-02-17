@@ -15,6 +15,7 @@ private:
 	void Initialize();
 	void Terminate();
 	void Update();
+	void Clear();
 
 	sizet mNextChannelId;
 
@@ -72,7 +73,7 @@ public:
 
 	void Set3DListenerAndOrientation(const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, const Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, const Math::Vector3& up = Math::Vector3{ 0, 0, 0 });
 
-	int PlayGivenSound(sizet soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float minDist = 1.0f, float maxDist = 10000.0f);
+	sizet Play(sizet soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float minDist = 1.0f, float maxDist = 10000.0f);
 	void PlayEvent(const std::string& eventName);
 
 	void StopChannel(int channelId);
