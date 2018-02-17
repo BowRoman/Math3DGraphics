@@ -16,14 +16,14 @@ private:
 	void Terminate();
 	void Update();
 
-	uInt mNextChannelId;
+	sizet mNextChannelId;
 
 	//-----------------------------------------------------------------------
 
 	FMOD::System* mSystem;
 
-	typedef std::unordered_map<uInt, std::unique_ptr<FMOD::Sound>> SoundMap;
-	typedef std::unordered_map<int, FMOD::Channel*> ChannelMap;
+	typedef std::unordered_map<sizet, std::unique_ptr<FMOD::Sound>> SoundMap;
+	typedef std::unordered_map<sizet, FMOD::Channel*> ChannelMap;
 
 	SoundMap mSounds;
 	ChannelMap mChannels;
@@ -35,7 +35,7 @@ private:
 	typedef std::unordered_map<std::string, FStudio::Bank*> BankMap;
 	typedef std::unordered_map<std::string, FStudio::EventInstance*> EventMap;
 
-	BankMap mBanks;
+	BankMap mBanks; // Stores event information
 	EventMap mEvents;
 
 	friend class JRAudioEngine;
@@ -46,8 +46,6 @@ class JRAudioEngine
 {
 private:
 	AudioEngineImpl* mAudioEngineImpl;
-
-public:
 	std::string mRoot;
 
 public:
@@ -64,32 +62,34 @@ public:
 	void Update();
 	static void ErrorCheck(FMOD_RESULT result);
 
-	uInt LoadSound(const std::string& soundName, bool b3D = true, bool bLooping = false, bool bStream = false);
-	void UnloadSound(uInt soundHash);
+	void SetRoot(const std::string& root) { mRoot = root; }
+
+	sizet LoadSound(const std::string& soundName, bool b3D = true, bool bLooping = false, bool bStream = false);
+	void UnloadSound(sizet soundHash);
 
 	void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
 	void LoadEvent(const std::string& eventName);
 
-	void Set3DListenerAndOrientation(const Math::Vector3& vPos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f);
+	void Set3DListenerAndOrientation(const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, const Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, const Math::Vector3& up = Math::Vector3{ 0, 0, 0 });
 
-	int PlayGivenSound(uInt soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 });
+	int PlayGivenSound(sizet soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float minDist = 1.0f, float maxDist = 10000.0f);
 	void PlayEvent(const std::string& eventName);
 
 	void StopChannel(int channelId);
 	void StopEvent(const std::string& eventName, bool bImmediate = false);
 
-	void GetEventParameter(const std::string& eventName, const std::string& eventParameter, float* parameter);
+	void GetEventParameter(const std::string& eventName, const std::string& parameterName, float* parameter);
 	void SetEventParameter(const std::string& eventName, const std::string& parameterName, float value);
 	void StopAllChannels();
 
-	void SetChannel3DPosition(int channelId, const Math::Vector3& pos);
-	void SetChannelVolume(int channelId, float volumeDB);
+	void SetChannel3DPosition(sizet channelId, const Math::Vector3& pos);
+	void SetChannelVolume(sizet channelId, float volumeDB);
 
 	bool IsPlaying(int channelId) const;
 	bool IsEventPlaying(const std::string& eventName) const;
 
-	float dbToVolume(float db);
-	float VolumeTodb(float volume);
+	float dbToVolume(float db) const { return powf(10.0f, 0.05f * db); }
+	float VolumeTodb(float volume) const { return 20.0f * log10f(volume); }
 	FMOD_VECTOR VectorToFmod(const Math::Vector3& pos);
 };
 

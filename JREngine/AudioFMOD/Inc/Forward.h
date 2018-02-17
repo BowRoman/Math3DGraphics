@@ -2,4 +2,4 @@
 
 #define FStudio FMOD::Studio
 
-using uInt = unsigned int;
+using sizet = std::size_t;
