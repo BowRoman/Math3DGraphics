@@ -21,6 +21,9 @@
     <ClInclude Include="Inc\AudioEngine.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\Forward.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Precompiled.cpp">
