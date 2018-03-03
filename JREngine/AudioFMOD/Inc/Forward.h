@@ -2,9 +2,6 @@
 
 namespace Audio
 {
-
-#define FStudio FMOD::Studio
-
-using sizet = std::size_t;
-
+	using SoundHandle = uint32_t;
+	using ChennelHandle = uint32_t;
 }

@@ -7,7 +7,7 @@ namespace Audio
 
 //-------------------------------------------[Implementation]-------------------------------------------
 
-AudioEngineImpl::AudioEngineImpl()
+AudioEngineImpl::AudioEngineImpl() noexcept
 	: mSystem{ nullptr }
 	, mStudioSystem{ nullptr }
 {
@@ -22,7 +22,7 @@ AudioEngineImpl::~AudioEngineImpl()
 void AudioEngineImpl::Initialize()
 {
 	// Create high-level system
-	JRAudioEngine::ErrorCheck(FStudio::System::create(&mStudioSystem));
+	JRAudioEngine::ErrorCheck(FMOD::Studio::System::create(&mStudioSystem));
 	JRAudioEngine::ErrorCheck(mStudioSystem->initialize(32, FMOD_STUDIO_INIT_LIVEUPDATE, FMOD_INIT_VOL0_BECOMES_VIRTUAL, nullptr));
 
 	// Grab low-level system
@@ -123,7 +123,7 @@ JRAudioEngine* JRAudioEngine::Get()
 } // JRAudioEngine* JRAudioEngine::Get()
 
 
-JRAudioEngine::JRAudioEngine()
+JRAudioEngine::JRAudioEngine() noexcept
 {
 
 } // JRAudioEngine::~JRAudioEngine()
@@ -162,13 +162,13 @@ void JRAudioEngine::ErrorCheck(FMOD_RESULT result)
 } // int ErrorCheck(FMOD_RESULT result)
 
 // Loads a sound into inventory by filename. For ease of use, file root level should be set through SetRoot()
-sizet JRAudioEngine::LoadSound(const std::string& soundName, bool b3D, bool bLooping, bool bStream)
+SoundHandle JRAudioEngine::LoadSound(const std::string& soundName, bool b3D, bool bLooping, bool bStream)
 {
 	std::string fullPath = mRoot + "/" + soundName;
 
 	// create hash of file location
 	std::hash<std::string> hasher;
-	sizet hash = hasher(fullPath);
+	SoundHandle hash = hasher(fullPath);
 
 	// create place in map for sound pointer
 	auto result = mAudioEngineImpl->mSounds.insert({ hash, nullptr });
@@ -194,7 +194,7 @@ sizet JRAudioEngine::LoadSound(const std::string& soundName, bool b3D, bool bLoo
 } // void JRAudioEngine::LoadSound(const std::string & soundName, bool b3D, bool bLooping, bool bStream)
 
 // Remove specified sound from inventory
-void JRAudioEngine::UnloadSound(sizet soundHash)
+void JRAudioEngine::UnloadSound(SoundHandle soundHash)
 {
 	auto findIter = mAudioEngineImpl->mSounds.find(soundHash);
 	if (mAudioEngineImpl->mSounds.end() != findIter)
@@ -210,7 +210,7 @@ void JRAudioEngine::LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_
 	auto foundIter = mAudioEngineImpl->mBanks.find(bankName);
 	if (mAudioEngineImpl->mBanks.end() == foundIter)
 	{
-		FStudio::Bank* bank = nullptr;
+		FMOD::Studio::Bank* bank = nullptr;
 		ErrorCheck(mAudioEngineImpl->mStudioSystem->loadBankFile(bankName.c_str(), flags, &bank));
 		if (nullptr != bank)
 		{
@@ -225,11 +225,11 @@ void JRAudioEngine::LoadEvent(const std::string& eventName)
 	auto foundIter = mAudioEngineImpl->mEvents.find(eventName);
 	if (mAudioEngineImpl->mEvents.end() == foundIter)
 	{
-		FStudio::EventDescription* eventDesc = nullptr;
+		FMOD::Studio::EventDescription* eventDesc = nullptr;
 		ErrorCheck(mAudioEngineImpl->mStudioSystem->getEvent(eventName.c_str(), &eventDesc));
 		if (nullptr != eventDesc)
 		{
-			FStudio::EventInstance* eventInst = nullptr;
+			FMOD::Studio::EventInstance* eventInst = nullptr;
 			ErrorCheck(eventDesc->createInstance(&eventInst));
 			if (nullptr != eventInst)
 			{
@@ -242,18 +242,18 @@ void JRAudioEngine::LoadEvent(const std::string& eventName)
 
 void JRAudioEngine::Set3DListenerAndOrientation(const Math::Vector3& pos, float volumeDB, const Math::Vector3& forward, const Math::Vector3& up)
 {
-	auto fPos{ VectorToFmod(pos) };
-	auto fForward{ VectorToFmod(forward) };
-	auto fUp{ VectorToFmod(up) };
-	mAudioEngineImpl->mSystem->set3DListenerAttributes(0, &fPos, nullptr, &fForward, &fUp);
+	FMOD_VECTOR fPos{ VectorToFmod(pos) };
+	FMOD_VECTOR fForward{ VectorToFmod(forward) };
+	FMOD_VECTOR fUp{ VectorToFmod(up) };
+	ErrorCheck(mAudioEngineImpl->mSystem->set3DListenerAttributes(0, &fPos, nullptr, &fForward, &fUp));
 
 } // void JRAudioEngine::Set3DListenerAndOrientation(const Math::Vector3 & vPos, float volumeDB)
 
 // Finds and plays the specified sound if it exists. Sound position will only affect sounds created as 3D
 // Returns ID of the channel the sound is on
-sizet JRAudioEngine::Play(sizet soundHash, float volumeDB, const Math::Vector3& pos, float minDist, float maxDist)
+ChennelHandle JRAudioEngine::Play(SoundHandle soundHash, float volumeDB, const Math::Vector3& pos, float minDist, float maxDist)
 {
-	sizet channelId = mAudioEngineImpl->mNextChannelId++;
+	uint32_t channelId = mAudioEngineImpl->mNextChannelId++;
 	auto findIter = mAudioEngineImpl->mSounds.find(soundHash);
 	ASSERT(findIter != mAudioEngineImpl->mSounds.end(), "[AudioEngine] Error playing sound, hash not found.");
 
@@ -289,7 +289,7 @@ void JRAudioEngine::PlayEvent(const std::string& eventName)
 
 } // void JRAudioEngine::PlayEvent(const std::string& eventName)
 
-void JRAudioEngine::StopChannel(int channelId)
+void JRAudioEngine::StopChannel(ChennelHandle channelId)
 {
 	mAudioEngineImpl->mChannels[channelId]->stop();
 
@@ -312,7 +312,7 @@ void JRAudioEngine::GetEventParameter(const std::string& eventName, const std::s
 	auto findIter = mAudioEngineImpl->mEvents.find(eventName);
 	if (mAudioEngineImpl->mEvents.end() != findIter)
 	{
-		FStudio::ParameterInstance* parameterInst = nullptr;
+		FMOD::Studio::ParameterInstance* parameterInst = nullptr;
 		ErrorCheck(findIter->second->getParameter(parameterName.c_str(), &parameterInst));
 		ErrorCheck(parameterInst->getValue(parameter));
 	}
@@ -324,7 +324,7 @@ void JRAudioEngine::SetEventParameter(const std::string& eventName, const std::s
 	auto findIter = mAudioEngineImpl->mEvents.find(eventName);
 	if (mAudioEngineImpl->mEvents.end() != findIter)
 	{
-		FStudio::ParameterInstance* parameter = nullptr;
+		FMOD::Studio::ParameterInstance* parameter = nullptr;
 		ErrorCheck(findIter->second->getParameter(parameterName.c_str(), &parameter));
 		ErrorCheck(parameter->setValue(value));
 	}
@@ -343,7 +343,7 @@ void JRAudioEngine::StopAllChannels()
 
 } // void JRAudioEngine::StopAllChannels()
 
-void JRAudioEngine::SetChannel3DPosition(sizet channelId, const Math::Vector3& pos)
+void JRAudioEngine::SetChannel3DPosition(ChennelHandle channelId, const Math::Vector3& pos)
 {
 	auto findIter = mAudioEngineImpl->mChannels.find(channelId);
 	if (mAudioEngineImpl->mChannels.end() == findIter)
@@ -354,7 +354,7 @@ void JRAudioEngine::SetChannel3DPosition(sizet channelId, const Math::Vector3& p
 
 } // void JRAudioEngine::SetChannel3DPosition(sizet channelId, const Math::Vector3& pos)
 
-void JRAudioEngine::SetChannelVolume(sizet channelId, float volumeDB)
+void JRAudioEngine::SetChannelVolume(ChennelHandle channelId, float volumeDB)
 {
 	auto findIter = mAudioEngineImpl->mChannels.find(channelId);
 	if (mAudioEngineImpl->mChannels.end() != findIter)
@@ -364,7 +364,7 @@ void JRAudioEngine::SetChannelVolume(sizet channelId, float volumeDB)
 
 } // void JRAudioEngine::SetChannelVolume(sizet channelId, float volumeDB)
 
-bool JRAudioEngine::IsPlaying(int channelId) const
+bool JRAudioEngine::IsPlaying(ChennelHandle channelId) const
 {
 	bool playing = false;
 	// Note: isPlaying returns true for paused sounds

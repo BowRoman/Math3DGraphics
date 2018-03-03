@@ -5,8 +5,8 @@
 
 namespace
 {
-	std::vector<Audio::sizet> soundIds;
-	std::vector<Audio::sizet> channelIds;
+	std::vector<uint32_t> soundIds;
+	std::vector<uint32_t> channelIds;
 	bool songPlaying = false;
 }
 
