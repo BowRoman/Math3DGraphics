@@ -143,7 +143,7 @@ void GameApp::OnUpdate()
 	}
 	if (is->IsKeyPressed(Keys::ONE))
 	{
-		Audio::JRAudioEngine::Get()->Play(soundIds[0]);
+		Audio::JRAudioEngine::Get()->PlaySounds(soundIds[0]);
 	}
 
 	Graphics::GraphicsSystem::Get()->BeginRender();

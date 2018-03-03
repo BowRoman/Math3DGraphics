@@ -19,7 +19,7 @@ private:
 
 	uint32_t mNextChannelId;
 
-	//-----------------------------------------------------------------------
+	//------------------------------------------[System]------------------------------------------
 	
 	FMOD::System* mSystem;
 
@@ -37,8 +37,9 @@ private:
 	ChannelMap mChannels;
 	ChannelGroupMap mChannelGroups;
 
-	//-----------------------------------------------------------------------
+	//-------------------------------------------[Studio]------------------------------------------
 
+	/*
 	FMOD::Studio::System* mStudioSystem;
 
 	typedef std::unordered_map<std::string, FMOD::Studio::Bank*> BankMap;
@@ -46,6 +47,7 @@ private:
 
 	BankMap mBanks; // Stores event information
 	EventMap mEvents;
+	*/
 
 	friend class JRAudioEngine;
 
@@ -77,33 +79,41 @@ public:
 	SoundHandle LoadSound(const std::string& soundName, const std::string& ChannelGroupName = "", bool b3D = true, bool bLooping = false, bool bStream = false);
 	void UnloadSound(SoundHandle soundHash);
 
-	void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
-	void LoadEvent(const std::string& eventName);
-
+	ChannelHandle PlaySounds(SoundHandle soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float minDist = 1.0f, float maxDist = 10000.0f);
+	
 	void Set3DListenerAndOrientation(const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, const Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, const Math::Vector3& up = Math::Vector3{ 0, 0, 0 });
 
-	ChannelHandle Play(SoundHandle soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float minDist = 1.0f, float maxDist = 10000.0f);
-	void PlayEvent(const std::string& eventName);
-
 	void CreateChannelGroup(const std::string& ChannelGroupName);
-	FMOD::ChannelGroup* const GetChannelGroup(const std::string& ChannelGroupName) const;
-
+private:
+	FMOD::ChannelGroup* const GetChannelGroup(const std::string& ChannelGroupName) const; // Not sure if this is needed
+public:
 	void StopChannel(ChannelHandle channelId);
-	void StopEvent(const std::string& eventName, bool bImmediate = false);
 
-	void GetEventParameter(const std::string& eventName, const std::string& parameterName, float* parameter);
-	void SetEventParameter(const std::string& eventName, const std::string& parameterName, float value);
 	void StopAllChannels();
 
 	void SetChannel3DPosition(ChannelHandle channelId, const Math::Vector3& pos);
 	void SetChannelVolume(ChannelHandle channelId, float volumeDB);
 
 	bool IsPlaying(ChannelHandle channelId) const;
-	bool IsEventPlaying(const std::string& eventName) const;
 
-	float dbToVolume(float db) const { return powf(10.0f, 0.05f * db); }
-	float VolumeTodb(float volume) const { return 20.0f * log10f(volume); }
+	float DBToVolume(float db) const { return powf(10.0f, 0.05f * db); }
+	float VolumeToDB(float volume) const { return 20.0f * log10f(volume); }
 	FMOD_VECTOR VectorToFmod(const Math::Vector3& pos);
+	
+	//-------------------------------------------[Studio]-------------------------------------------
+
+	/*
+	void LoadBank(const std::string& bankName, FMOD_STUDIO_LOAD_BANK_FLAGS flags);
+	void LoadEvent(const std::string& eventName);
+
+	void PlayEvent(const std::string& eventName);
+	void StopEvent(const std::string& eventName, bool bImmediate = false);
+	
+	void GetEventParameter(const std::string& eventName, const std::string& parameterName, float* parameter);
+	void SetEventParameter(const std::string& eventName, const std::string& parameterName, float value);
+	
+	bool IsEventPlaying(const std::string& eventName) const;
+	*/
 };
 
 } // namespace Audio
