@@ -101,7 +101,7 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmodL_X86.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudioL_X86.lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmodL_vc.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudioL_vc.lib;</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,7 +122,7 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmodL_X64.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudioL_X64.lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmodL64_vc.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudioL64_vc.lib;</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,7 +147,7 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmod_X86.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudio_X86.lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmod_vc.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudio_vc.lib;</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -172,7 +172,7 @@
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmod_X64.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudio_X64.lib;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\FMODAPI\lib\fmod64_vc.lib;$(SolutionDir)External\FMODAPI\lib\fmodstudio64_vc.lib;</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
