@@ -2,7 +2,7 @@
 
 namespace Audio
 {
-	using SoundHandle = int;
-	using ChannelHandle = int;
-	using ChannelGroupHandle = int;
+	using SoundHandle = uint32_t;
+	using ChannelHandle = uint32_t;
+	using ChannelGroupHandle = uint32_t;
 }

@@ -5,6 +5,26 @@
 namespace Audio
 {
 
+struct SoundDescription
+{
+	SoundHandle handle;
+	float volumeDB = 50.0f;
+	float minDist = 0.0f;
+	float maxdist = 1000.0f;
+
+	Math::Vector3 position = Math::Vector3{ 0, 0, 0 };
+};
+
+struct ChannelDescription
+{
+	float frequency;
+	float lowPassGain;
+	float doppler3D;
+	float pitch;
+	// TODO: Add reverb
+	Math::Vector3 position = Math::Vector3{ 0, 0, 0 };
+};
+
 class AudioEngineImpl
 {
 private:
@@ -20,7 +40,7 @@ private:
 	uint32_t mNextChannelId;
 
 	//------------------------------------------[System]------------------------------------------
-	
+
 	FMOD::System* mSystem;
 
 	struct JRSound
@@ -37,6 +57,8 @@ private:
 	ChannelMap mChannels;
 	ChannelGroupMap mChannelGroups;
 
+	//------------------------------------------[/System]------------------------------------------
+
 	//-------------------------------------------[Studio]------------------------------------------
 
 	/*
@@ -48,6 +70,8 @@ private:
 	BankMap mBanks; // Stores event information
 	EventMap mEvents;
 	*/
+
+	//-------------------------------------------[/Studio]------------------------------------------
 
 	friend class JRAudioEngine;
 
@@ -72,34 +96,37 @@ public:
 	void Initialize();
 	void Terminate();
 	void Update();
-	static void ErrorCheck(FMOD_RESULT result);
+	static void ErrorCheck( FMOD_RESULT result );
 
-	void SetRoot(const std::string& root) { mRoot = root; }
+	void SetRoot( const std::string& root ) { mRoot = root; }
 
-	SoundHandle LoadSound(const std::string& soundName, const std::string& ChannelGroupName = "", bool b3D = true, bool bLooping = false, bool bStream = false);
-	void UnloadSound(SoundHandle soundHash);
+	SoundHandle LoadSound( const std::string& soundName, const std::string& ChannelGroupName = "", bool b3D = true, bool bLooping = false, bool bStream = false );
+	void UnloadSound( SoundHandle soundHash );
 
-	ChannelHandle PlaySounds(SoundHandle soundHash, float volumeDB = 0.0f, const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float minDist = 1.0f, float maxDist = 10000.0f);
-	
-	void Set3DListenerAndOrientation(const Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, const Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, const Math::Vector3& up = Math::Vector3{ 0, 0, 0 });
+	ChannelHandle PlaySounds( SoundDescription& soundDesc );
+	ChannelHandle PlaySounds( SoundHandle soundHandle );
 
-	void CreateChannelGroup(const std::string& ChannelGroupName);
-private:
-	FMOD::ChannelGroup* const GetChannelGroup(const std::string& ChannelGroupName) const; // Not sure if this is needed
-public:
-	void StopChannel(ChannelHandle channelId);
+	void Set3DListenerAndOrientation( Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, Math::Vector3& up = Math::Vector3{ 0, 0, 0 } ) const;
+
+	void CreateChannelGroup( const std::string& ChannelGroupName );
+	FMOD::ChannelGroup* const GetChannelGroup( const std::string& ChannelGroupName ) const; // Not sure if this is needed
+	void StopChannel( ChannelHandle channelId );
 
 	void StopAllChannels();
 
-	void SetChannel3DPosition(ChannelHandle channelId, const Math::Vector3& pos);
-	void SetChannelVolume(ChannelHandle channelId, float volumeDB);
+	void GetChannelProperties( ChannelHandle channelId, ChannelDescription& channelDesc ) const;
+	ChannelDescription GetChannelProperties( ChannelHandle channelId ) const;
+	void SetChannelProperties( ChannelHandle channelId, ChannelDescription channelDesc );
+	void SetChannel3DPosition( ChannelHandle channelId, Math::Vector3& pos );
+	void SetChannelVolume( ChannelHandle channelId, float volumeDB );
 
-	bool IsPlaying(ChannelHandle channelId) const;
+	bool IsPlaying( ChannelHandle channelId ) const;
 
-	float DBToVolume(float db) const { return powf(10.0f, 0.05f * db); }
-	float VolumeToDB(float volume) const { return 20.0f * log10f(volume); }
-	FMOD_VECTOR VectorToFmod(const Math::Vector3& pos);
-	
+	float DBToVolume( float db ) const { return powf( 10.0f, 0.05f * db ); }
+	float VolumeToDB( float volume ) const { return 20.0f * log10f( volume ); }
+	FMOD_VECTOR VectorToFmod( Math::Vector3& pos ) const;
+	Math::Vector3 FmodToVector( FMOD_VECTOR& pos ) const;
+
 	//-------------------------------------------[Studio]-------------------------------------------
 
 	/*
@@ -108,10 +135,10 @@ public:
 
 	void PlayEvent(const std::string& eventName);
 	void StopEvent(const std::string& eventName, bool bImmediate = false);
-	
+
 	void GetEventParameter(const std::string& eventName, const std::string& parameterName, float* parameter);
 	void SetEventParameter(const std::string& eventName, const std::string& parameterName, float value);
-	
+
 	bool IsEventPlaying(const std::string& eventName) const;
 	*/
 };

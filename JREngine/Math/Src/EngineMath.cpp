@@ -11,7 +11,7 @@ const float Math::kRootTwo		= 1.41421356237309f;
 const float Math::kRootThree	= 1.73205080756887f;
 const float Math::kDegToRad		= kPi / 180.0f;
 const float Math::kRadToDeg		= 180.0f / kPi;
-const float Math::KEpsilon		= 0.000001f;
+const float Math::kEpsilon		= 0.000001f;
 
 Quaternion Quaternion::RotationAxis(const Vector3& axis, float rad)
 {

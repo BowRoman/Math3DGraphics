@@ -5,10 +5,17 @@ namespace Math {
 
 struct Matrix4
 {
-	float _11, _12, _13, _14;
-	float _21, _22, _23, _24;
-	float _31, _32, _33, _34;
-	float _41, _42, _43, _44;
+	union
+	{
+		float data[16];
+		struct
+		{
+			float _11, _12, _13, _14;
+			float _21, _22, _23, _24;
+			float _31, _32, _33, _34;
+			float _41, _42, _43, _44;
+		};
+	};
 
 	Matrix4()
 		: _11(1.0f), _12(0.0f), _13(0.0f), _14(0.0f)
