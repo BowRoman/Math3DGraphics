@@ -108,8 +108,10 @@ public:
 
 	void Set3DListenerAndOrientation( Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, Math::Vector3& up = Math::Vector3{ 0, 0, 0 } ) const;
 
-	void CreateChannelGroup( const std::string& ChannelGroupName );
+	bool CreateChannelGroup( const std::string& ChannelGroupName, const std::string& parentGroupName = "" );
 	FMOD::ChannelGroup* const GetChannelGroup( const std::string& ChannelGroupName ) const; // Not sure if this is needed
+	void PlayChannel( ChannelHandle channelId );
+	void PauseChannel( ChannelHandle channelId );
 	void StopChannel( ChannelHandle channelId );
 
 	void StopAllChannels();

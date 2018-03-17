@@ -46,6 +46,10 @@ void AudioEngineImpl::Initialize()
 	//InitializeStudio(); [STUDIO]
 	FMOD::System_Create( &mSystem );
 
+	FMOD::ChannelGroup *newChannelGroup = nullptr;
+
+	JRAudioEngine::ErrorCheck( mSystem->createChannelGroup( "Master", &newChannelGroup ) );
+
 } // void AudioEngineImpl::Initialize()
 
 void AudioEngineImpl::Terminate()
@@ -281,20 +285,40 @@ ChannelHandle JRAudioEngine::PlaySounds( SoundHandle soundHandle )
 	return PlaySounds( desc );
 }
 
-void JRAudioEngine::CreateChannelGroup( const std::string& ChannelGroupName )
+// Returns true if channel group was created successfully
+bool JRAudioEngine::CreateChannelGroup( const std::string& ChannelGroupName, const std::string& parentGroupName )
 {
-	FMOD::ChannelGroup *newChannelGroup;
-	auto test = &newChannelGroup;
+	auto groups = mAudioEngineImpl->mChannelGroups;
+	auto iter = groups.find( ChannelGroupName );
+	if( iter == groups.end() )
+	{
+		return false;
+	}
 
-	ErrorCheck( mAudioEngineImpl->mSystem->createChannelGroup( ChannelGroupName.c_str(), test ) );
+	FMOD::ChannelGroup *newChannelGroup = nullptr;
 
-	mAudioEngineImpl->mChannelGroups[ChannelGroupName] = newChannelGroup;
+	ErrorCheck( mAudioEngineImpl->mSystem->createChannelGroup( ChannelGroupName.c_str(), &newChannelGroup ) );
+	groups["Master"]->addGroup( newChannelGroup );
+
+	groups[ChannelGroupName] = newChannelGroup;
+
+	return true;
 } // void JRAudioEngine::CreateChannelGroup(const std::string& ChannelGroupName)
 
 FMOD::ChannelGroup* const JRAudioEngine::GetChannelGroup( const std::string& ChannelGroupName ) const
 {
 	return mAudioEngineImpl->mChannelGroups[ChannelGroupName];
 } // FMOD::ChannelGroup* const JRAudioEngine::GetChannelGroup(const std::string& ChannelGroupName) const
+
+void JRAudioEngine::PlayChannel( ChannelHandle channelId )
+{
+	mAudioEngineImpl->mChannels[channelId]->setPaused( false );
+}
+
+void JRAudioEngine::PauseChannel( ChannelHandle channelId )
+{
+	mAudioEngineImpl->mChannels[channelId]->setPaused( true );
+}
 
 void JRAudioEngine::StopChannel( ChannelHandle channelId )
 {
