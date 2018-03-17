@@ -8,9 +8,9 @@ namespace Audio
 struct SoundDescription
 {
 	SoundHandle handle;
-	float volumeDB = 50.0f;
+	float volumeDB = 0.5f;
 	float minDist = 0.0f;
-	float maxdist = 1000.0f;
+	float maxdist = 1.0f;
 
 	Math::Vector3 position = Math::Vector3{ 0, 0, 0 };
 };
@@ -19,8 +19,8 @@ struct ChannelDescription
 {
 	float frequency;
 	float lowPassGain;
-	float doppler3D;
-	float pitch;
+	float doppler3D = 1.0f;
+	float pitch = 1.0f;
 	// TODO: Add reverb
 	Math::Vector3 position = Math::Vector3{ 0, 0, 0 };
 };

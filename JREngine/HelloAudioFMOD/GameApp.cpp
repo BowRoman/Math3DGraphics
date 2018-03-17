@@ -7,8 +7,8 @@ namespace
 {
 std::vector<uint32_t> soundIds;
 std::vector<uint32_t> musicIds;
-std::vector<uint32_t> channelIds;
 bool songPlaying = false;
+uint32_t channelhandle;
 }
 
 GameApp::GameApp()
@@ -37,22 +37,27 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	Physics::Settings settings;
 	settings.gravity = Math::Vector3::Zero();
 	mPhysicsWorld.Setup(settings);
-	for (int i = 0; i < 51; ++i)
-	{
+	//for (int i = 0; i < 51; ++i)
+	//{
+		Math::Vector3 musicPos{ 0.0f, 0.0f, 0.0f };
 		auto p = new Physics::Particle();
-		p->SetPosition({ -12.5f + (static_cast<float>(i)*0.5f), 0.0f, 0.0f });
+		p->SetPosition({ /*-12.5f + (static_cast<float>(i)*0.5f)*/musicPos });
 		mPhysicsWorld.AddParticle(p);
-	}
+	//}
 
 	// Audio
 	Audio::JRAudioEngine::StaticInitialize();
 	auto soundMng = Audio::JRAudioEngine::Get();
+
 	soundMng->SetRoot("..\\Assets\\Sounds");
-	soundIds.push_back(soundMng->LoadSound("I_Was_Enjoying_That!.wav", "Sounds"));
 	soundMng->CreateChannelGroup("Sounds");
+	soundIds.push_back(soundMng->LoadSound("I_Was_Enjoying_That!.wav", "Sounds"));
 	soundMng->CreateChannelGroup("Music");
 	musicIds.push_back(soundMng->LoadSound("LightningCombat_1.wav", "Music"));
-	channelIds.push_back(soundMng->PlaySounds(Audio::SoundDescription{ musicIds[0] }));
+	Audio::SoundDescription musicDesc;
+	musicDesc.handle = musicIds[0];
+	musicDesc.position = musicPos;
+	channelhandle = soundMng->PlaySounds(musicIds[0]);
 }
 
 
@@ -127,21 +132,33 @@ void GameApp::OnUpdate()
 		mCameraTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * dTime);
 		mCameraTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * dTime);
 	}
+	if( is->IsKeyPressed( Keys::EQUALS ) )
+	{
+		auto props = Audio::JRAudioEngine::Get()->GetChannelProperties( channelhandle );
+		props.lowPassGain += 0.1f;
+		Audio::JRAudioEngine::Get()->SetChannelProperties( channelhandle, props );
+	}
+	/*if( is->IsMousePressed( Mouse::LBUTTON ) )
+	{
+		mPhysicsWorld.ClearParticles();
+		auto p = new Physics::Particle();
+		p->SetPosition( mCameraTransform.GetPosition() + mCameraTransform.GetDirection() * 5.0f );
+		mPhysicsWorld.AddParticle( p );
+	}*/
 	if (is->IsKeyPressed(Keys::P))
 	{
-		if(Audio::JRAudioEngine::Get()->IsPlaying(channelIds[0]))
+		/*if(Audio::JRAudioEngine::Get()->IsPlaying(channelIds[0]))
 		{
 			Audio::JRAudioEngine::Get()->PauseChannel( channelIds[0] );
 		}
 		else
 		{
 			Audio::JRAudioEngine::Get()->PlayChannel( channelIds[0] );
-		}
+		}*/
 	}
 	if (is->IsKeyPressed(Keys::O))
 	{
-		//Audio::SoundManager::Get()->Stop(instIds[0]);
-		songPlaying = false;
+		Audio::JRAudioEngine::Get()->StopAllChannels();
 	}
 	if (is->IsKeyPressed(Keys::ONE))
 	{
