@@ -83,6 +83,10 @@ private:
 	AudioEngineImpl* mAudioEngineImpl;
 	std::string mRoot;
 
+private:
+	FMOD::Channel* GetChannel(ChannelHandle channelId);
+	FMOD::Channel* GetChannel(ChannelHandle channelId) const;
+
 public:
 	static void StaticInitialize();
 	static void StaticTerminate();
@@ -110,6 +114,7 @@ public:
 
 	bool CreateChannelGroup( const std::string& ChannelGroupName, const std::string& parentGroupName = "" );
 	FMOD::ChannelGroup* const GetChannelGroup( const std::string& ChannelGroupName ) const; // Not sure if this is needed
+
 	void PlayChannel( ChannelHandle channelId );
 	void PauseChannel( ChannelHandle channelId );
 	void StopChannel( ChannelHandle channelId );
