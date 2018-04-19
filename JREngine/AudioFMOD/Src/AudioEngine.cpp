@@ -66,7 +66,7 @@ void AudioEngineImpl::Update()
 	for (auto it = mChannels.begin(), itEnd = mChannels.end(); it != itEnd; ++it)
 	{
 		bool bIsPlaying = false;
-		it->second->isPlaying(&bIsPlaying);
+		it->second->isPlaying(&bIsPlaying); // or paused
 		if (!bIsPlaying)
 		{
 			stoppedChannels.push_back(it);
@@ -361,6 +361,18 @@ void JRAudioEngine::StopChannel(ChannelHandle channelId)
 
 } // void JRAudioEngine::StopChannel(int channelId)
 
+void JRAudioEngine::TogglePaused(ChannelHandle channelId)
+{
+	if (IsPaused(channelId))
+	{
+		PlayChannel(channelId);
+	}
+	else
+	{
+		PauseChannel(channelId);
+	}
+}
+
 void JRAudioEngine::StopAllChannels()
 {
 	for (auto channel : mAudioEngineImpl->mChannels)
@@ -442,6 +454,13 @@ bool JRAudioEngine::IsPlaying(ChannelHandle channelId) const
 	return playing;
 
 } // bool JRAudioEngine::IsPlaying(int channelId) const
+
+bool JRAudioEngine::IsPaused(ChannelHandle channelId) const
+{
+	bool paused = false;
+	ErrorCheck(mAudioEngineImpl->mChannels[channelId]->getPaused(&paused));
+	return paused;
+}
 
 FMOD_VECTOR JRAudioEngine::VectorToFmod(Math::Vector3& pos) const
 {

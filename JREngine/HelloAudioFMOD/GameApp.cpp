@@ -147,14 +147,11 @@ void GameApp::OnUpdate()
 	}*/
 	if (is->IsKeyPressed(Keys::P))
 	{
-		/*if(Audio::JRAudioEngine::Get()->IsPlaying(channelIds[0]))
-		{
-			Audio::JRAudioEngine::Get()->PauseChannel( channelIds[0] );
-		}
-		else
-		{
-			Audio::JRAudioEngine::Get()->PlayChannel( channelIds[0] );
-		}*/
+		Audio::JRAudioEngine::Get()->TogglePaused(channelhandle);
+	}
+	if (is->IsKeyPressed(Keys::S))
+	{
+		Audio::JRAudioEngine::Get()->StopChannel(channelhandle);
 	}
 	if (is->IsKeyPressed(Keys::O))
 	{
