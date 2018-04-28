@@ -13,3 +13,4 @@
 // TODO: reference additional headers your program requires here
 
 #include <Core\Inc\BlockAllocator.h>
+#include <Core\Inc\TypedAllocator.h>

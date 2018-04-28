@@ -2,9 +2,9 @@
 #include "BlockAllocator.h"
 
 BlockAllocator::BlockAllocator(int blockSize, int blockCapacity)
+	: mSize{ blockSize }
+	, mCapacity{ blockCapacity }
 {
-	mSize = blockSize;
-	mCapacity = blockCapacity;
 	mFreeSlots.reserve(blockCapacity);
 	for (int i = 0; i < blockCapacity; ++i)
 	{
@@ -20,7 +20,7 @@ BlockAllocator::~BlockAllocator()
 
 void* BlockAllocator::Allocate()
 {
-	if(mFreeSlots.size() <= 0)
+	if (mFreeSlots.size() <= 0)
 		return nullptr;
 
 	// remove slot from freeslots
@@ -31,12 +31,12 @@ void* BlockAllocator::Allocate()
 	offset *= mSize;
 
 	// move ptr to that point
-	void* ptr = (void*)((uint8_t)mData * (uint8_t)mSize);
+	void* ptr = static_cast<void*>(static_cast<uint8_t*>(mData) + static_cast<uint8_t>(offset));
 
 	return ptr;
 }
 
 void BlockAllocator::Free(void* ptr)
 {
-	mFreeSlots.emplace_back(int(ptr) - int(mData));
+	mFreeSlots.emplace_back(reinterpret_cast<int>(ptr) - reinterpret_cast<int>(mData));
 }

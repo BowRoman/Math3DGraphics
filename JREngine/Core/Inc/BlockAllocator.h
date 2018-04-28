@@ -4,7 +4,7 @@
 class BlockAllocator
 {
 public:
-	BlockAllocator(int blockSize, int blockCount);
+	BlockAllocator(int blockSize, int blockCapacity);
 	~BlockAllocator();
 
 	BlockAllocator(const BlockAllocator& copy) = delete;
