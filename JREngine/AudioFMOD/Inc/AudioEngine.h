@@ -150,6 +150,9 @@ public:
 
 	bool IsEventPlaying(const std::string& eventName) const;
 	*/
-};
+
+	//-------------------------------------------[/Studio]------------------------------------------
+
+}; // class JRAudioEngine
 
 } // namespace Audio

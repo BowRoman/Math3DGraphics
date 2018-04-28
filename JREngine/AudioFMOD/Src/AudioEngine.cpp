@@ -148,7 +148,7 @@ void JRAudioEngine::StaticInitialize()
 	sJRAudioEngine = new JRAudioEngine;
 	sJRAudioEngine->Initialize();
 
-} // void JRAudioEngine::StaticInitialize()
+} // void StaticInitialize()
 
 void JRAudioEngine::StaticTerminate()
 {
@@ -157,7 +157,7 @@ void JRAudioEngine::StaticTerminate()
 	sJRAudioEngine->Terminate();
 	SafeDelete(sJRAudioEngine);
 
-} // void JRAudioEngine::StaticTerminate()
+} // void StaticTerminate()
 
 JRAudioEngine* JRAudioEngine::Get()
 {
@@ -165,19 +165,19 @@ JRAudioEngine* JRAudioEngine::Get()
 
 	return sJRAudioEngine;
 
-} // JRAudioEngine* JRAudioEngine::Get()
+} // JRAudioEngine* Get()
 
 
 JRAudioEngine::JRAudioEngine() noexcept
 	: mAudioEngineImpl{ nullptr }
 {
 
-} // JRAudioEngine::~JRAudioEngine()
+} // JRAudioEngine() noexcept
 
 JRAudioEngine::~JRAudioEngine()
 {
 
-} // JRAudioEngine::~JRAudioEngine()
+} // ~JRAudioEngine()
 
 void JRAudioEngine::Initialize()
 {
@@ -185,27 +185,27 @@ void JRAudioEngine::Initialize()
 	mAudioEngineImpl = new AudioEngineImpl;
 	mAudioEngineImpl->Initialize();
 
-} // void JRAudioEngine::Initialize()
+} // void Initialize()
 
 void JRAudioEngine::Terminate()
 {
 	ASSERT(nullptr != mAudioEngineImpl, "[AudioEngine] mAudioEngineImpl not cleared, cannot be initialized.");
 	mAudioEngineImpl->Terminate();
 
-} // void JRAudioEngine::Terminate()
+} // void Terminate()
 
 void JRAudioEngine::Update()
 {
 	ASSERT(nullptr != mAudioEngineImpl, "[AudioEngine] mAudioEngineImpl not active, cannot update.");
 	mAudioEngineImpl->Update();
 
-} // void JRAudioEngine::Terminate()
+} // void Terminate()
 
 void JRAudioEngine::ErrorCheck(FMOD_RESULT result)
 {
 	ASSERT(FMOD_OK == result, "[AudioEngine] ErrorCheck failed.");
 
-} // int ErrorCheck(FMOD_RESULT result)
+} // void ErrorCheck(FMOD_RESULT result)
 
 // Loads a sound into inventory by filename. For ease of use, file root level should be set through SetRoot()
 SoundHandle JRAudioEngine::LoadSound(const std::string& soundName, const std::string& ChannelGroupName, bool b3D, bool bLooping, bool bStream)
@@ -245,7 +245,7 @@ SoundHandle JRAudioEngine::LoadSound(const std::string& soundName, const std::st
 
 	return hash;
 
-} // void JRAudioEngine::LoadSound(const std::string & soundName, bool b3D, bool bLooping, bool bStream)
+} // SoundHandle LoadSound(const std::string& soundName, const std::string& ChannelGroupName, bool b3D, bool bLooping, bool bStream)
 
 // Remove specified sound from inventory
 void JRAudioEngine::UnloadSound(SoundHandle soundHash)
@@ -257,7 +257,7 @@ void JRAudioEngine::UnloadSound(SoundHandle soundHash)
 		mAudioEngineImpl->mSounds.erase(findIter);
 	}
 
-} // void JRAudioEngine::UnloadSound(const std::string & soundName)
+} // void UnloadSound(const std::string & soundName)
 
 void JRAudioEngine::Set3DListenerAndOrientation(Math::Vector3& pos, float volumeDB, Math::Vector3& forward, Math::Vector3& up) const
 {
@@ -266,7 +266,7 @@ void JRAudioEngine::Set3DListenerAndOrientation(Math::Vector3& pos, float volume
 	FMOD_VECTOR fUp{ VectorToFmod(up) };
 	ErrorCheck(mAudioEngineImpl->mSystem->set3DListenerAttributes(0, &fPos, nullptr, &fForward, &fUp));
 
-} // void JRAudioEngine::Set3DListenerAndOrientation(const Math::Vector3 & vPos, float volumeDB)
+} // void Set3DListenerAndOrientation(Math::Vector3& pos, float volumeDB, Math::Vector3& forward, Math::Vector3& up) const
 
 // Finds and plays the specified sound if it exists. Sound position will only affect sounds created as 3D
 // Returns ID of the channel the sound is on
@@ -299,14 +299,15 @@ ChannelHandle JRAudioEngine::PlaySounds(SoundDescription& soundDesc)
 	}
 	return -1;
 
-} // void JRAudioEngine::PlayGivenSound(const std::string & soundName, const Math::Vector3 & pos, float volumeDB)
+} // ChannelHandle PlaySounds(SoundDescription& soundDesc)
 
 ChannelHandle JRAudioEngine::PlaySounds(SoundHandle soundHandle)
 {
 	SoundDescription desc;
 	desc.handle = soundHandle;
 	return PlaySounds(desc);
-}
+
+} // ChannelHandle PlaySounds(SoundHandle soundHandle)
 
 // Returns true if channel group was created successfully
 bool JRAudioEngine::CreateChannelGroup(const std::string& ChannelGroupName, const std::string& parentGroupName)
@@ -326,12 +327,14 @@ bool JRAudioEngine::CreateChannelGroup(const std::string& ChannelGroupName, cons
 	}
 
 	return true;
-} // void JRAudioEngine::CreateChannelGroup(const std::string& ChannelGroupName)
+
+} // bool CreateChannelGroup(const std::string& ChannelGroupName, const std::string& parentGroupName)
 
 FMOD::ChannelGroup* const JRAudioEngine::GetChannelGroup(const std::string& ChannelGroupName) const
 {
 	return mAudioEngineImpl->mChannelGroups[ChannelGroupName];
-} // FMOD::ChannelGroup* const JRAudioEngine::GetChannelGroup(const std::string& ChannelGroupName) const
+
+} // FMOD::ChannelGroup* const GetChannelGroup(const std::string& ChannelGroupName) const
 
 void JRAudioEngine::PlayChannel(ChannelHandle channelId)
 {
@@ -340,7 +343,8 @@ void JRAudioEngine::PlayChannel(ChannelHandle channelId)
 	{
 		ErrorCheck(channel->setPaused(false));
 	}
-}
+
+} // void PlayChannel(ChannelHandle channelId)
 
 void JRAudioEngine::PauseChannel(ChannelHandle channelId)
 {
@@ -349,7 +353,8 @@ void JRAudioEngine::PauseChannel(ChannelHandle channelId)
 	{
 		ErrorCheck(channel->setPaused(true));
 	}
-}
+
+} // void PauseChannel(ChannelHandle channelId)
 
 void JRAudioEngine::StopChannel(ChannelHandle channelId)
 {
@@ -359,7 +364,7 @@ void JRAudioEngine::StopChannel(ChannelHandle channelId)
 		ErrorCheck(channel->stop());
 	}
 
-} // void JRAudioEngine::StopChannel(int channelId)
+} // void StopChannel(int channelId)
 
 void JRAudioEngine::TogglePaused(ChannelHandle channelId)
 {
@@ -371,7 +376,8 @@ void JRAudioEngine::TogglePaused(ChannelHandle channelId)
 	{
 		PauseChannel(channelId);
 	}
-}
+
+} // void TogglePaused(ChannelHandle channelId)
 
 void JRAudioEngine::StopAllChannels()
 {
@@ -383,7 +389,7 @@ void JRAudioEngine::StopAllChannels()
 		}
 	}
 
-} // void JRAudioEngine::StopAllChannels()
+} // void StopAllChannels()
 
 void JRAudioEngine::GetChannelProperties(ChannelHandle channelId, ChannelDescription& channelDesc) const
 {
@@ -400,14 +406,16 @@ void JRAudioEngine::GetChannelProperties(ChannelHandle channelId, ChannelDescrip
 		channel->get3DAttributes(&pos, &vel);
 		channelDesc.position = FmodToVector(pos);
 	}
-}
+
+} // void GetChannelProperties(ChannelHandle channelId, ChannelDescription& channelDesc) const
 
 ChannelDescription JRAudioEngine::GetChannelProperties(ChannelHandle channelId) const
 {
 	ChannelDescription desc;
 	GetChannelProperties(channelId, desc);
 	return desc;
-}
+
+} // ChannelDescription GetChannelProperties(ChannelHandle channelId) const
 
 void JRAudioEngine::SetChannelProperties(ChannelHandle channelId, ChannelDescription channelDesc)
 {
@@ -423,7 +431,8 @@ void JRAudioEngine::SetChannelProperties(ChannelHandle channelId, ChannelDescrip
 		channel->get3DAttributes(&pos, &vel);
 		channel->set3DAttributes(&VectorToFmod(channelDesc.position), &vel);
 	}
-}
+
+} // void SetChannelProperties(ChannelHandle channelId, ChannelDescription channelDesc)
 
 void JRAudioEngine::SetChannel3DPosition(ChannelHandle channelId, Math::Vector3& pos)
 {
@@ -434,7 +443,7 @@ void JRAudioEngine::SetChannel3DPosition(ChannelHandle channelId, Math::Vector3&
 		ErrorCheck(channel->set3DAttributes(&position, nullptr));
 	}
 
-} // void JRAudioEngine::SetChannel3DPosition(sizet channelId, const Math::Vector3& pos)
+} // void SetChannel3DPosition(sizet channelId, const Math::Vector3& pos)
 
 void JRAudioEngine::SetChannelVolume(ChannelHandle channelId, float volumeDB)
 {
@@ -444,7 +453,7 @@ void JRAudioEngine::SetChannelVolume(ChannelHandle channelId, float volumeDB)
 		ErrorCheck(channel->setVolume(DBToVolume(volumeDB)));
 	}
 
-} // void JRAudioEngine::SetChannelVolume(sizet channelId, float volumeDB)
+} // void SetChannelVolume(ChannelHandle channelId, float volumeDB)
 
 bool JRAudioEngine::IsPlaying(ChannelHandle channelId) const
 {
@@ -453,14 +462,15 @@ bool JRAudioEngine::IsPlaying(ChannelHandle channelId) const
 	ErrorCheck(mAudioEngineImpl->mChannels[channelId]->isPlaying(&playing));
 	return playing;
 
-} // bool JRAudioEngine::IsPlaying(int channelId) const
+} // bool IsPlaying(ChannelHandle channelId) const
 
 bool JRAudioEngine::IsPaused(ChannelHandle channelId) const
 {
 	bool paused = false;
 	ErrorCheck(mAudioEngineImpl->mChannels[channelId]->getPaused(&paused));
 	return paused;
-}
+
+} // bool IsPaused(ChannelHandle channelId) const
 
 FMOD_VECTOR JRAudioEngine::VectorToFmod(Math::Vector3& pos) const
 {
@@ -470,7 +480,7 @@ FMOD_VECTOR JRAudioEngine::VectorToFmod(Math::Vector3& pos) const
 	fVec.z = pos.z;
 	return fVec;
 
-} // FMOD_VECTOR JRAudioEngine::VectorToFmod(const Math::Vector3& pos)
+} // FMOD_VECTOR VectorToFmod(const Math::Vector3& pos)
 
 Math::Vector3 JRAudioEngine::FmodToVector(FMOD_VECTOR& pos) const
 {
@@ -479,7 +489,8 @@ Math::Vector3 JRAudioEngine::FmodToVector(FMOD_VECTOR& pos) const
 	vec.y = pos.y;
 	vec.z = pos.z;
 	return vec;
-}
+
+} // Math::Vector3 FmodToVector(FMOD_VECTOR& pos) const
 
 //-------------------------------------------[Studio]-------------------------------------------
 

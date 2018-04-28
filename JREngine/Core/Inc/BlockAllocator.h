@@ -1,6 +1,9 @@
 #pragma once
 #include <vector>
 
+namespace Core
+{
+
 class BlockAllocator
 {
 public:
@@ -12,8 +15,12 @@ public:
 
 	void* Allocate();
 	void Free(void* ptr);
+
 protected:
 	void* mData;
 	int mSize, mCapacity;
 	std::vector<int> mFreeSlots;
-};
+
+}; // class BlockAllocator
+
+} // namespace Core
