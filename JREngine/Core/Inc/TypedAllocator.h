@@ -46,7 +46,7 @@ T* TypedAllocator<T>::New()
 template<typename T>
 void TypedAllocator<T>::Delete(T* ptr)
 {
-	//TODO: Check if pointer belongs to allocator
+	// TODO: check if pointer belongs to allocator
 	// destruct the object
 	ptr->~T();
 	Free(static_cast<void*>(ptr));
