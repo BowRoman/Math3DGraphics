@@ -1,16 +1,18 @@
 #include "Precompiled.h"
 #include "BlockAllocator.h"
+#include "Debug.h"
 
 namespace Core
 {
 
-BlockAllocator::BlockAllocator(int blockSize, int blockCapacity)
+BlockAllocator::BlockAllocator(unsigned int blockSize, unsigned int blockCapacity)
 	: mSize{ blockSize }
 	, mCapacity{ blockCapacity }
 {
+	ASSERT(blockSize > 0 && blockCapacity > 0, "[BlockAllocator] Invalid construction parameters.");
 	// fill free slot indices
 	mFreeSlots.reserve(blockCapacity);
-	for (int i = 0; i < blockCapacity; ++i)
+	for (unsigned int i = 0; i < blockCapacity; ++i)
 	{
 		mFreeSlots.push_back(i);
 	}
@@ -28,7 +30,9 @@ BlockAllocator::~BlockAllocator()
 void* BlockAllocator::Allocate()
 {
 	if (mFreeSlots.size() <= 0)
+	{
 		return nullptr;
+	}
 
 	// remove slot from freeslots
 	int offset = mFreeSlots.back();
@@ -46,6 +50,7 @@ void* BlockAllocator::Allocate()
 
 void BlockAllocator::Free(void* ptr)
 {
+	//TODO: check if ptr is contained in allocator
 	// add pointer block index back into freeslots
 	mFreeSlots.emplace_back(reinterpret_cast<int>(ptr) - reinterpret_cast<int>(mData));
 

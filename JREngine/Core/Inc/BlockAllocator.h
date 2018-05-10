@@ -7,7 +7,7 @@ namespace Core
 class BlockAllocator
 {
 public:
-	BlockAllocator(int blockSize, int blockCapacity);
+	BlockAllocator(unsigned int blockSize, unsigned int blockCapacity);
 	~BlockAllocator();
 
 	BlockAllocator(const BlockAllocator& copy) = delete;
@@ -18,8 +18,8 @@ public:
 
 protected:
 	void* mData;
-	int mSize, mCapacity;
-	std::vector<int> mFreeSlots;
+	unsigned int mSize, mCapacity;
+	std::vector<unsigned int> mFreeSlots;
 
 }; // class BlockAllocator
 

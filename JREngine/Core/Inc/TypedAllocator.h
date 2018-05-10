@@ -8,7 +8,7 @@ template<typename T>
 class TypedAllocator : private BlockAllocator
 {
 public:
-	TypedAllocator(int blockCapacity);
+	TypedAllocator(unsigned int blockCapacity);
 	~TypedAllocator();
 
 	TypedAllocator(const TypedAllocator<T>& copy) = delete;
@@ -20,7 +20,7 @@ public:
 }; // class TypedAllocator : private BlockAllocator
 
 template<typename T>
-TypedAllocator<T>::TypedAllocator(int blockCapacity)
+TypedAllocator<T>::TypedAllocator(unsigned int blockCapacity)
 	: BlockAllocator(sizeof(T), blockCapacity)
 {
 } // TypedAllocator(int blockCapacity)
@@ -46,6 +46,7 @@ T* TypedAllocator<T>::New()
 template<typename T>
 void TypedAllocator<T>::Delete(T* ptr)
 {
+	//TODO: Check if pointer belongs to allocator
 	// destruct the object
 	ptr->~T();
 	Free(static_cast<void*>(ptr));
