@@ -40,29 +40,29 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	//Physics::PhysicsPlane* groundPlane = new Physics::PhysicsPlane(Math::Plane{ 0.0f,1.0f,0.0f,-0.1f }, 0.7f, 0.7f);
 	//mPhysicsWorld.AddPhysicsPlane(groundPlane);
 
-	Math::OBB obb;
+	/*Math::OBB obb;
 	obb.center = { 0.0f,0.0f,0.0f };
 	obb.extend = { 1.0f,1.0f,1.0f };
 	Physics::PhysicsOBB* box = new Physics::PhysicsOBB(obb);
-	mPhysicsWorld.AddPhysicsOBB(box);
+	mPhysicsWorld.AddPhysicsOBB(std::move(box));*/
 
-	/*Math::OBB obb;
+	Math::OBB obb;
 	obb.center = { 0.0f,-1.0f,0.0f };
-	obb.extend = { 6.0f,2.0f,2.0f };
+	obb.extend = { 6.0f,1.0f,2.0f };
 	Physics::PhysicsOBB* box = new Physics::PhysicsOBB(obb);
-	mPhysicsWorld.AddPhysicsOBB(box);
+	mPhysicsWorld.AddPhysicsOBB(std::move(box));
 
-	obb.center = { 0.0f,0.0f,5.0f };
-	obb.extend = { 6.0f,3.0f,2.0f };
+	obb.center = { 0.0f,-1.0f,7.0f };
+	obb.extend = { 6.0f,2.0f,2.0f };
 	obb.rot = Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), 20.0f * Math::kDegToRad);
 	box = new Physics::PhysicsOBB(obb);
-	mPhysicsWorld.AddPhysicsOBB(box);
+	mPhysicsWorld.AddPhysicsOBB(std::move(box));
 
-	obb.center = { 0.0f,0.0f,-3.0f };
-	obb.extend = { 6.0f,3.0f,2.0f };
+	obb.center = { 0.0f,-1.0f,-7.0f };
+	obb.extend = { 6.0f,2.0f,2.0f };
 	obb.rot = Math::Quaternion::RotationAxis(Math::Vector3::XAxis(), (-20.0f) * Math::kDegToRad);
 	box = new Physics::PhysicsOBB(obb);
-	mPhysicsWorld.AddPhysicsOBB(box);*/
+	mPhysicsWorld.AddPhysicsOBB(std::move(box));
 }
 
 
@@ -135,11 +135,13 @@ void GameApp::OnUpdate()
 		mCameraTransform.Yaw(is->GetMouseMoveX() * cameraTurnSpeed * dTime);
 		mCameraTransform.Pitch(is->GetMouseMoveY() * cameraTurnSpeed * dTime);
 	}
-	if (is->IsMouseDown(Mouse::LBUTTON))
+	firePoint.pos = mCameraTransform.GetPosition();
+	firePoint.dir = mCameraTransform.GetDirection();
+	/*if (is->IsMouseDown(Mouse::LBUTTON))
 	{
 		firePoint.pos = mCameraTransform.GetPosition();
 		firePoint.dir = mCameraTransform.GetDirection();
-	}
+	}*/
 	// Basic
 	if (is->IsKeyPressed(Keys::ONE))
 	{
@@ -372,7 +374,7 @@ void GameApp::OnUpdate()
 	Math::Matrix4 projectionMatrix = mCamera.GetProjectionMatrix(Graphics::GraphicsSystem::Get()->GetAspectRatio());
 
 
-	for (int i = 0; i < 100; ++i)
+	/*for (int i = 0; i < 100; ++i)
 	{
 		Math::Vector3 p0(-50.0f, -0.1f, -50.0f + i);
 		Math::Vector3 p1(+50.0f, -0.1f, -50.0f + i);
@@ -383,8 +385,8 @@ void GameApp::OnUpdate()
 		Math::Vector3 p0(-50.0f + i, -0.1f, -50.0f);
 		Math::Vector3 p1(-50.0f + i, -0.1f, +50.0f);
 		Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Gray());
-	}
-	Graphics::SimpleDraw::DrawSphere(firePoint.pos, 3, 4, 0.7f, Math::Vector4::Azure());
+	}*/
+	//Graphics::SimpleDraw::DrawSphere(firePoint.pos, 3, 4, 0.7f, Math::Vector4::Azure());
 	Graphics::SimpleDraw::DrawLine(firePoint.pos, firePoint.pos+firePoint.dir, Math::Vector4::Red());
 
 	Graphics::SimpleDraw::DrawTransform(Math::Matrix4::Identity());
