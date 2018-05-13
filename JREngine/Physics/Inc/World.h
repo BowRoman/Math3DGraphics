@@ -42,13 +42,15 @@ private:
 	void AccumulateForces();
 	void Integrate();
 	void SatisfyConstraints();
+	void RemoveExpired();
 
 	Settings mSettings;
 	ParticleVec mParticles;
 	ConstraintVec mConstraints;
 	PhysicsPlaneVec mPlanes;
 	PhysicsOBBVec mOBBs;
-	float mTimer;
+	float mTimer = 0.0f;
+	float mWorldTime = 0.0f;
 
 }; // class World
 

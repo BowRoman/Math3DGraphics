@@ -49,7 +49,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	Math::OBB obb;
 	obb.center = { 0.0f,-1.0f,0.0f };
 	obb.extend = { 6.0f,1.0f,2.0f };
-	Physics::PhysicsOBB* box = new Physics::PhysicsOBB(obb);
+	Physics::PhysicsOBB* box = new Physics::PhysicsOBB(obb, 0.6f);
 	mPhysicsWorld.AddPhysicsOBB(std::move(box));
 
 	obb.center = { 0.0f,-1.0f,7.0f };
@@ -147,7 +147,7 @@ void GameApp::OnUpdate()
 	{
 		for (int i = 0; i < 50; ++i)
 		{
-			auto p = new Physics::Particle();
+			auto p = new Physics::Particle(5.0f);
 			p->SetPosition({ firePoint.pos });
 			p->SetVelocity({ firePoint.dir*0.5f });
 			mPhysicsWorld.AddParticle(p);

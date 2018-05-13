@@ -84,6 +84,7 @@ void Physics::PhysicsOBB::Apply(ParticleVec& particles)
 				closestDist = negZDist;
 			}
 
+			// EVALUATE: Possibly better to store the planes instead of generating on collision
 			switch (closestAxis)
 			{
 			case ClosestAxis::XPos:

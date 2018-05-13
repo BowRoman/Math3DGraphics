@@ -24,7 +24,7 @@ Terrain::~Terrain()
 {
 }
 
-void Terrain::Initialize(const char* rawFileName, uint32_t cols, uint32_t rows, float scale, float maxHeight, Math::Vector3 origin)
+void Terrain::Initialize(const char* rawFileName, uint32_t cols, uint32_t rows)
 {
 	ASSERT(cols > 0, "[HeightMap] Invalid number of columns");
 	ASSERT(rows > 0, "[HeightMap] Invalid number of rows");
@@ -32,13 +32,20 @@ void Terrain::Initialize(const char* rawFileName, uint32_t cols, uint32_t rows, 
 	mColumns = cols;
 	mRows = rows;
 
-	std::ifstream file(rawFileName, std::ios::binary);
-	size_t bytesSize = cols * rows * 4;
+	// Load height map
+	std::ifstream heightStream;
+	heightStream.open(rawFileName, std::ios::binary);
+	ASSERT(!heightStream.fail(), "[Terrain] File failed to load.");
 
-	unsigned char* buffer = new unsigned char[bytesSize];
-	file.read((char*)buffer, bytesSize);
-	file.close();
-	mHeightVertices = reinterpret_cast<float*>(buffer);
+	// Get number of vertices
+	heightStream.seekg(0, std::ios::end);
+	mNumHeightVertices = heightStream.tellg();
+	heightStream.seekg(0, std::ios::beg);
+
+	// Allocate memory and read the data
+	mHeightVertices = new char[mNumHeightVertices];
+	heightStream.read(mHeightVertices, mNumHeightVertices);
+	heightStream.close();
 
 	float tempMin = 0;
 	for (uint32_t i = 0; i < mColumns * mRows; ++i)
@@ -48,9 +55,9 @@ void Terrain::Initialize(const char* rawFileName, uint32_t cols, uint32_t rows, 
 		{
 			tempVal = tempMin;
 		}
-		if (tempVal > maxHeight)
+		if (tempVal > mMaxHeight)
 		{
-			tempVal = maxHeight;
+			tempVal = mMaxHeight;
 		}
 		mHeightVertices[i] = tempVal;
 	}
@@ -58,15 +65,15 @@ void Terrain::Initialize(const char* rawFileName, uint32_t cols, uint32_t rows, 
 	uint32_t intcount = (mColumns * 2) * (mRows - 1) + (mRows - 2);
 	mMesh.Allocate(rows*cols, intcount);
 
-	float startingX = origin.x - ((rows*scale)*0.5f);
-	float startingZ = origin.z - ((cols*scale)*0.5f);
+	float startingX = origin.x - ((rows*mScale)*0.5f);
+	float startingZ = origin.z - ((cols*mScale)*0.5f);
 	for (uint32_t i = 0; i < cols; ++i)
 	{
 		for (uint32_t j = 0; j < rows; ++j)
 		{
-			mMesh.mVertices[(i * cols) + j].position.y = origin.y + (GetHeight(i, j) * scale);
-			mMesh.mVertices[(i * cols) + j].position.x = startingX + (j * scale);
-			mMesh.mVertices[(i * cols) + j].position.z = startingZ + (i * scale);
+			mMesh.mVertices[(i * cols) + j].position.y = origin.y + (GetHeight(i, j) * mScale);
+			mMesh.mVertices[(i * cols) + j].position.x = startingX + (j * mScale);
+			mMesh.mVertices[(i * cols) + j].position.z = startingZ + (i * mScale);
 			mMesh.mVertices[(i * cols) + j].normal = Math::Vector3::YAxis();
 			mMesh.mVertices[(i * cols) + j].tangent = Math::Vector3::XAxis();
 			mMesh.mVertices[(i * cols) + j].color = Math::Vector4::White();

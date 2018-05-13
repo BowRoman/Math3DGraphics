@@ -175,7 +175,7 @@ bool ImportModel(const Params& params)
 
 	// And have it read the given file with some example postprocessing
 	// Usually - if speed is not the most important aspect for you - you'll 
-	// propably to request more postprocessing than we do in this example.
+	// probably want to request more postprocessing than we do in this example.
 	const uint32_t flags =
 		aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |

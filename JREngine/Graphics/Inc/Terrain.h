@@ -17,7 +17,7 @@ public:
 	Terrain();
 	~Terrain();
 
-	void Initialize(const char* rawFileName, uint32_t columns, uint32_t rows, float scale = 1.f, float maxHeight = 10.f, Math::Vector3 origin = Math::Vector3::Zero());
+	void Initialize(const char* rawFileName, uint32_t cols, uint32_t rows);
 	void Terminate();
 
 	float GetHeight(uint32_t row, uint32_t col) const;
@@ -34,9 +34,14 @@ private:
 	Mesh mMesh;
 	MeshBuffer mMeshBuffer;
 
-	float* mHeightVertices;
+	uint32_t mNumHeightVertices;
+	char* mHeightVertices;
 	uint32_t mColumns;
 	uint32_t mRows;
+
+	float mScale = 1.0f;
+	float mMaxHeight = 100.0f;
+	Math::Vector3 origin = Math::Vector3::Zero();
 };
 
 } // namespace Graphics
