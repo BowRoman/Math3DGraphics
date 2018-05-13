@@ -28,7 +28,7 @@ void World::Update(float deltaTime)
 		AccumulateForces();
 		Integrate();
 		SatisfyConstraints();
-		RemoveExpired();
+		RemoveExpired(); // TODO: Add support for constraint removal
 	}
 }
 
