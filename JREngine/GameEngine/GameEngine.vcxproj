@@ -48,6 +48,7 @@
     <ClInclude Include="Inc\GameObjectFactory.h" />
     <ClInclude Include="Inc\Precompiled.h" />
     <ClInclude Include="Inc\TransformComponent.h" />
+    <ClInclude Include="Inc\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\AABoxColliderComponent.cpp" />
@@ -59,6 +60,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\TransformComponent.cpp" />
+    <ClCompile Include="Src\World.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

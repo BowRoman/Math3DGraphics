@@ -16,6 +16,6 @@ public:
 	~CameraComponent() override;
 
 	const Graphics::Camera& GetCamera() const { return mCamera; }
-	Graphics::Camera& GetForward() { return mCamera; }
+	Graphics::Camera& GetCamera() { return mCamera; }
 
 };
