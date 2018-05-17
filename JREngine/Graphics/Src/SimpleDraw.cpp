@@ -48,6 +48,11 @@ public:
 
 	//-------------------------------------------------------------------------------------------------------
 
+	void DrawAABB(const Math::AABB& aabb, const Math::Vector4& color)
+	{
+		// TODO: implement AABB simpledraw
+	}
+
 	void DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, const Math::Vector4& color)
 	{
 		mMeshBuffer.SetTopology(MeshBuffer::Topology::LineList);
@@ -174,7 +179,7 @@ private:
 	uint32_t mCapacity;
 }; // class SimpleDraw
 
-SimpleDrawImpl *sSimpleDraw = nullptr;
+SimpleDrawImpl* sSimpleDraw = nullptr;
 
 } // namespace
 
@@ -189,6 +194,12 @@ void SimpleDraw::StaticTerminate()
 {
 	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
 	sSimpleDraw->Terminate();
+}
+
+void SimpleDraw::DrawAABB(const Math::AABB& aabb, const Math::Vector4& color)
+{
+	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
+	sSimpleDraw->DrawAABB(aabb, color);
 }
 
 void SimpleDraw::DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, const Math::Vector4& color)

@@ -21,6 +21,15 @@
     <ClInclude Include="Inc\Component.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\ColliderComponent.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\TransformComponent.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\GameObjectFactory.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GameObject.cpp">
@@ -30,6 +39,15 @@
       <Filter>Src</Filter>
     </ClCompile>
     <ClCompile Include="Src\Component.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\ColliderComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TransformComponent.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\GameObjectFactory.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

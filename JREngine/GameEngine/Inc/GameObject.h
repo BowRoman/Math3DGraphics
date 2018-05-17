@@ -61,7 +61,7 @@ const T* GameObject::GetComponent() const
 	{
 		if (component->GetType() == T::StaticGetType())
 		{
-			return static_cast<const T*>(component);
+			return static_cast<const T*>(component.get());
 		}
 	}
 	// if no such component exists, return nullptr

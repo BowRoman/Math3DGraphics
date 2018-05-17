@@ -10,7 +10,7 @@ class Component
 	GameObject* mGameObject;
 
 public:
-	REGISTER_TYPE(BSCP) // "BaseComponent"
+	REGISTER_TYPE(BSEC) // (B)a(seC)omponent
 
 	Component();
 	virtual ~Component();
