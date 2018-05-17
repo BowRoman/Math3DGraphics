@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include "Math\Inc\EngineMath.h"
 
 class TransformComponent : public Component
 {
@@ -10,6 +9,8 @@ class TransformComponent : public Component
 
 public:
 	REGISTER_TYPE(TFMC); // (T)rans(f)or(m)(C)omponent
+
+	const static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
 
 	TransformComponent();
 	~TransformComponent() override;

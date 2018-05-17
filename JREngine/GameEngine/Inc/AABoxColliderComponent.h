@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include "Math\Inc\EngineMath.h"
 
 class TransformComponent;
 
@@ -14,6 +13,8 @@ class AABoxColliderComponent : public Component
 
 public:
 	REGISTER_TYPE(ABCC); // (A)ABB(B)ox(C)ollider(Component)
+
+	const static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
 
 	AABoxColliderComponent();
 	~AABoxColliderComponent() override;

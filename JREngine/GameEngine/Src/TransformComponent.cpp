@@ -1,6 +1,31 @@
 #include "Precompiled.h"
 #include "TransformComponent.h"
 
+#include "GameObject.h"
+
+const void TransformComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
+{
+	auto newComponent = gameObj->AddComponent<TransformComponent>();
+	auto vec = node->FirstChildElement();
+	while (vec)
+	{
+		auto dim = vec->FirstChildElement();
+		float x = static_cast<float>(std::atof(dim->GetText()));
+		float y = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+		float z = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+
+		if (std::strcmp(vec->FirstAttribute()->Value(), "Position"))
+		{
+			newComponent->SetPosition({ x,y,z });
+		}
+		if (std::strcmp(vec->FirstAttribute()->Value(), "Forward"))
+		{
+			newComponent->SetForward({ x,y,z });
+		}
+		vec->NextSiblingElement();
+	}
+}
+
 TransformComponent::TransformComponent()
 	: mPosition(Math::Vector3::Zero())
 	, mForward(Math::Vector3::ZAxis())

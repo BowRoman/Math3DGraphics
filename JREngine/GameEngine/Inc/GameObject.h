@@ -23,7 +23,7 @@ public:
 	void Render2D();
 
 	template <class T>
-	typename std::enable_if<std::is_base_of<Component, T>::value, T*>::type*
+	typename std::enable_if<std::is_base_of<Component, T>::value, T*>::type
 		AddComponent();
 
 	template <class T>
@@ -35,14 +35,14 @@ public:
 }; // class GameObject
 
 template <class T>
-typename std::enable_if<std::is_base_of<Component,T>::value, T*>::type*
+typename std::enable_if<std::is_base_of<Component,T>::value, T*>::type
 GameObject::AddComponent()
 {
 	// create a component of the given type and return a pointer to it to be modified
 	mComponents.emplace_back(std::make_unique<T>());
 	auto& newComp = mComponents.back();
 	newComp->mGameObject = this;
-	return newComp.get();
+	return static_cast<T*>(newComp.get());
 }
 
 template <class T>

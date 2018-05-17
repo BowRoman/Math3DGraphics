@@ -1,5 +1,5 @@
 #include "Precompiled.h"
-#include "ColliderComponent.h"
+#include "AABoxColliderComponent.h"
 
 #include "GameObject.h"
 #include "TransformComponent.h"
@@ -7,6 +7,35 @@
 #include <Graphics\Inc\SimpleDraw.h>
 
 using namespace Graphics;
+
+const void AABoxColliderComponent::CreateFunc(GameObject* gameObj, const TiXmlNode * node)
+{
+	auto newComponent = gameObj->AddComponent<AABoxColliderComponent>();
+	auto vec = node->FirstChildElement();
+	while (vec)
+	{
+		auto dim = vec->FirstChildElement();
+		float x = static_cast<float>(std::atof(dim->GetText()));
+		float y = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+		float z = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+
+		if (std::strcmp(vec->FirstAttribute()->Value(), "Center"))
+		{
+			newComponent->SetCenter({ x,y,z });
+		}
+		if (std::strcmp(vec->FirstAttribute()->Value(), "Extend"))
+		{
+			newComponent->SetExtend({ x,y,z });
+		}
+		if (std::strcmp(vec->FirstAttribute()->Value(), "Color"))
+		{
+			float a = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+			newComponent->SetColor({ x,y,z,a });
+		}
+
+		vec->NextSiblingElement();
+	}
+}
 
 AABoxColliderComponent::AABoxColliderComponent()
 	: mTransformComponent(nullptr)
