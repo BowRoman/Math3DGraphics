@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+VisualStudioVersion = 15.0.27004.2006
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Core", "Core\Core.vcxproj", "{4911D530-4725-4DDB-921E-1AF6F10BEE65}"
 EndProject
@@ -70,6 +70,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine", "GameEngine\GameEngine.vcxproj", "{2DE80D3B-5EBB-406D-B901-2981A18A950C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TinyXML", "External\TinyXML\TinyXML.vcxproj", "{F0CFFF50-94C6-418B-9109-8C0EE4C87270}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloGameObject", "HelloGameObject\HelloGameObject.vcxproj", "{55D9BB2C-E982-46BA-8D93-6FE7767E7606}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -307,6 +309,14 @@ Global
 		{F0CFFF50-94C6-418B-9109-8C0EE4C87270}.Release|x64.ActiveCfg = Release|Win32
 		{F0CFFF50-94C6-418B-9109-8C0EE4C87270}.Release|x86.ActiveCfg = Release|Win32
 		{F0CFFF50-94C6-418B-9109-8C0EE4C87270}.Release|x86.Build.0 = Release|Win32
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Debug|x64.ActiveCfg = Debug|x64
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Debug|x64.Build.0 = Debug|x64
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Debug|x86.ActiveCfg = Debug|Win32
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Debug|x86.Build.0 = Debug|Win32
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Release|x64.ActiveCfg = Release|x64
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Release|x64.Build.0 = Release|x64
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Release|x86.ActiveCfg = Release|Win32
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -341,6 +351,7 @@ Global
 		{52E866D4-EE28-4C02-9F7C-2C6D5740C8CD} = {1FBDF361-9272-4072-984E-716DE18B4B67}
 		{2DE80D3B-5EBB-406D-B901-2981A18A950C} = {B8E66790-B8F9-4F69-B9F3-4A9208D960C8}
 		{F0CFFF50-94C6-418B-9109-8C0EE4C87270} = {BDE0E0FC-A376-4D22-8ED5-2F598506C307}
+		{55D9BB2C-E982-46BA-8D93-6FE7767E7606} = {C208CE02-4808-44E2-9B68-3D464E1DB461}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {12765CB4-00EE-462D-A4E0-30D740E45F58}

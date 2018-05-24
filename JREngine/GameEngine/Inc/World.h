@@ -8,6 +8,7 @@ class World
 
 	std::unique_ptr<GameObjectAllocator> mGameObjectAllocator;
 	std::unique_ptr<GameObjectFactory> mGameObjectFactory;
+	GameObjectVector mGameObjectVector;
 
 public:
 	World();

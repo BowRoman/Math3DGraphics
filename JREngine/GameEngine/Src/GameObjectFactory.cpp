@@ -39,11 +39,12 @@ GameObject* GameObjectFactory::Create(const char* templateFileName)
 
 	// check all components
 	element = handleRoot.FirstChild("Components").FirstChild().Element();
-	for (;; element = element->NextSiblingElement())
+	while(element)
 	{
 		const char *ComponentType = element->Value();
 
 		mCreateFuncMap[std::string(ComponentType)](gameObject, element);
+		element->NextSiblingElement();
 	}
 
 	return gameObject;
