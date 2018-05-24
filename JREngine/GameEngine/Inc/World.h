@@ -8,7 +8,10 @@ class World
 
 	std::unique_ptr<GameObjectAllocator> mGameObjectAllocator;
 	std::unique_ptr<GameObjectFactory> mGameObjectFactory;
-	GameObjectVector mGameObjectVector;
+
+	GameObjectVector mUpdateList;
+	GameObjectVector mDestroyList;
+	bool bUpdating = false;
 
 public:
 	World();
@@ -26,5 +29,9 @@ public:
 	void Update(float deltaTime);
 	void Render();
 	void Render2D();
+
+private:
+	void DestroyInternal(GameObject* gameObj);
+	void PruneDestroyed();
 
 }; // class World

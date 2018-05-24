@@ -138,6 +138,7 @@
     <ClInclude Include="Inc\Core.h" />
     <ClInclude Include="Inc\Debug.h" />
     <ClInclude Include="Inc\DeleteUtil.h" />
+    <ClInclude Include="Inc\HandlePool.h" />
     <ClInclude Include="Inc\RTTI.h" />
     <ClInclude Include="Inc\Timer.h" />
     <ClInclude Include="Inc\TypedAllocator.h" />

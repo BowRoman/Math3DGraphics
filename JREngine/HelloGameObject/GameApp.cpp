@@ -140,7 +140,5 @@ void GameApp::OnUpdate()
 
 	Graphics::SimpleDraw::Flush(viewMatrix*projectionMatrix);
 
-	Graphics::SimpleDraw::Flush(viewMatrix*projectionMatrix);
-
 	gs->EndRender();
 }

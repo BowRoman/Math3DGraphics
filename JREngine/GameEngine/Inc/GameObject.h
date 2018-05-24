@@ -8,8 +8,11 @@ using GameObjectAllocator = Core::TypedAllocator<GameObject>;
 class GameObject
 {
 	using Components = std::vector<std::unique_ptr<Component>>;
+	friend class World;
 
 	Components mComponents;
+	std::string mName;
+	World* mWorld;
 
 public:
 	GameObject();
@@ -21,6 +24,9 @@ public:
 	void Update(float dTime);
 	void Render();
 	void Render2D();
+
+	const char* GetName() const { return mName.c_str(); }
+	const World* GetWorld() const { return mWorld; }
 
 	template <class T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, T*>::type
