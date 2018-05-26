@@ -3,6 +3,9 @@
 
 #include <functional>
 
+namespace GameEngine
+{
+
 class GameObjectFactory
 {
 	using CreateFunc = std::function<void(GameObject*, const TiXmlNode*)>;
@@ -19,3 +22,5 @@ public:
 	GameObject* Create(const char* templateFileName);
 	void Destroy(GameObject* gameObject);
 };
+
+} // namespace GameEngine

@@ -15,4 +15,6 @@
 #include "BlockAllocator.h"
 #include "TypedAllocator.h"
 
+#include "HandlePool.h"
+
 #endif // #ifndef INCLUDED_CORE_H

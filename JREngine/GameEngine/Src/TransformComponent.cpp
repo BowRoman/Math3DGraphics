@@ -3,7 +3,10 @@
 
 #include "GameObject.h"
 
-const void TransformComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
+namespace GameEngine
+{
+
+void TransformComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
 {
 	auto newComponent = gameObj->AddComponent<TransformComponent>();
 	auto vec = node->FirstChildElement();
@@ -52,3 +55,5 @@ Math::Matrix4 TransformComponent::GetLocalToWorld() const
 		pos.x, pos.y, pos.z, 1.0f
 	);
 }
+
+} // namespace GameEngine

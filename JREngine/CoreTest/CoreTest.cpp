@@ -32,7 +32,7 @@ public:
 
 		pass |= PassEnum::two;
 		Assert::AreEqual((int)pass, (0x01 | 0x02 | 0x04));
-		FailEnum fail = FailEnum::zero | FailEnum::one;
+		//FailEnum fail = FailEnum::zero | FailEnum::one;
 	}
 
 	TEST_METHOD(TestAnd)

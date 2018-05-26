@@ -1,9 +1,16 @@
 #pragma once
 
+
+namespace GameEngine
+{
+
 class Component;
 class GameObject;
 
 using GameObjectAllocator = Core::TypedAllocator<GameObject>;
+using GameObjectHandlePool = Core::HandlePool<GameObject>;
+using GameObjectHandle = Core::Handle<GameObject>;
+
 
 class GameObject
 {
@@ -12,6 +19,7 @@ class GameObject
 
 	Components mComponents;
 	std::string mName;
+	GameObjectHandle mHandle;
 	World* mWorld;
 
 public:
@@ -27,6 +35,7 @@ public:
 
 	const char* GetName() const { return mName.c_str(); }
 	const World* GetWorld() const { return mWorld; }
+	GameObjectHandle GetHandle() const { return mHandle; }
 
 	template <class T>
 	typename std::enable_if<std::is_base_of<Component, T>::value, T*>::type
@@ -73,3 +82,5 @@ const T* GameObject::GetComponent() const
 	// if no such component exists, return nullptr
 	return nullptr;
 }
+
+} // namespace GameEngine

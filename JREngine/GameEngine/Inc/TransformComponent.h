@@ -2,6 +2,9 @@
 
 #include "Component.h"
 
+namespace GameEngine
+{
+
 class TransformComponent : public Component
 {
 	Math::Vector3 mPosition;
@@ -10,7 +13,7 @@ class TransformComponent : public Component
 public:
 	REGISTER_TYPE(TFMC); // (T)rans(f)or(m)(C)omponent
 
-	const static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
+	static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
 
 	TransformComponent();
 	~TransformComponent() override;
@@ -24,3 +27,5 @@ public:
 	const Math::Vector3& GetForward() const { return mForward; }
 
 };
+
+} // namespace GameEngine

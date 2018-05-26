@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Core\Inc\RTTI.h"
+#include <Core\Inc\RTTI.h>
+
+namespace GameEngine
+{
 
 class GameObject;
 
@@ -29,3 +32,5 @@ public:
 	const GameObject& GetOwner() const { return *mGameObject; }
 
 }; // class Component
+
+} // namespace GameEngine

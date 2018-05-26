@@ -3,6 +3,12 @@
 
 #include "Component.h"
 
+#include <Core\Inc\TypedAllocator.h>
+#include <Core\Inc\HandlePool.h>
+
+namespace GameEngine
+{
+
 GameObject::GameObject()
 {
 }
@@ -51,3 +57,5 @@ void GameObject::Render2D()
 		component->Render2D();
 	}
 }
+
+}// namespace GameEngine

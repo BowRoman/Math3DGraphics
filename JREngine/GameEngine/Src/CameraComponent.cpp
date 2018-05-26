@@ -3,7 +3,10 @@
 
 #include "GameObject.h"
 
-const void CameraComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
+namespace GameEngine
+{
+
+void CameraComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
 {
 	auto newComponent = gameObj->AddComponent<CameraComponent>();
 }
@@ -15,3 +18,5 @@ CameraComponent::CameraComponent()
 CameraComponent::~CameraComponent()
 {
 }
+
+} // namespace GameEngine

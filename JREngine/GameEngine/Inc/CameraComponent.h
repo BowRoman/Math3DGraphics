@@ -3,6 +3,9 @@
 #include "Component.h"
 #include "Graphics\Inc\Camera.h"
 
+namespace GameEngine
+{
+
 class CameraComponent : public Component
 {
 	Graphics::Camera mCamera;
@@ -10,7 +13,7 @@ class CameraComponent : public Component
 public:
 	REGISTER_TYPE(CAMC); // (Cam)era(C)omponent
 
-	const static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
+	static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
 
 	CameraComponent();
 	~CameraComponent() override;
@@ -19,3 +22,5 @@ public:
 	Graphics::Camera& GetCamera() { return mCamera; }
 
 };
+
+} // namespace GameEngine

@@ -2,6 +2,9 @@
 
 #include "Component.h"
 
+namespace GameEngine
+{
+
 class TransformComponent;
 
 class AABoxColliderComponent : public Component
@@ -14,7 +17,7 @@ class AABoxColliderComponent : public Component
 public:
 	REGISTER_TYPE(ABCC); // (A)ABB(B)ox(C)ollider(Component)
 
-	const static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
+	static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
 
 	AABoxColliderComponent();
 	~AABoxColliderComponent() override;
@@ -36,3 +39,5 @@ static bool CheckCollision(AABoxColliderComponent& boxA, AABoxColliderComponent&
 {
 	return boxA.CheckCollision(boxB);
 }
+
+} // namespace GameEngine

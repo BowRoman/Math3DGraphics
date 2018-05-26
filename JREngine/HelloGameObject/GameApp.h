@@ -5,6 +5,7 @@
 #include <Core\Inc\Core.h>
 #include <Graphics\Inc\Graphics.h>
 #include <Input\Inc\Input.h>
+#include <GameEngine\Inc\GameEngine.h>
 
 class GameApp : public Core::Application
 {
@@ -25,15 +26,7 @@ private:
 	Core::Window mWindow;
 	Core::Timer mTimer;
 
-	Graphics::Camera mCamera;
-	Graphics::Transform mCameraTransform;
-
-	Graphics::TypedConstantBuffer<ConstantData> mConstantBuffer;
-	Graphics::PixelShader mPixelShader;
-	Graphics::VertexShader mVertexShader;
-
-	Graphics::MeshBuffer mMeshBuffer;
-	Math::Vector3 mRotation;
+	GameEngine::World mWorld;
 };
 
 #endif // #ifndef INCLUDED_GAMEAPP_H

@@ -123,7 +123,7 @@ Handle<DataType> HandlePool<DataType>::Register(DataType* instance)
 	ASSERT(!mFreeSlots.empty(), "[HandlePool] Pool is full.");
 
 	// find free slot
-	uin32_t slot = mFreeSlots.back();
+	uint32_t slot = mFreeSlots.back();
 	mFreeSlots.pop_back();
 
 	// register instance

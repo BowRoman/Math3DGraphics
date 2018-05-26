@@ -8,7 +8,10 @@
 
 using namespace Graphics;
 
-const void AABoxColliderComponent::CreateFunc(GameObject* gameObj, const TiXmlNode * node)
+namespace GameEngine
+{
+
+void AABoxColliderComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
 {
 	auto newComponent = gameObj->AddComponent<AABoxColliderComponent>();
 	auto vec = node->FirstChildElement();
@@ -90,3 +93,5 @@ Math::AABB AABoxColliderComponent::GetAABB() const
 	Math::Vector3 pos = mTransformComponent->GetPosition();
 	return Math::AABB(mCenter + pos, mExtend);
 }
+
+} // namespace GameEngine

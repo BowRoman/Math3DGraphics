@@ -5,10 +5,14 @@
 #include "CameraComponent.h"
 #include "TransformComponent.h"
 
+namespace GameEngine
+{
+
 void World::Initialize(uint32_t capacity)
 {
 	mGameObjectAllocator = std::make_unique<GameObjectAllocator>(capacity);
 	mGameObjectFactory = std::make_unique<GameObjectFactory>(*mGameObjectAllocator);
+	mGameObjectHandlePool = std::make_unique<GameObjectHandlePool>(capacity);
 	mUpdateList.reserve(capacity);
 	mDestroyList.reserve(capacity);
 	mGameObjectFactory->Register("CameraComponent", CameraComponent::CreateFunc);
@@ -27,7 +31,7 @@ void World::Terminate()
 
 	mGameObjectAllocator.reset();
 	mGameObjectFactory.reset();
-
+	mGameObjectHandlePool.reset();
 }
 
 void World::LoadLevel(const char* levelFileName)
@@ -75,46 +79,62 @@ void World::LoadLevel(const char* levelFileName)
 	}
 }
 
-GameObject* World::Create(const char* templateFileName, const char* name)
+GameObjectHandle World::Create(const char* templateFileName, const char* name)
 {
 	// TODO: Integrate name into creation and find
 	GameObject* object = mGameObjectFactory->Create(templateFileName);
 	ASSERT(object, "[World] Failed to create GameObject.");
 
+	auto handle = mGameObjectHandlePool->Register(object);
+
 	object->mWorld = this;
 	object->mName = std::string(name);
+	object->mHandle = handle;
 	object->Initialize();
 
 	mUpdateList.push_back(object);
 
-	return object;
+	return handle;
 }
 
-GameObject* World::Find(const char* name)
+GameObjectHandle World::Find(const char* name)
 {
 	for (auto obj : mUpdateList)
 	{
 		if (obj->GetName() == std::string(name))
 		{
-			return obj;
+			return obj->GetHandle();
 		}
 	}
-	return nullptr;
+	return GameObjectHandle();
 }
 
-void World::Destroy(GameObject* gameObj)
+void World::Destroy(GameObjectHandle handle)
 {
-	if (gameObj == nullptr)
+	if (!handle.IsValid())
 	{
 		return;
 	}
+
+	// mark object and free handle
+	mGameObjectHandlePool->Unregister(handle);
+
+	GameObject* obj = handle.Get();
 	if (!bUpdating)
 	{
-		DestroyInternal(gameObj);
+		DestroyInternal(obj);
 	}
 	else
 	{
-		mDestroyList.push_back(gameObj);
+		mDestroyList.push_back(obj);
+	}
+}
+
+void World::Visit(Visitor & visitor)
+{
+	for (auto gameObj : mUpdateList)
+	{
+		visitor(gameObj);
 	}
 }
 
@@ -127,7 +147,11 @@ void World::Update(float deltaTime)
 	for (size_t i = 0; i < mUpdateList.size(); ++i)
 	{
 		GameObject* gameObj = mUpdateList[i];
-		gameObj->Update(deltaTime);
+		// object may have been deleted
+		if (gameObj->GetHandle().IsValid())
+		{
+			gameObj->Update(deltaTime);
+		}
 	}
 
 	bUpdating = false;
@@ -179,3 +203,5 @@ void World::PruneDestroyed()
 	}
 	mDestroyList.clear();
 }
+
+} // namespace GameEngine

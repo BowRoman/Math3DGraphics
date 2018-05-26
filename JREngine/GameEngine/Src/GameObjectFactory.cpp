@@ -2,7 +2,11 @@
 #include "GameObjectFactory.h"
 
 #include "AABoxColliderComponent.h"
+#include "CameraComponent.h"
 #include "TransformComponent.h"
+
+namespace GameEngine
+{
 
 GameObjectFactory::GameObjectFactory(GameObjectAllocator& allocator)
 	: mGameObjectAllocator(allocator)
@@ -54,3 +58,5 @@ void GameObjectFactory::Destroy(GameObject* gameObject)
 {
 	mGameObjectAllocator.Delete(gameObject);
 }
+
+} // namespace GameEngine
