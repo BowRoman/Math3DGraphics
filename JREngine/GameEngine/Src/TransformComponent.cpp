@@ -17,15 +17,15 @@ void TransformComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
 		float y = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
 		float z = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
 
-		if (std::strcmp(vec->FirstAttribute()->Value(), "Position"))
+		if (std::strcmp(vec->FirstAttribute()->Name(), "Position"))
 		{
 			newComponent->SetPosition({ x,y,z });
 		}
-		if (std::strcmp(vec->FirstAttribute()->Value(), "Forward"))
+		if (std::strcmp(vec->FirstAttribute()->Name(), "Forward"))
 		{
 			newComponent->SetForward({ x,y,z });
 		}
-		vec->NextSiblingElement();
+		vec = vec->NextSiblingElement();
 	}
 }
 

@@ -8,6 +8,14 @@
 namespace GameEngine
 {
 
+World::World()
+{
+}
+
+World::~World()
+{
+}
+
 void World::Initialize(uint32_t capacity)
 {
 	mGameObjectAllocator = std::make_unique<GameObjectAllocator>(capacity);
@@ -16,7 +24,7 @@ void World::Initialize(uint32_t capacity)
 	mUpdateList.reserve(capacity);
 	mDestroyList.reserve(capacity);
 	mGameObjectFactory->Register("CameraComponent", CameraComponent::CreateFunc);
-	mGameObjectFactory->Register("AABoxColliderComponent", AABoxColliderComponent::CreateFunc);
+	mGameObjectFactory->Register("ColliderComponent", AABoxColliderComponent::CreateFunc);
 	mGameObjectFactory->Register("TransformComponent", TransformComponent::CreateFunc);
 }
 
@@ -24,10 +32,15 @@ void World::Terminate()
 {
 	ASSERT(!bUpdating, "[World] Cannot be terminating during update.");
 
-	mDestroyList.insert(std::end(mDestroyList), std::begin(mUpdateList), std::end(mUpdateList));
+	bUpdating = true;
+	for (auto obj : mUpdateList)
+	{
+		Destroy(obj->GetHandle());
+	}
+	bUpdating = false;
 	
-	mUpdateList.clear();
 	PruneDestroyed();
+	mUpdateList.clear();
 
 	mGameObjectAllocator.reset();
 	mGameObjectFactory.reset();
@@ -48,33 +61,36 @@ void World::LoadLevel(const char* levelFileName)
 		TiXmlHandle handleRoot = TiXmlHandle(element);
 
 		// load all files
-		element = handleRoot.FirstChild("GameObject").FirstChild().Element();
+		element = handleRoot.FirstChild("GameObject").Element();
 		while (element)
 		{
 			TiXmlNode* name = element->FirstChild();
 			TiXmlNode* fileNode = name->NextSibling();
-			auto obj = Create(fileNode->Value(), name->Value());
+			auto obj = Create(fileNode->FirstChild()->Value(), name->FirstChild()->Value());
 
-			const TiXmlNode* positionNode = fileNode->NextSibling();
-			if (positionNode)
+			const auto* overrideNode = fileNode->NextSibling();
+			if (overrideNode)
 			{
-				auto transformComp = obj->GetComponent<TransformComponent>();
-				if (transformComp)
+				if (std::strcmp(overrideNode->FirstChildElement()->FirstAttribute()->Name(), "Position"))
 				{
-					auto xNode = positionNode->FirstChild()->FirstChild();
-					float x = static_cast<float>(std::atof(positionNode->Value()));
+					auto transformComp = obj->GetComponent<TransformComponent>();
+					if (transformComp)
+					{
+						auto xNode = overrideNode->FirstChild();
+						float x = static_cast<float>(std::atof(xNode->FirstChild()->Value()));
 
-					auto yNode = xNode->NextSiblingElement()->FirstChild();
-					float y = static_cast<float>(std::atof(yNode->Value()));
+						auto yNode = xNode->NextSiblingElement();
+						float y = static_cast<float>(std::atof(yNode->FirstChild()->Value()));
 
-					auto zNode = yNode->NextSiblingElement()->FirstChild();
-					float z = static_cast<float>(std::atof(zNode->Value()));
-					transformComp->SetPosition({ x,y,z });
+						auto zNode = yNode->NextSiblingElement();
+						float z = static_cast<float>(std::atof(zNode->FirstChild()->Value()));
+						transformComp->SetPosition({ x,y,z });
+					}
 				}
 			}
 			// TODO: Override data for each component
 
-			element->NextSiblingElement();
+			element = element->NextSiblingElement();
 		}
 	}
 }
@@ -116,10 +132,11 @@ void World::Destroy(GameObjectHandle handle)
 		return;
 	}
 
+	GameObject* obj = handle.Get();
+
 	// mark object and free handle
 	mGameObjectHandlePool->Unregister(handle);
 
-	GameObject* obj = handle.Get();
 	if (!bUpdating)
 	{
 		DestroyInternal(obj);

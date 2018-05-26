@@ -13,7 +13,7 @@ public:
 	void Apply(ParticleVec& particles);
 	void Apply(Particle* particles);
 private:
-	friend class World;
+	friend class PhysicsWorld;
 
 	Math::Plane mPlane;
 	float mRestitution;

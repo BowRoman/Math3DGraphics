@@ -17,7 +17,7 @@ private:
 	void SetMaxExtend();
 
 private:
-	friend class World;
+	friend class PhysicsWorld;
 
 	Math::OBB mOBB;
 	float mMaxExtend;

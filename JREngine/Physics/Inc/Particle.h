@@ -6,7 +6,7 @@ namespace Physics
 
 class Particle
 {
-	friend class World;
+	friend class PhysicsWorld;
 	friend class Spring;
 	friend class Fixed;
 	friend class PhysicsOBB;

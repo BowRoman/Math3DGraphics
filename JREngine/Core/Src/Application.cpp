@@ -6,7 +6,7 @@ using namespace Core;
 
 
 Core::Application::Application()
-	:mInstance(nullptr)
+	: mInstance(nullptr)
 	, mWindow(nullptr)
 	, mRunning(true)
 {

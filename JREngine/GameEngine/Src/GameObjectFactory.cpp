@@ -23,6 +23,11 @@ GameObject* GameObjectFactory::Create(const char* templateFileName)
 {
 	GameObject* gameObject = mGameObjectAllocator.New();
 
+	if (gameObject == nullptr)
+	{
+		return nullptr;
+	}
+
 	TiXmlDocument doc(templateFileName);
 	if (!doc.LoadFile())
 	{
@@ -48,7 +53,7 @@ GameObject* GameObjectFactory::Create(const char* templateFileName)
 		const char *ComponentType = element->Value();
 
 		mCreateFuncMap[std::string(ComponentType)](gameObject, element);
-		element->NextSiblingElement();
+		element = element->NextSiblingElement();
 	}
 
 	return gameObject;

@@ -25,5 +25,5 @@ private:
 	Graphics::Camera mCamera;
 	Graphics::Transform mCameraTransform;
 
-	Physics::World mPhysicsWorld;
+	Physics::PhysicsWorld mPhysicsWorld;
 };

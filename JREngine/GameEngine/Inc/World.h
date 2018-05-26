@@ -19,6 +19,7 @@ class World
 
 public:
 	using Visitor = std::function<void(GameObject*)>;
+
 	World();
 	~World();
 

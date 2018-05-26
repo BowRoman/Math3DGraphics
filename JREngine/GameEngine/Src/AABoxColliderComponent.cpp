@@ -22,21 +22,21 @@ void AABoxColliderComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* no
 		float y = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
 		float z = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
 
-		if (std::strcmp(vec->FirstAttribute()->Value(), "Center"))
+		if (std::strcmp(vec->FirstAttribute()->Name(), "Center"))
 		{
 			newComponent->SetCenter({ x,y,z });
 		}
-		if (std::strcmp(vec->FirstAttribute()->Value(), "Extend"))
+		if (std::strcmp(vec->FirstAttribute()->Name(), "Extend"))
 		{
 			newComponent->SetExtend({ x,y,z });
 		}
-		if (std::strcmp(vec->FirstAttribute()->Value(), "Color"))
+		if (std::strcmp(vec->FirstAttribute()->Name(), "Color"))
 		{
 			float a = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
 			newComponent->SetColor({ x,y,z,a });
 		}
 
-		vec->NextSiblingElement();
+		vec = vec->NextSiblingElement();
 	}
 }
 

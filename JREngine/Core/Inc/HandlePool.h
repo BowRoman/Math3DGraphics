@@ -26,7 +26,7 @@ public:
 	DataType* operator->() const;
 
 	bool operator==(Handle rhs) const { return mIndex == rhs.mIndex && mGeneration == rhs.mGeneration; }
-	bool operator!=(Handle rhs) const { return (*this != rhs); }
+	bool operator!=(Handle rhs) const { return !(*this == rhs); }
 };
 
 template<class DataType>
@@ -95,9 +95,9 @@ HandlePool<DataType>::HandlePool(uint32_t capacity)
 	ASSERT(capacity > 0, "[HandlePool] Invalid capacity.");
 
 	mEntries.resize(capacity + 1);
-	mFreeSlots.resize(capacity + 1);
+	mFreeSlots.reserve(capacity + 1);
 
-	for (size_t i = capacity; i > 0; --i)
+	for (size_t i = capacity + 1; i > 0; --i)
 	{
 		mFreeSlots.push_back(i);
 	}
@@ -110,7 +110,7 @@ HandlePool<DataType>::HandlePool(uint32_t capacity)
 template<class DataType>
 HandlePool<DataType>::~HandlePool()
 {
-	ASSERT(mFreeSlots.size() == mFreeSlots.capacity(), "[HandlePool] Pool cannot be destructed with registered slots.");
+	ASSERT(mFreeSlots.size() >= mFreeSlots.capacity(), "[HandlePool] Pool cannot be destructed with registered slots.");
 
 	ASSERT(HandleType::sPool == this, "[HandlePool] Pool cannot be destructed, something went wrong.");
 	HandleType::sPool = nullptr;
