@@ -15,7 +15,7 @@ class AABoxColliderComponent : public Component
 	Math::Vector4 mColor;
 
 public:
-	REGISTER_TYPE(ABCC); // (A)ABB(B)ox(C)ollider(Component)
+	REGISTER_TYPE(ABCC); // (A)ABB(B)ox(C)ollider(C)omponent
 
 	static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
 

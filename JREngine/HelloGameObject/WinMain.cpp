@@ -3,7 +3,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	GameApp myApp;
-	myApp.Initialize(hInstance, "Hello Cube.", 1024, 768);
+	myApp.Initialize(hInstance, "Hello Game Object.", 1024, 768);
 
 	while (myApp.IsRunning())
 	{

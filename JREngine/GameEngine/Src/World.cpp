@@ -3,6 +3,7 @@
 
 #include "AABoxColliderComponent.h"
 #include "CameraComponent.h"
+#include "FPControllerComponent.h"
 #include "TransformComponent.h"
 
 namespace GameEngine
@@ -21,10 +22,13 @@ void World::Initialize(uint32_t capacity)
 	mGameObjectAllocator = std::make_unique<GameObjectAllocator>(capacity);
 	mGameObjectFactory = std::make_unique<GameObjectFactory>(*mGameObjectAllocator);
 	mGameObjectHandlePool = std::make_unique<GameObjectHandlePool>(capacity);
+
 	mUpdateList.reserve(capacity);
 	mDestroyList.reserve(capacity);
+
 	mGameObjectFactory->Register("CameraComponent", CameraComponent::CreateFunc);
 	mGameObjectFactory->Register("ColliderComponent", AABoxColliderComponent::CreateFunc);
+	mGameObjectFactory->Register("FPControllerComponent",FPControllerComponent::CreateFunc);
 	mGameObjectFactory->Register("TransformComponent", TransformComponent::CreateFunc);
 }
 
@@ -97,7 +101,6 @@ void World::LoadLevel(const char* levelFileName)
 
 GameObjectHandle World::Create(const char* templateFileName, const char* name)
 {
-	// TODO: Integrate name into creation and find
 	GameObject* object = mGameObjectFactory->Create(templateFileName);
 	ASSERT(object, "[World] Failed to create GameObject.");
 
@@ -178,10 +181,40 @@ void World::Update(float deltaTime)
 
 void World::Render()
 {
-	for (auto obj : mUpdateList)
+	Graphics::GraphicsSystem::Get()->BeginRender();
+
+	auto camera = Find("FPSCamera").Get();
+	if (camera)
 	{
-		obj->Render();
+		auto rawcamera = camera->GetComponent<GameEngine::CameraComponent>()->GetCamera();
+		auto cameraTrans = rawcamera.mTransform;
+
+		Math::Matrix4 viewMatrix = rawcamera.GetViewMatrix(cameraTrans);
+		Math::Matrix4 projectionMatrix = rawcamera.GetProjectionMatrix(Graphics::GraphicsSystem::Get()->GetAspectRatio());
+
+		for (auto obj : mUpdateList)
+		{
+			obj->Render();
+		}
+
+		for (int i = 0; i < 100; ++i)
+		{
+			Math::Vector3 p0(-50.0f, -0.1f, -50.0f + i);
+			Math::Vector3 p1(+50.0f, -0.1f, -50.0f + i);
+			Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Gray());
+		}
+		for (int i = 0; i < 100; ++i)
+		{
+			Math::Vector3 p0(-50.0f + i, -0.1f, -50.0f);
+			Math::Vector3 p1(-50.0f + i, -0.1f, +50.0f);
+			Graphics::SimpleDraw::DrawLine(p0, p1, Math::Vector4::Gray());
+		}
+
+		Graphics::SimpleDraw::Flush(viewMatrix * projectionMatrix);
 	}
+
+	Graphics::GraphicsSystem::Get()->EndRender();
+
 }
 
 void World::Render2D()

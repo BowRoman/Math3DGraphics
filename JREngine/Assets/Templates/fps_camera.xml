@@ -1,5 +1,9 @@
 <GameObject>
   <Components>
+    <CameraComponent>
+    </CameraComponent>
+    <FPControllerComponent>
+    </FPControllerComponent>
     <TransformComponent>
       <Vector3 name="Position">
         <Float name="x">5</Float>

@@ -46,6 +46,7 @@
     <ClInclude Include="Inc\CameraComponent.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Component.h" />
+    <ClInclude Include="Inc\FPControllerComponent.h" />
     <ClInclude Include="Inc\GameEngine.h" />
     <ClInclude Include="Inc\GameObject.h" />
     <ClInclude Include="Inc\GameObjectFactory.h" />
@@ -57,6 +58,7 @@
     <ClCompile Include="Src\AABoxColliderComponent.cpp" />
     <ClCompile Include="Src\CameraComponent.cpp" />
     <ClCompile Include="Src\Component.cpp" />
+    <ClCompile Include="Src\FPControllerComponent.cpp" />
     <ClCompile Include="Src\GameObject.cpp" />
     <ClCompile Include="Src\GameObjectFactory.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">

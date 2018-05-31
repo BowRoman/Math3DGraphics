@@ -14,13 +14,20 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 
 	mTimer.Initialize();
 
+	Graphics::GraphicsSystem::StaticInitialize(mWindow.GetWindowHandle(), false);
+	Graphics::SimpleDraw::StaticInitialize(1000u);
+
 	mWorld.Initialize(1000u);
 	mWorld.LoadLevel("../Assets/Templates/test_level.xml");
+
 }
 
 void GameApp::OnTerminate()
 {
 	mWorld.Terminate();
+
+	Graphics::SimpleDraw::StaticTerminate();
+	Graphics::GraphicsSystem::StaticTerminate();
 
 	Input::InputSystem::StaticTerminate();
 	UnhookWindow();
@@ -43,4 +50,7 @@ void GameApp::OnUpdate()
 	{
 		Kill();
 	}
+
+	mWorld.Update(dTime);
+	mWorld.Render();
 }

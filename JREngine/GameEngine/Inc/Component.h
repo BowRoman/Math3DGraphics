@@ -9,6 +9,7 @@ class GameObject;
 
 class Component
 {
+protected:
 	friend class GameObject;
 	GameObject* mGameObject;
 

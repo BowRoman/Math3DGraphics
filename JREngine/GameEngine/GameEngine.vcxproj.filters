@@ -45,6 +45,9 @@
     <ClInclude Include="Inc\World.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\FPControllerComponent.h">
+      <Filter>Inc\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GameObject.cpp">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="Src\World.cpp">
       <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\FPControllerComponent.cpp">
+      <Filter>Src\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

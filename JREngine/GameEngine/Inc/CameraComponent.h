@@ -8,6 +8,16 @@ namespace GameEngine
 
 class CameraComponent : public Component
 {
+	struct ConstantData
+	{
+		Math::Matrix4 wvp;
+	};
+
+	Graphics::TypedConstantBuffer<ConstantData> mConstantBuffer;
+	Graphics::PixelShader mPixelShader;
+	Graphics::VertexShader mVertexShader;
+	Graphics::MeshBuffer mMeshBuffer;
+
 	Graphics::Camera mCamera;
 
 public:
@@ -17,6 +27,8 @@ public:
 
 	CameraComponent();
 	~CameraComponent() override;
+
+	void Update(float dTime) override;
 
 	const Graphics::Camera& GetCamera() const { return mCamera; }
 	Graphics::Camera& GetCamera() { return mCamera; }

@@ -50,7 +50,7 @@ public:
 
 	void DrawAABB(const Math::AABB& aabb, const Math::Vector4& color)
 	{
-		// TODO: implement AABB simpledraw
+		// TODO: fix AABB simpledraw
 		/*
 			   4------5
 			  /|     /|
