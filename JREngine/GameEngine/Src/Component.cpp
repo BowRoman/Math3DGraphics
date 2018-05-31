@@ -4,13 +4,4 @@
 namespace GameEngine
 {
 
-Component::Component()
-	: mGameObject{ nullptr }
-{
-}
-
-Component::~Component()
-{
-}
-
 } // namespace GameEngine

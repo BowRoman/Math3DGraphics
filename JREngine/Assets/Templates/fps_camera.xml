@@ -4,12 +4,5 @@
     </CameraComponent>
     <FPControllerComponent>
     </FPControllerComponent>
-    <TransformComponent>
-      <Vector3 name="Position">
-        <Float name="x">5</Float>
-        <Float name="y">0</Float>
-        <Float name="z">0</Float>
-      </Vector3>
-    </TransformComponent>
   </Components>
 </GameObject>

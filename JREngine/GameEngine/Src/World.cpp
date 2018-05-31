@@ -17,7 +17,7 @@ World::~World()
 {
 }
 
-void World::Initialize(uint32_t capacity)
+void World::Initialize(uint32_t capacity, OnRegisterComponent registerComponentCB)
 {
 	mGameObjectAllocator = std::make_unique<GameObjectAllocator>(capacity);
 	mGameObjectFactory = std::make_unique<GameObjectFactory>(*mGameObjectAllocator);
@@ -75,20 +75,39 @@ void World::LoadLevel(const char* levelFileName)
 			const auto* overrideNode = fileNode->NextSibling();
 			if (overrideNode)
 			{
-				if (std::strcmp(overrideNode->FirstChildElement()->FirstAttribute()->Value(), "Position") == 0)
+				if (std::strcmp(overrideNode->ToElement()->FirstAttribute()->Value(), "Position") == 0)
 				{
-					auto transformComp = obj->GetComponent<TransformComponent>();
-					if (transformComp)
+					if (std::strcmp(name->FirstChild()->Value(), "FPSCamera") == 0)
 					{
-						auto xNode = overrideNode->FirstChild();
-						float x = static_cast<float>(std::atof(xNode->FirstChild()->Value()));
+						auto* cameraComp = obj->GetComponent<CameraComponent>();
+						if (cameraComp)
+						{
+							auto xNode = overrideNode->FirstChild();
+							float x = static_cast<float>(std::atof(xNode->FirstChild()->Value()));
 
-						auto yNode = xNode->NextSiblingElement();
-						float y = static_cast<float>(std::atof(yNode->FirstChild()->Value()));
+							auto yNode = xNode->NextSiblingElement();
+							float y = static_cast<float>(std::atof(yNode->FirstChild()->Value()));
 
-						auto zNode = yNode->NextSiblingElement();
-						float z = static_cast<float>(std::atof(zNode->FirstChild()->Value()));
-						transformComp->SetPosition({ x,y,z });
+							auto zNode = yNode->NextSiblingElement();
+							float z = static_cast<float>(std::atof(zNode->FirstChild()->Value()));
+							cameraComp->GetCamera().mTransform.SetPosition({ x,y,z });
+						}
+					}
+					else
+					{
+						TransformComponent* transformComp = obj->GetComponent<TransformComponent>();
+						if (transformComp)
+						{
+							auto xNode = overrideNode->FirstChild();
+							float x = static_cast<float>(std::atof(xNode->FirstChild()->Value()));
+
+							auto yNode = xNode->NextSiblingElement();
+							float y = static_cast<float>(std::atof(yNode->FirstChild()->Value()));
+
+							auto zNode = yNode->NextSiblingElement();
+							float z = static_cast<float>(std::atof(zNode->FirstChild()->Value()));
+							transformComp->SetPosition({ x,y,z });
+						}
 					}
 				}
 			}
@@ -173,6 +192,11 @@ void World::Update(float deltaTime)
 			gameObj->Update(deltaTime);
 		}
 	}
+	auto numServices = mServices.size();
+	for (size_t i = 0; i < numServices; ++i)
+	{
+		mServices[i].get()->Update(deltaTime);
+	}
 
 	bUpdating = false;
 
@@ -195,6 +219,12 @@ void World::Render()
 		for (auto obj : mUpdateList)
 		{
 			obj->Render();
+		}
+
+		auto numServices = mServices.size();
+		for (size_t i = 0; i < numServices; ++i)
+		{
+			mServices[i].get()->Render();
 		}
 
 		for (int i = 0; i < 100; ++i)
@@ -222,6 +252,11 @@ void World::Render2D()
 	for (auto obj : mUpdateList)
 	{
 		obj->Render2D();
+	}
+	auto numServices = mServices.size();
+	for (size_t i = 0; i < numServices; ++i)
+	{
+		mServices[i].get()->Render2D();
 	}
 }
 

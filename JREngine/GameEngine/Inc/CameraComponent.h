@@ -28,8 +28,6 @@ public:
 	CameraComponent();
 	~CameraComponent() override;
 
-	void Update(float dTime) override;
-
 	const Graphics::Camera& GetCamera() const { return mCamera; }
 	Graphics::Camera& GetCamera() { return mCamera; }
 

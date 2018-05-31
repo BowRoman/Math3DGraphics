@@ -12,7 +12,7 @@ class FPControllerComponent : public Component
 	float mTurnSpeed;
 
 public:
-	REGISTER_TYPE(FPCC);
+	REGISTER_TYPE(FPCC); // (FPC)ontroller(C)omponent
 
 	static void CreateFunc(GameObject* gameObj, const TiXmlNode* node);
 

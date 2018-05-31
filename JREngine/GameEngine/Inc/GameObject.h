@@ -20,6 +20,7 @@ class GameObject
 	Components mComponents;
 	std::string mName;
 	GameObjectHandle mHandle;
+
 	World* mWorld;
 
 public:

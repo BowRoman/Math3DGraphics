@@ -4,7 +4,7 @@
     <Template>../Assets/Templates/fps_camera.xml</Template>
     <Vector3 name="Position">
       <Float name="x">7</Float>
-      <Float name="y">1</Float>
+      <Float name="y">3</Float>
       <Float name="z">6</Float>
     </Vector3>
   </GameObject>

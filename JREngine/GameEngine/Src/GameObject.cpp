@@ -15,7 +15,6 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
-	mComponents.clear();
 }
 
 void GameObject::Initialize()
@@ -32,6 +31,7 @@ void GameObject::Terminate()
 	{
 		component->Terminate();
 	}
+	mComponents.clear();
 }
 
 void GameObject::Update(float dTime)

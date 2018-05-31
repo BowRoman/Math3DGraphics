@@ -16,8 +16,8 @@ protected:
 public:
 	REGISTER_TYPE(BSEC) // (B)a(seC)omponent
 
-	Component();
-	virtual ~Component();
+	Component() : mGameObject{ nullptr } {}
+	virtual ~Component() {}
 
 	Component(const Component&) = delete;
 	Component& operator=(const Component&) = delete;
