@@ -10,6 +10,7 @@ void CameraComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
 {
 	auto newComponent = gameObj->AddComponent<CameraComponent>();
 	newComponent->mCamera.mTransform.SetDirection({ 0.0f, 0.0f, 1.0f });
+	// TODO: Add proper loading for CameraComponent
 }
 
 CameraComponent::CameraComponent()

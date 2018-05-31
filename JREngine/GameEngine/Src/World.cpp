@@ -75,7 +75,7 @@ void World::LoadLevel(const char* levelFileName)
 			const auto* overrideNode = fileNode->NextSibling();
 			if (overrideNode)
 			{
-				if (std::strcmp(overrideNode->FirstChildElement()->FirstAttribute()->Name(), "Position"))
+				if (std::strcmp(overrideNode->FirstChildElement()->FirstAttribute()->Value(), "Position") == 0)
 				{
 					auto transformComp = obj->GetComponent<TransformComponent>();
 					if (transformComp)

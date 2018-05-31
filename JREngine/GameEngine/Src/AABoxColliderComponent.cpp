@@ -13,29 +13,35 @@ namespace GameEngine
 
 void AABoxColliderComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
 {
-	auto newComponent = gameObj->AddComponent<AABoxColliderComponent>();
+	AABoxColliderComponent* newComponent = gameObj->AddComponent<AABoxColliderComponent>();
 	auto vec = node->FirstChildElement();
 	while (vec)
 	{
+		// get dimensions
 		auto dim = vec->FirstChildElement();
 		float x = static_cast<float>(std::atof(dim->GetText()));
-		float y = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
-		float z = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+		dim = dim->NextSiblingElement();
+		float y = static_cast<float>(std::atof(dim->GetText()));
+		dim = dim->NextSiblingElement();
+		float z = static_cast<float>(std::atof(dim->GetText()));
 
-		if (std::strcmp(vec->FirstAttribute()->Name(), "Center"))
+		// set dimensions of desired vector
+		if (std::strcmp(vec->FirstAttribute()->Value(), "Center") == 0)
 		{
 			newComponent->SetCenter({ x,y,z });
 		}
-		if (std::strcmp(vec->FirstAttribute()->Name(), "Extend"))
+		else if (std::strcmp(vec->FirstAttribute()->Value(), "Extend") == 0)
 		{
 			newComponent->SetExtend({ x,y,z });
 		}
-		if (std::strcmp(vec->FirstAttribute()->Name(), "Color"))
+		else if (std::strcmp(vec->FirstAttribute()->Value(), "Color") == 0)
 		{
-			float a = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+			dim = dim->NextSiblingElement();
+			float a = static_cast<float>(std::atof(dim->GetText()));
 			newComponent->SetColor({ x,y,z,a });
 		}
 
+		// move to next vector
 		vec = vec->NextSiblingElement();
 	}
 }
@@ -43,7 +49,7 @@ void AABoxColliderComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* no
 AABoxColliderComponent::AABoxColliderComponent()
 	: mTransformComponent(nullptr)
 	, mCenter(Math::Vector3::Zero())
-	, mExtend(Math::Vector3::One())
+	, mExtend({1.0f,1.0f,1.0f})
 	, mColor(Math::Vector4::Green())
 {
 }

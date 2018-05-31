@@ -9,7 +9,8 @@
 
 using namespace Graphics;
 
-namespace {
+namespace
+{
 
 class SimpleDrawImpl
 {
@@ -60,14 +61,14 @@ public:
 			2------3
 		*/
 		Math::Vector3 pos[8];
-		pos[2] = aabb.center - aabb.extend;
-		pos[3] = pos[2] + (Math::Vector3::XAxis() * aabb.extend.x * 2);
-		pos[0] = pos[2] + (Math::Vector3::YAxis() * aabb.extend.y * 2);
-		pos[1] = pos[0] + (Math::Vector3::XAxis() * aabb.extend.x * 2);
-		pos[5] = aabb.center + aabb.extend;
-		pos[4] = pos[5] - (Math::Vector3::XAxis() * aabb.extend.x * 2);
-		pos[7] = pos[5] - (Math::Vector3::YAxis() * aabb.extend.y * 2);
-		pos[6] = pos[7] - (Math::Vector3::XAxis() * aabb.extend.x * 2);
+		pos[2] = (aabb.center - aabb.extend);
+		pos[3] = (pos[2] + (Math::Vector3::XAxis() * aabb.extend.x * 2));
+		pos[0] = (pos[2] + (Math::Vector3::YAxis() * aabb.extend.y * 2));
+		pos[1] = (pos[0] + (Math::Vector3::XAxis() * aabb.extend.x * 2));
+		pos[5] = (aabb.center + aabb.extend);
+		pos[4] = (pos[5] - (Math::Vector3::XAxis() * aabb.extend.x * 2));
+		pos[7] = (pos[5] - (Math::Vector3::YAxis() * aabb.extend.y * 2));
+		pos[6] = (pos[7] - (Math::Vector3::XAxis() * aabb.extend.x * 2));
 
 		DrawLine(pos[0], pos[1], color);
 		DrawLine(pos[0], pos[2], color);

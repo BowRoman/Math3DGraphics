@@ -10,21 +10,28 @@ void TransformComponent::CreateFunc(GameObject* gameObj, const TiXmlNode* node)
 {
 	auto newComponent = gameObj->AddComponent<TransformComponent>();
 	auto vec = node->FirstChildElement();
+
 	while (vec)
 	{
+		// get each dimension
 		auto dim = vec->FirstChildElement();
 		float x = static_cast<float>(std::atof(dim->GetText()));
-		float y = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
-		float z = static_cast<float>(std::atof(dim->NextSiblingElement()->GetText()));
+		dim = dim->NextSiblingElement();
+		float y = static_cast<float>(std::atof(dim->GetText()));
+		dim = dim->NextSiblingElement();
+		float z = static_cast<float>(std::atof(dim->GetText()));
 
-		if (std::strcmp(vec->FirstAttribute()->Name(), "Position"))
+		// set dimension
+		if (std::strcmp(vec->FirstAttribute()->Value(), "Position") == 0)
 		{
 			newComponent->SetPosition({ x,y,z });
 		}
-		if (std::strcmp(vec->FirstAttribute()->Name(), "Forward"))
+		else if (std::strcmp(vec->FirstAttribute()->Value(), "Forward") == 0)
 		{
 			newComponent->SetForward({ x,y,z });
 		}
+
+		// move to next vector
 		vec = vec->NextSiblingElement();
 	}
 }
