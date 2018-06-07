@@ -1,6 +1,7 @@
 #include "Precompiled.h"
 #include "World.h"
 
+#include "CollisionService.h"
 #include "AABoxColliderComponent.h"
 #include "CameraComponent.h"
 #include "FPControllerComponent.h"
@@ -26,6 +27,8 @@ void World::Initialize(uint32_t capacity, OnRegisterComponent registerComponentC
 	mUpdateList.reserve(capacity);
 	mDestroyList.reserve(capacity);
 
+	registerComponentCB();
+	AddService<CollisionService>();
 	mGameObjectFactory->Register("CameraComponent", CameraComponent::CreateFunc);
 	mGameObjectFactory->Register("ColliderComponent", AABoxColliderComponent::CreateFunc);
 	mGameObjectFactory->Register("FPControllerComponent",FPControllerComponent::CreateFunc);
@@ -169,7 +172,7 @@ void World::Destroy(GameObjectHandle handle)
 	}
 }
 
-void World::Visit(Visitor & visitor)
+void World::Visit(Visitor& visitor)
 {
 	for (auto gameObj : mUpdateList)
 	{

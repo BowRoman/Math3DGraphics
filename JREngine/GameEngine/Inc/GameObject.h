@@ -35,7 +35,8 @@ public:
 	void Render2D();
 
 	const char* GetName() const { return mName.c_str(); }
-	const World* GetWorld() const { return mWorld; }
+	World& GetWorld() { return *mWorld; }
+	const World& GetWorld() const { return *mWorld; }
 	GameObjectHandle GetHandle() const { return mHandle; }
 
 	template <class T>

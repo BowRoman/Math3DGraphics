@@ -44,6 +44,7 @@
   <ItemGroup>
     <ClInclude Include="Inc\AABoxColliderComponent.h" />
     <ClInclude Include="Inc\CameraComponent.h" />
+    <ClInclude Include="Inc\CollisionService.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Component.h" />
     <ClInclude Include="Inc\FPControllerComponent.h" />
@@ -58,6 +59,7 @@
   <ItemGroup>
     <ClCompile Include="Src\AABoxColliderComponent.cpp" />
     <ClCompile Include="Src\CameraComponent.cpp" />
+    <ClCompile Include="Src\CollisionService.cpp" />
     <ClCompile Include="Src\Component.cpp" />
     <ClCompile Include="Src\FPControllerComponent.cpp" />
     <ClCompile Include="Src\GameObject.cpp" />

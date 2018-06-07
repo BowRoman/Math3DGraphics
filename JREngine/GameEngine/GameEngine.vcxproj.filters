@@ -51,6 +51,9 @@
     <ClInclude Include="Inc\Component.h">
       <Filter>Inc</Filter>
     </ClInclude>
+    <ClInclude Include="Inc\CollisionService.h">
+      <Filter>Inc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\GameObject.cpp">
@@ -78,6 +81,9 @@
       <Filter>Src\Components</Filter>
     </ClCompile>
     <ClCompile Include="Src\Component.cpp">
+      <Filter>Src</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\CollisionService.cpp">
       <Filter>Src</Filter>
     </ClCompile>
   </ItemGroup>

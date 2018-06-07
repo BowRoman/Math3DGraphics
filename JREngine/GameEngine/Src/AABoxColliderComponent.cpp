@@ -1,8 +1,10 @@
 #include "Precompiled.h"
 #include "AABoxColliderComponent.h"
 
+#include "CollisionService.h"
 #include "GameObject.h"
 #include "TransformComponent.h"
+#include "World.h"
 
 #include <Graphics\Inc\SimpleDraw.h>
 
@@ -61,6 +63,14 @@ AABoxColliderComponent::~AABoxColliderComponent()
 void AABoxColliderComponent::Initialize()
 {
 	mTransformComponent = GetOwner().GetComponent<TransformComponent>();
+	auto service = GetOwner().GetWorld().GetService<CollisionService>();
+	service->Register(this);
+}
+
+void AABoxColliderComponent::Terminate()
+{
+	auto service = GetOwner().GetWorld().GetService<CollisionService>();
+	service->Unregister(this);
 }
 
 void AABoxColliderComponent::Render()
@@ -92,6 +102,48 @@ bool AABoxColliderComponent::CheckCollision(AABoxColliderComponent& boxB)
 	mColor = boxB.mColor = Math::Vector4::Red();
 
 	return true;
+}
+
+void AABoxColliderComponent::AddCollisionEvent(CollisionEvent eventCall, CollisionEventType eventType)
+{
+	switch (eventType)
+	{
+	case CollisionEventType::Colliding: 
+		 mCollisionEvents.push_back(eventCall);
+		break;
+	case CollisionEventType::Enter:
+		mCollisionEnterEvents.push_back(eventCall);
+		break;
+	case CollisionEventType::Exit:
+		mCollisionExitEvents.push_back(eventCall);
+		break;
+	default:
+		ASSERT(false, "[AABoxColliderComponent] Invalidcollision event type argument.");
+	}
+}
+
+void AABoxColliderComponent::OnCollision()
+{
+	for (auto e : mCollisionEvents)
+	{
+		e();
+	}
+}
+
+void AABoxColliderComponent::OnCollisionEnter()
+{
+	for (auto e : mCollisionEnterEvents)
+	{
+		e();
+	}
+}
+
+void AABoxColliderComponent::OnCollisionExit()
+{
+	for (auto e : mCollisionExitEvents)
+	{
+		e();
+	}
 }
 
 Math::AABB AABoxColliderComponent::GetAABB() const
