@@ -33,42 +33,96 @@ void Physics::PhysicsOBB::Apply(ParticleVec& particles)
 			particle->mPositionOld = Math::TransformCoord(particle->mPositionOld, Math::Inverse(trans));
 
 			Vector3 oldPos = particle->mPositionOld;
-			oldPos.x = Math::Clamp(oldPos.x, mOBB.extend.x * -0.5f, mOBB.extend.x * 0.5f);
-			oldPos.y = Math::Clamp(oldPos.y, mOBB.extend.y * -0.5f, mOBB.extend.y * 0.5f);
-			oldPos.z = Math::Clamp(oldPos.z, mOBB.extend.z * -0.5f, mOBB.extend.z * 0.5f);
+			oldPos.x = Math::Clamp(oldPos.x, mOBB.extend.x * -1.0f, mOBB.extend.x);
+			oldPos.y = Math::Clamp(oldPos.y, mOBB.extend.y * -1.0f, mOBB.extend.y);
+			oldPos.z = Math::Clamp(oldPos.z, mOBB.extend.z * -1.0f, mOBB.extend.z);
 
-			//------------------------X------------------------------
-			if (Math::Compare(oldPos.x, (mOBB.extend.x * 0.5f), 0.001f))
+			enum class ClosestAxis
 			{
-				Physics::PhysicsPlane plane(Plane{ Math::Vector3::XAxis(), (mOBB.extend.x * 0.5f) }, mRestitution, mRestitution);
-				plane.Apply(particle);
+				XPos,
+				XNeg,
+				YPos,
+				YNeg,
+				ZPos,
+				ZNeg
+			};
+
+			ClosestAxis closestAxis = ClosestAxis::XPos;
+			float closestDist;
+
+			float posXDist = Math::DistanceSqr(oldPos.x, (mOBB.extend.x));
+			float negXDist = Math::DistanceSqr(oldPos.x, (mOBB.extend.x * -1.0f));
+			float posYDist = Math::DistanceSqr(oldPos.y, (mOBB.extend.y));
+			float negYDist = Math::DistanceSqr(oldPos.y, (mOBB.extend.y * -1.0f));
+			float posZDist = Math::DistanceSqr(oldPos.z, (mOBB.extend.z));
+			float negZDist = Math::DistanceSqr(oldPos.z, (mOBB.extend.z * -1.0f));
+
+			closestDist = posXDist;
+			if (closestDist > negXDist)
+			{
+				closestAxis = ClosestAxis::XNeg;
+				closestDist = negXDist;
 			}
-			else if (Math::Compare(oldPos.x, (mOBB.extend.x * -0.5f), 0.001f))
+			if (closestDist > posYDist)
 			{
-				Physics::PhysicsPlane plane(Plane{ Vector3::Zero() - Math::Vector3::XAxis(), (mOBB.extend.x * 0.5f) }, mRestitution, mRestitution);
-				plane.Apply(particle);
+				closestAxis = ClosestAxis::YPos;
+				closestDist = posYDist;
 			}
-			//------------------------Y------------------------------
-			else if (Math::Compare(oldPos.y, (mOBB.extend.y * 0.5f), 0.001f))
+			if (closestDist > negYDist)
 			{
-				Physics::PhysicsPlane plane(Plane{ Math::Vector3::YAxis(), mOBB.extend.y*0.5f }, mRestitution, mRestitution);
-				plane.Apply(particle);
+				closestAxis = ClosestAxis::YNeg;
+				closestDist = negYDist;
 			}
-			else if (Math::Compare(oldPos.y, (mOBB.extend.y * -0.5f), 0.001f))
+			if (closestDist > posZDist)
 			{
-				Physics::PhysicsPlane plane(Plane{ Vector3::Zero() - Math::Vector3::YAxis(), mOBB.extend.y * 0.5f }, mRestitution, mRestitution);
-				plane.Apply(particle);
+				closestAxis = ClosestAxis::ZPos;
+				closestDist = posZDist;
 			}
-			//------------------------Z------------------------------
-			else if (Math::Compare(oldPos.z, (mOBB.extend.z * 0.5f), 0.001f))
+			if (closestDist > negZDist)
 			{
-				Physics::PhysicsPlane plane(Plane{ Math::Vector3::ZAxis(), (mOBB.extend.z * 0.5f) }, mRestitution, mRestitution);
-				plane.Apply(particle);
+				closestAxis = ClosestAxis::ZNeg;
+				closestDist = negZDist;
 			}
-			else if (Math::Compare(oldPos.z, (mOBB.extend.z * -0.5f), 0.001f))
+
+			// EVALUATE: Possibly better to store the planes instead of generating on collision
+			switch (closestAxis)
 			{
-				Physics::PhysicsPlane plane(Plane{ Vector3::Zero() - Math::Vector3::ZAxis(), (mOBB.extend.z * 0.5f) }, mRestitution, mRestitution);
+			case ClosestAxis::XPos:
+			{
+				Physics::PhysicsPlane plane(Plane{ Math::Vector3::XAxis(), (mOBB.extend.x) }, mRestitution, mRestitution);
 				plane.Apply(particle);
+				break;
+			}
+			case ClosestAxis::XNeg:
+			{
+				Physics::PhysicsPlane plane(Plane{ Vector3::Zero() - Math::Vector3::XAxis(), (mOBB.extend.x) }, mRestitution, mRestitution);
+				plane.Apply(particle);
+				break;
+			}
+			case ClosestAxis::YPos:
+			{
+				Physics::PhysicsPlane plane(Plane{ Math::Vector3::YAxis(), mOBB.extend.y*1.0f }, mRestitution, mRestitution);
+				plane.Apply(particle);
+				break;
+			}
+			case ClosestAxis::YNeg:
+			{
+				Physics::PhysicsPlane plane(Plane{ Vector3::Zero() - Math::Vector3::YAxis(), mOBB.extend.y }, mRestitution, mRestitution);
+				plane.Apply(particle);
+				break;
+			}
+			case ClosestAxis::ZPos:
+			{
+				Physics::PhysicsPlane plane(Plane{ Math::Vector3::ZAxis(), (mOBB.extend.z) }, mRestitution, mRestitution);
+				plane.Apply(particle);
+				break;
+			}
+			case ClosestAxis::ZNeg:
+			{
+				Physics::PhysicsPlane plane(Plane{ Vector3::Zero() - Math::Vector3::ZAxis(), (mOBB.extend.z) }, mRestitution, mRestitution);
+				plane.Apply(particle);
+				break;
+			}
 			}
 
 			particle->mPosition = Math::TransformCoord(particle->mPosition, trans);
@@ -80,11 +134,11 @@ void Physics::PhysicsOBB::Apply(ParticleVec& particles)
 void PhysicsOBB::DebugDraw()
 {
 	auto rotMat = Math::Matrix4::RotationQuaternion(mOBB.rot);
-	auto xExtend = Vector3(mOBB.extend.x, 0.0f, 0.0f) * 0.5f;
+	auto xExtend = Vector3(mOBB.extend.x, 0.0f, 0.0f);
 	xExtend = Math::TransformCoord(xExtend, rotMat);
-	auto yExtend = Vector3(0.0f, mOBB.extend.y, 0.0f) * 0.5f;
+	auto yExtend = Vector3(0.0f, mOBB.extend.y, 0.0f);
 	yExtend = Math::TransformCoord(yExtend, rotMat);
-	auto zExtend = Vector3(0.0f, 0.0f, mOBB.extend.z) * 0.5f;
+	auto zExtend = Vector3(0.0f, 0.0f, mOBB.extend.z);
 	zExtend = Math::TransformCoord(zExtend, rotMat);
 
 	auto top = mOBB.center + yExtend;

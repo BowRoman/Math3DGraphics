@@ -4,22 +4,24 @@
 using namespace Physics;
 
 Particle::Particle()
-	: mPosition(0.0f, 0.0f, 0.0f)
-	, mPositionOld(0.0f, 0.0f, 0.0f)
-	, mAcceleration(0.0f, 0.0f, 0.0f)
-	, mRadius{ 0.5f }
-	, mInvMass{ 0.2387f } // based on volume assuming radius 1.0f
-	, bImplicitMass{true}
 {
 }
 
-Particle::Particle(const Math::Vector3& position, float radius, float invMass)
-	: mPosition(position)
-	, mPositionOld(position)
-	, mAcceleration(0.0f, 0.0f, 0.0f)
-	, mRadius{ radius }
-	, mInvMass{ invMass }
-	, bImplicitMass{ false }
+Physics::Particle::Particle(float lifespan)
+	: mLifespan{ lifespan }
+{
+}
+
+Particle::Particle(const Math::Vector3& position)
+	: mPosition{ position }
+	, mPositionOld{ position }
+{
+}
+
+Particle::Particle(const Math::Vector3& position, float lifespan)
+	: mPosition{ position }
+	, mPositionOld{ position }
+	, mLifespan{ lifespan }
 {
 }
 
@@ -28,29 +30,36 @@ void Particle::DebugDraw() const
 	Graphics::SimpleDraw::DrawSphere(mPosition, 3, 2, mRadius, Math::Vector4::Cyan());
 }
 
-void Particle::SetPosition(Math::Vector3 position)
-{
-	mPosition = position;
-	mPositionOld = position;
-}
-
 void Particle::SetRadius(float radius)
 {
+	ASSERT(radius > 0.0f, "[Particle] Radius must be positive and above zero.");
 	mRadius = radius;
-	if (bImplicitMass)
-	{
-		if (radius != 0.0f)
-		{
-			// generate implicit mass based on volume of the sphere
-			mInvMass = 1 / (1.3333333f * Math::kPi * (radius*radius*radius));
-		}
-	}
+	CalculateImplicitMass();
+}
+
+void Physics::Particle::SetDensity(float density)
+{
+	ASSERT(density > 0.0f, "[Particle] Density must be positive and above zero.");
+	mDensity = density;
+	CalculateImplicitMass();
 }
 
 // LAZY, SetInvMass() is better
 void Particle::SetMass(float mass)
 {
-	ASSERT(mass > 0.0f, "[Particle] Mass cannot be zero.");
+	ASSERT(mass > 0.0f, "[Particle] Mass must be positive and above zero.");
 	bImplicitMass = false;
 	mInvMass = 1 / mass;
+}
+
+void Particle::CalculateImplicitMass()
+{
+	if (bImplicitMass)
+	{
+		if (mRadius != 0.0f && mDensity != 0.0f)
+		{
+			// generate implicit mass based on volume of the sphere
+			mInvMass = 1 / (mDensity * (1.33333333f * Math::kPi * (mRadius*mRadius*mRadius)));
+		}
+	}
 }

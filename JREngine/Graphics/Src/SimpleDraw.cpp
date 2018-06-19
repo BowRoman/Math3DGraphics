@@ -9,7 +9,8 @@
 
 using namespace Graphics;
 
-namespace {
+namespace
+{
 
 class SimpleDrawImpl
 {
@@ -47,6 +48,47 @@ public:
 	}
 
 	//-------------------------------------------------------------------------------------------------------
+
+	void DrawAABB(const Math::AABB& aabb, const Math::Vector4& color)
+	{
+		// TODO: fix AABB simpledraw
+		/*
+			   4------5
+			  /|     /|
+			 / 6----/-7
+			0------1 /
+			|/     |/
+			2------3
+		*/
+		Math::Vector3 pos[8];
+		pos[2] = (aabb.center - aabb.extend);
+		pos[3] = (pos[2] + (Math::Vector3::XAxis() * aabb.extend.x * 2));
+		pos[0] = (pos[2] + (Math::Vector3::YAxis() * aabb.extend.y * 2));
+		pos[1] = (pos[0] + (Math::Vector3::XAxis() * aabb.extend.x * 2));
+		pos[5] = (aabb.center + aabb.extend);
+		pos[4] = (pos[5] - (Math::Vector3::XAxis() * aabb.extend.x * 2));
+		pos[7] = (pos[5] - (Math::Vector3::YAxis() * aabb.extend.y * 2));
+		pos[6] = (pos[7] - (Math::Vector3::XAxis() * aabb.extend.x * 2));
+
+		DrawLine(pos[0], pos[1], color);
+		DrawLine(pos[0], pos[2], color);
+		DrawLine(pos[0], pos[4], color);
+
+		DrawLine(pos[1], pos[3], color);
+		DrawLine(pos[1], pos[5], color);
+
+		DrawLine(pos[2], pos[3], color);
+		DrawLine(pos[2], pos[6], color);
+
+		DrawLine(pos[3], pos[7], color);
+
+		DrawLine(pos[4], pos[5], color);
+		DrawLine(pos[4], pos[6], color);
+
+		DrawLine(pos[5], pos[7], color);
+
+		DrawLine(pos[6], pos[7], color);
+	}
 
 	void DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, const Math::Vector4& color)
 	{
@@ -174,7 +216,7 @@ private:
 	uint32_t mCapacity;
 }; // class SimpleDraw
 
-SimpleDrawImpl *sSimpleDraw = nullptr;
+SimpleDrawImpl* sSimpleDraw = nullptr;
 
 } // namespace
 
@@ -189,6 +231,12 @@ void SimpleDraw::StaticTerminate()
 {
 	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
 	sSimpleDraw->Terminate();
+}
+
+void SimpleDraw::DrawAABB(const Math::AABB& aabb, const Math::Vector4& color)
+{
+	ASSERT(sSimpleDraw != nullptr, "[SimpleDraw] No instance exists.");
+	sSimpleDraw->DrawAABB(aabb, color);
 }
 
 void SimpleDraw::DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, const Math::Vector4& color)

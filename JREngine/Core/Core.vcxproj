@@ -135,16 +135,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Inc\BitMask.h" />
     <ClInclude Include="Inc\Application.h" />
+    <ClInclude Include="Inc\BlockAllocator.h" />
     <ClInclude Include="Inc\Common.h" />
     <ClInclude Include="Inc\Core.h" />
     <ClInclude Include="Inc\Debug.h" />
     <ClInclude Include="Inc\DeleteUtil.h" />
+    <ClInclude Include="Inc\HandlePool.h" />
+    <ClInclude Include="Inc\RTTI.h" />
     <ClInclude Include="Inc\Timer.h" />
+    <ClInclude Include="Inc\TypedAllocator.h" />
     <ClInclude Include="Inc\Window.h" />
     <ClInclude Include="Src\Precompiled.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\BlockAllocator.cpp" />
     <ClCompile Include="Src\Precompiled.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

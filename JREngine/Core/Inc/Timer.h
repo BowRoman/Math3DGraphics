@@ -1,7 +1,8 @@
 #ifndef INCLUDED_CORE_TIMER_H
 #define INCLUDED_CORE_TIMER_H
 
-namespace Core {
+namespace Core
+{
 
 class Timer
 {
@@ -27,7 +28,7 @@ private:
 	float mLastUpdateTime;
 	float mFrameSinceLastSecond;
 	float mFramesPerSecond;
-};
+}; // class Timer
 
 } // namespace Core
 

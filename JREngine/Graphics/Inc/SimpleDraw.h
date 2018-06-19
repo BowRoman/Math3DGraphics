@@ -10,6 +10,7 @@ namespace SimpleDraw
 void StaticInitialize(uint32_t capacity);
 void StaticTerminate();
 
+void DrawAABB(const Math::AABB& aabb, const Math::Vector4& color = Math::Vector4::White());
 void DrawLine(const Math::Vector3& p0, const Math::Vector3& p1, const Math::Vector4& color = Math::Vector4::White());
 void DrawTransform(const Math::Matrix4& trans);
 void DrawSphere(const Math::Vector3& position, uint32_t slices = 6, uint32_t rings = 6, float scale = 1.f, const Math::Vector4& color = Math::Vector4::White());

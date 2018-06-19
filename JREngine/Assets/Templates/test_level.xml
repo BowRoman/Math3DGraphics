@@ -1,0 +1,23 @@
+<GameObjectList>
+  <GameObject>
+    <Name>FPSCamera</Name>
+    <Template>../Assets/Templates/fps_camera.xml</Template>
+    <Vector3 name="Position">
+      <Float name="x">7</Float>
+      <Float name="y">3</Float>
+      <Float name="z">6</Float>
+    </Vector3>
+  </GameObject>
+  <GameObject>
+    <Name>RedBox</Name>
+    <Template>../Assets/Templates/red_box.xml</Template>
+  </GameObject>
+  <GameObject>
+    <Name>GreenBox</Name>
+    <Template>../Assets/Templates/green_box.xml</Template>
+  </GameObject>
+  <GameObject>
+    <Name>BlueBox</Name>
+    <Template>../Assets/Templates/blue_box.xml</Template>
+  </GameObject>
+</GameObjectList>

@@ -54,7 +54,7 @@ void GameApp::OnInitialize(uint32_t width, uint32_t height)
 	mTerrainVertexShader.Initialize(L"../Assets/Shaders/Texturing.fx", Graphics::Vertex::Format);
 	mTerrainPixelShader.Initialize(L"../Assets/Shaders/Texturing.fx");
 
-	mTerrain.Initialize("../Assets/Images/heightMap.raw", 1024, 1024, 0.1f);
+	mTerrain.Initialize("../Assets/Images/heightMap.raw", 1024, 1024);
 
 	mTerrainTexture.Initialize(L"../Assets/Images/terrain.jpg");
 	mTerrainSampler.Initialize(Graphics::Sampler::Filter::Anisotropic, Graphics::Sampler::AddressMode::Wrap);

@@ -157,7 +157,6 @@
     <ClInclude Include="Inc\RenderTargetMesh.h" />
     <ClInclude Include="Inc\Sampler.h" />
     <ClInclude Include="Inc\SkinnedMesh.h" />
-    <ClInclude Include="Inc\Terrain.h" />
     <ClInclude Include="Inc\Texture.h" />
     <ClInclude Include="Inc\TextureManager.h" />
     <ClInclude Include="Inc\Transform.h" />
@@ -191,7 +190,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Src\SkinnedMesh.cpp" />
-    <ClCompile Include="Src\Terrain.cpp" />
     <ClCompile Include="Src\Texture.cpp" />
     <ClCompile Include="Src\TextureManager.cpp" />
     <ClCompile Include="Src\Transform.cpp" />

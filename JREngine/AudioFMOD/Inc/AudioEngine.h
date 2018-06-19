@@ -100,39 +100,41 @@ public:
 	void Initialize();
 	void Terminate();
 	void Update();
-	static void ErrorCheck( FMOD_RESULT result );
+	static void ErrorCheck(FMOD_RESULT result);
 
-	void SetRoot( const std::string& root ) { mRoot = root; }
+	void SetRoot(const std::string& root) { mRoot = root; }
 
-	SoundHandle LoadSound( const std::string& soundName, const std::string& ChannelGroupName = "", bool b3D = true, bool bLooping = false, bool bStream = false );
-	void UnloadSound( SoundHandle soundHash );
+	SoundHandle LoadSound(const std::string& soundName, const std::string& ChannelGroupName = "", bool b3D = true, bool bLooping = false, bool bStream = false);
+	void UnloadSound(SoundHandle soundHash);
 
-	ChannelHandle PlaySounds( SoundDescription& soundDesc );
-	ChannelHandle PlaySounds( SoundHandle soundHandle );
+	ChannelHandle PlaySounds(SoundDescription& soundDesc);
+	ChannelHandle PlaySounds(SoundHandle soundHandle);
 
-	void Set3DListenerAndOrientation( Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, Math::Vector3& up = Math::Vector3{ 0, 0, 0 } ) const;
+	void Set3DListenerAndOrientation(Math::Vector3& pos = Math::Vector3{ 0, 0, 0 }, float volumeDB = 0.0f, Math::Vector3& forward = Math::Vector3{ 0, 0, 0 }, Math::Vector3& up = Math::Vector3{ 0, 0, 0 }) const;
 
-	bool CreateChannelGroup( const std::string& ChannelGroupName, const std::string& parentGroupName = "" );
-	FMOD::ChannelGroup* const GetChannelGroup( const std::string& ChannelGroupName ) const; // Not sure if this is needed
+	bool CreateChannelGroup(const std::string& ChannelGroupName, const std::string& parentGroupName = "");
+	FMOD::ChannelGroup* const GetChannelGroup(const std::string& ChannelGroupName) const; // Not sure if this is needed
 
-	void PlayChannel( ChannelHandle channelId );
-	void PauseChannel( ChannelHandle channelId );
-	void StopChannel( ChannelHandle channelId );
+	void PlayChannel(ChannelHandle channelId);
+	void PauseChannel(ChannelHandle channelId);
+	void StopChannel(ChannelHandle channelId);
+	void TogglePaused(ChannelHandle channelId);
 
 	void StopAllChannels();
 
-	void GetChannelProperties( ChannelHandle channelId, ChannelDescription& channelDesc ) const;
-	ChannelDescription GetChannelProperties( ChannelHandle channelId ) const;
-	void SetChannelProperties( ChannelHandle channelId, ChannelDescription channelDesc );
-	void SetChannel3DPosition( ChannelHandle channelId, Math::Vector3& pos );
-	void SetChannelVolume( ChannelHandle channelId, float volumeDB );
+	void GetChannelProperties(ChannelHandle channelId, ChannelDescription& channelDesc) const;
+	ChannelDescription GetChannelProperties(ChannelHandle channelId) const;
+	void SetChannelProperties(ChannelHandle channelId, ChannelDescription channelDesc);
+	void SetChannel3DPosition(ChannelHandle channelId, Math::Vector3& pos);
+	void SetChannelVolume(ChannelHandle channelId, float volumeDB);
 
-	bool IsPlaying( ChannelHandle channelId ) const;
+	bool IsPlaying(ChannelHandle channelId) const;
+	bool IsPaused(ChannelHandle channelId) const;
 
-	float DBToVolume( float db ) const { return powf( 10.0f, 0.05f * db ); }
-	float VolumeToDB( float volume ) const { return 20.0f * log10f( volume ); }
-	FMOD_VECTOR VectorToFmod( Math::Vector3& pos ) const;
-	Math::Vector3 FmodToVector( FMOD_VECTOR& pos ) const;
+	float DBToVolume(float db) const { return powf(10.0f, 0.05f * db); }
+	float VolumeToDB(float volume) const { return 20.0f * log10f(volume); }
+	FMOD_VECTOR VectorToFmod(Math::Vector3& pos) const;
+	Math::Vector3 FmodToVector(FMOD_VECTOR& pos) const;
 
 	//-------------------------------------------[Studio]-------------------------------------------
 
@@ -148,6 +150,9 @@ public:
 
 	bool IsEventPlaying(const std::string& eventName) const;
 	*/
-};
+
+	//-------------------------------------------[/Studio]------------------------------------------
+
+}; // class JRAudioEngine
 
 } // namespace Audio

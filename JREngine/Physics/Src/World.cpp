@@ -8,50 +8,52 @@
 
 using namespace Physics;
 
-World::World()
-	: mTimer{ 0.0f }
+PhysicsWorld::PhysicsWorld()
 {}
 
-World::~World()
+PhysicsWorld::~PhysicsWorld()
 {
-	ASSERT(mParticles.empty(), "[World] Particle vector must be cleared before destruction.");
-	ASSERT(mConstraints.empty(), "[World] Constraint vector must be cleared before destruction.");
-	ASSERT(mPlanes.empty(), "[World] Plane vector must be cleared before destruction.");
+	ASSERT(mParticles.empty(), "[PhysicsWorld] Particle vector must be cleared before destruction.");
+	ASSERT(mConstraints.empty(), "[PhysicsWorld] Constraint vector must be cleared before destruction.");
+	ASSERT(mPlanes.empty(), "[PhysicsWorld] Plane vector must be cleared before destruction.");
 }
 
-void World::Update(float deltaTime)
+void PhysicsWorld::Update(float deltaTime)
 {
 	mTimer += deltaTime;
+	mWorldTime += deltaTime;
 	while (mTimer >= mSettings.timeStep)
 	{
 		mTimer -= mSettings.timeStep;
 		AccumulateForces();
 		Integrate();
 		SatisfyConstraints();
+		RemoveExpired(); // TODO: Add support for constraint removal
 	}
 }
 
-void World::AddParticle(Particle* p)
+void PhysicsWorld::AddParticle(Particle* p)
 {
+	p->mCreationTime = mWorldTime;
 	mParticles.push_back(p);
 }
 
-void World::AddConstraint(Constraint* c)
+void PhysicsWorld::AddConstraint(Constraint* c)
 {
 	mConstraints.push_back(c);
 }
 
-void Physics::World::AddPhysicsPlane(PhysicsPlane* p)
+void Physics::PhysicsWorld::AddPhysicsPlane(PhysicsPlane* p)
 {
 	mPlanes.push_back(p);
 }
 
-void Physics::World::AddPhysicsOBB(PhysicsOBB* obb)
+void Physics::PhysicsWorld::AddPhysicsOBB(PhysicsOBB* obb)
 {
 	mOBBs.push_back(obb);
 }
 
-void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math::Vector3 velocity, float width, float invMass, bool fixed)
+void Physics::PhysicsWorld::AddCube(Physics::PhysicsWorld& world, Math::Vector3 position, Math::Vector3 velocity, float width, float invMass, bool fixed)
 {
 	float particleinvMass = invMass / 8;
 	float halfWidth = width * 0.5f;
@@ -93,7 +95,7 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 	{
 		auto c0 = new Physics::Spring(particles[i], particles[(i + 1) % 4], width);
 		auto c1 = new Physics::Spring(particles[i], particles[(i + 4)], width);
-	
+
 		world.AddConstraint(c0);
 		world.AddConstraint(c1);
 	}
@@ -113,7 +115,7 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 		auto c = new Physics::Spring(particles[i], particles[(i + 2) % 4], squareDiagonalLength);
 		world.AddConstraint(c);
 	}
-	
+
 	// diagonals across bottom
 	for (int i = 0; i < 4; ++i)
 	{
@@ -125,26 +127,26 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 	// backslash
 	auto c = new Physics::Spring(particles[0], particles[5], squareDiagonalLength);
 	world.AddConstraint(c);
-	
+
 	c = new Physics::Spring(particles[1], particles[6], squareDiagonalLength);
 	world.AddConstraint(c);
-	
+
 	c = new Physics::Spring(particles[2], particles[7], squareDiagonalLength);
 	world.AddConstraint(c);
-	
+
 	c = new Physics::Spring(particles[3], particles[4], squareDiagonalLength);
 	world.AddConstraint(c);
-	
+
 	// forward slash
 	c = new Physics::Spring(particles[0], particles[7], squareDiagonalLength);
 	world.AddConstraint(c);
-	
+
 	c = new Physics::Spring(particles[1], particles[4], squareDiagonalLength);
 	world.AddConstraint(c);
-	
+
 	c = new Physics::Spring(particles[2], particles[5], squareDiagonalLength);
 	world.AddConstraint(c);
-	
+
 	c = new Physics::Spring(particles[3], particles[6], squareDiagonalLength);
 	world.AddConstraint(c);
 
@@ -184,7 +186,7 @@ void Physics::World::AddCube(Physics::World& world, Math::Vector3 position, Math
 }
 
 // Clears all pointer containers
-void World::ClearDynamic()
+void PhysicsWorld::ClearDynamic()
 {
 	SafeDeleteVector(mParticles);
 	SafeDeleteVector(mConstraints);
@@ -193,13 +195,13 @@ void World::ClearDynamic()
 }
 
 // Clears particle and constraint containers
-void World::ClearParticles()
+void PhysicsWorld::ClearParticles()
 {
 	SafeDeleteVector(mParticles);
 	SafeDeleteVector(mConstraints);
 }
 
-void World::DebugDraw() const
+void PhysicsWorld::DebugDraw() const
 {
 	for (const auto p : mParticles)
 	{
@@ -215,7 +217,7 @@ void World::DebugDraw() const
 	}
 }
 
-void World::AccumulateForces()
+void PhysicsWorld::AccumulateForces()
 {
 	for (auto p : mParticles)
 	{
@@ -223,7 +225,7 @@ void World::AccumulateForces()
 	}
 }
 
-void World::Integrate()
+void PhysicsWorld::Integrate()
 {
 	const float timeStepSqr = Math::Sqr(mSettings.timeStep);
 	for (auto p : mParticles)
@@ -234,7 +236,7 @@ void World::Integrate()
 	}
 }
 
-void World::SatisfyConstraints()
+void PhysicsWorld::SatisfyConstraints()
 {
 	for (auto c : mConstraints)
 	{
@@ -249,5 +251,22 @@ void World::SatisfyConstraints()
 	for (auto o : mOBBs)
 	{
 		o->Apply(mParticles);
+	}
+}
+
+void PhysicsWorld::RemoveExpired()
+{
+	auto i = mParticles.begin();
+	while(i != mParticles.end())
+	{
+		auto p = *i;
+		if (mWorldTime > p->mCreationTime + p->mLifespan)
+		{
+			i = mParticles.erase(i);
+		}
+		else
+		{
+			++i;
+		}
 	}
 }
